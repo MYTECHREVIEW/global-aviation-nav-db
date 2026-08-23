@@ -52,6 +52,19 @@ function setupTabs() {
 function setupEventListeners() {
     document.getElementById('traceBtn').addEventListener('click', traceRoute);
 
+    const labelToggle = document.getElementById('toggleWpLabels');
+    if (labelToggle) {
+        labelToggle.checked = showWaypointLabels;
+        labelToggle.addEventListener('change', (e) => {
+            showWaypointLabels = e.target.checked;
+            localStorage.setItem('show_wp_labels', showWaypointLabels);
+            if (currentRouteData) {
+                renderRouteOnMap(currentRouteData);
+            }
+        });
+    }
+
+
     const searchBtn = document.getElementById('searchSubmitBtn');
     if (searchBtn) searchBtn.addEventListener('click', executeSearch);
 
@@ -400,13 +413,18 @@ async function traceRoute() {
     }
 }
 
+let currentRouteData = null;
+let showWaypointLabels = localStorage.getItem('show_wp_labels') !== 'false';
+
 function renderRouteOnMap(data) {
+    currentRouteData = data;
     routeLayerGroup.clearLayers();
 
     if (!data.route_coordinates || data.route_coordinates.length === 0) return;
 
     const latLngs = data.route_coordinates.map(c => [c[1], c[0]]);
 
+    // Glow background line
     L.polyline(latLngs, {
         color: '#00ff88',
         weight: 6,
@@ -414,6 +432,7 @@ function renderRouteOnMap(data) {
         lineCap: 'round'
     }).addTo(routeLayerGroup);
 
+    // Primary flight path polyline
     const flightPath = L.polyline(latLngs, {
         color: '#00ff88',
         weight: 3,
@@ -422,19 +441,25 @@ function renderRouteOnMap(data) {
         lineCap: 'round'
     }).addTo(routeLayerGroup);
 
+    // Markers for waypoints
     data.waypoints.forEach((wp, idx) => {
+        const isDep = idx === 0;
+        const isArr = idx === data.waypoints.length - 1;
         const isVor = wp.type.includes('VOR') || wp.type.includes('TACAN');
         const isApt = wp.type === 'AIRPORT';
 
-        let markerColor = '#ff1e42';
+        let markerColor = '#ff1e42'; // Waypoint red
         let radius = 4;
+        let labelClass = 'map-wp-label';
 
         if (isApt) {
-            markerColor = '#38bdf8';
+            markerColor = '#38bdf8'; // Airport cyan
             radius = 6;
+            labelClass = 'map-wp-label wp-apt';
         } else if (isVor) {
-            markerColor = '#00ff88';
+            markerColor = '#00ff88'; // VOR green
             radius = 5;
+            labelClass = 'map-wp-label wp-vor';
         }
 
         const marker = L.circleMarker([wp.latitude, wp.longitude], {
@@ -445,6 +470,16 @@ function renderRouteOnMap(data) {
             opacity: 1,
             fillOpacity: 0.9
         }).addTo(routeLayerGroup);
+
+        // Bind Permanent Tooltip (Label)
+        if (showWaypointLabels) {
+            marker.bindTooltip(wp.ident, {
+                permanent: true,
+                direction: 'top',
+                offset: [0, -6],
+                className: labelClass
+            });
+        }
 
         const popupContent = `
             <div style="font-family: 'Inter', sans-serif; font-size: 12px; color: #fff; min-width: 150px;">

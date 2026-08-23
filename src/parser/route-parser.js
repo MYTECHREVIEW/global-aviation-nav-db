@@ -89,7 +89,8 @@ class RouteParser {
 
         if (isExplicitAirport && this.airports[clean]) {
             const apt = this.airports[clean];
-            return {
+            const showLabels = options.include_labels !== false && options.show_labels !== false;
+        return {
                 id: `APT_${apt.icao}`,
                 ident: apt.icao,
                 name: apt.name,

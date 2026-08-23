@@ -954,3 +954,104 @@ input:focus, textarea:focus {
     font-size: 0.72rem;
     color: #a7f3d0;
 }
+
+
+/* 🏷️ Waypoint Map Labels */
+.leaflet-tooltip.map-wp-label {
+    background: rgba(10, 15, 29, 0.88) !important;
+    border: 1px solid rgba(56, 189, 248, 0.5) !important;
+    color: #38bdf8 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7) !important;
+    white-space: nowrap !important;
+    pointer-events: none !important;
+}
+
+.leaflet-tooltip.map-wp-label.wp-vor {
+    border-color: rgba(0, 255, 136, 0.7) !important;
+    color: #00ff88 !important;
+}
+
+.leaflet-tooltip.map-wp-label.wp-apt {
+    border-color: rgba(251, 191, 36, 0.9) !important;
+    color: #fbbf24 !important;
+    font-size: 11px !important;
+}
+
+.leaflet-tooltip.map-wp-label::before {
+    display: none !important; /* Hide triangle arrow for cleaner look */
+}
+
+/* Label Toggle in Sidebar */
+.label-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    margin-top: 10px;
+    margin-bottom: 12px;
+}
+
+.label-toggle-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #334155;
+    transition: .25s;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 2px;
+    background-color: #94a3b8;
+    transition: .25s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: rgba(0, 255, 136, 0.3);
+    border-color: #00ff88;
+}
+
+input:checked + .slider:before {
+    transform: translateX(17px);
+    background-color: #00ff88;
+}
