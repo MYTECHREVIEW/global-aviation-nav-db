@@ -443,23 +443,26 @@ function renderRouteOnMap(data, autoFit = true) {
 
     // Markers for waypoints
     data.waypoints.forEach((wp, idx) => {
-        const isDep = idx === 0;
-        const isArr = idx === data.waypoints.length - 1;
-        const isVor = wp.type.includes('VOR') || wp.type.includes('TACAN');
+        const isVor = wp.type.includes('VOR') || wp.type.includes('TACAN') || wp.type.includes('NDB');
         const isApt = wp.type === 'AIRPORT';
+        const isFix = wp.type === 'TERMINAL_WAYPOINT' || wp.type === 'INTERSECTION' || wp.type === 'FIX';
 
-        let markerColor = '#ff1e42'; // Waypoint red
+        let markerColor = '#f43f5e'; // Waypoint Rose
         let radius = 4;
-        let labelClass = 'map-wp-label';
+        let labelClass = 'map-wp-label wp-waypoint';
 
         if (isApt) {
-            markerColor = '#38bdf8'; // Airport cyan
+            markerColor = '#fbbf24'; // Airport Amber
             radius = 6;
             labelClass = 'map-wp-label wp-apt';
         } else if (isVor) {
-            markerColor = '#00ff88'; // VOR green
+            markerColor = '#00ff88'; // VOR Green
             radius = 5;
             labelClass = 'map-wp-label wp-vor';
+        } else if (isFix) {
+            markerColor = '#38bdf8'; // Fix / Terminal Cyan
+            radius = 4.5;
+            labelClass = 'map-wp-label wp-fix';
         }
 
         const marker = L.circleMarker([wp.latitude, wp.longitude], {
@@ -468,7 +471,7 @@ function renderRouteOnMap(data, autoFit = true) {
             color: '#fff',
             weight: 1.5,
             opacity: 1,
-            fillOpacity: 0.9
+            fillOpacity: 0.95
         }).addTo(routeLayerGroup);
 
         // Bind Permanent Tooltip (Label) if enabled

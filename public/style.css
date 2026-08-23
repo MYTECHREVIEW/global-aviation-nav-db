@@ -956,34 +956,51 @@ input:focus, textarea:focus {
 }
 
 
-/* 🏷️ Waypoint Map Labels */
+/* 🏷️ Distinct Color-Coded Waypoint Map Labels */
 .leaflet-tooltip.map-wp-label {
-    background: rgba(10, 15, 29, 0.88) !important;
-    border: 1px solid rgba(56, 189, 248, 0.5) !important;
-    color: #38bdf8 !important;
+    background: rgba(10, 15, 29, 0.9) !important;
     font-family: 'JetBrains Mono', monospace !important;
     font-size: 10px !important;
     font-weight: 700 !important;
     padding: 2px 6px !important;
     border-radius: 4px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7) !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.8) !important;
     white-space: nowrap !important;
     pointer-events: none !important;
+    letter-spacing: 0.5px !important;
 }
 
-.leaflet-tooltip.map-wp-label.wp-vor {
-    border-color: rgba(0, 255, 136, 0.7) !important;
-    color: #00ff88 !important;
-}
-
+/* 1. Airport Labels (Amber Yellow) */
 .leaflet-tooltip.map-wp-label.wp-apt {
-    border-color: rgba(251, 191, 36, 0.9) !important;
+    border: 1px solid rgba(251, 191, 36, 0.85) !important;
     color: #fbbf24 !important;
+    background: rgba(25, 20, 10, 0.92) !important;
     font-size: 11px !important;
 }
 
+/* 2. VOR & NavAid Labels (Aviation Emerald Green) */
+.leaflet-tooltip.map-wp-label.wp-vor {
+    border: 1px solid rgba(0, 255, 136, 0.75) !important;
+    color: #00ff88 !important;
+    background: rgba(10, 25, 18, 0.92) !important;
+}
+
+/* 3. Enroute Waypoints (Neon Rose / Magenta) */
+.leaflet-tooltip.map-wp-label.wp-waypoint {
+    border: 1px solid rgba(244, 63, 94, 0.75) !important;
+    color: #f43f5e !important;
+    background: rgba(28, 12, 18, 0.92) !important;
+}
+
+/* 4. Terminal Fixes & Intersections (Electric Cyan) */
+.leaflet-tooltip.map-wp-label.wp-fix {
+    border: 1px solid rgba(56, 189, 248, 0.75) !important;
+    color: #38bdf8 !important;
+    background: rgba(10, 22, 35, 0.92) !important;
+}
+
 .leaflet-tooltip.map-wp-label::before {
-    display: none !important; /* Hide triangle arrow for cleaner look */
+    display: none !important;
 }
 
 /* Label Toggle in Sidebar */
