@@ -89,8 +89,7 @@ class RouteParser {
 
         if (isExplicitAirport && this.airports[clean]) {
             const apt = this.airports[clean];
-            const showLabels = options.include_labels !== false && options.show_labels !== false;
-        return {
+            return {
                 id: `APT_${apt.icao}`,
                 ident: apt.icao,
                 name: apt.name,
@@ -160,7 +159,7 @@ class RouteParser {
         return bestCandidate;
     }
 
-    parseRoute(routeStr, depIcao = null, arrIcao = null, cruisingAltFt = 35000, speedKts = 450) {
+    parseRoute(routeStr, depIcao = null, arrIcao = null, cruisingAltFt = 35000, speedKts = 450, options = {}) {
         const rawStringTokens = (routeStr || '').replace(/[\r\n\t]+/g, ' ').split(' ').filter(t => t.trim());
 
         // Extract departure/arrival runways if present in string (e.g. KEYW/09 or KLGA/04)
@@ -407,6 +406,7 @@ class RouteParser {
 
             processedWaypoints.push({
                 sequence: i + 1,
+                label: pt.ident,
                 id: pt.id,
                 ident: pt.ident,
                 name: pt.name,
@@ -472,7 +472,9 @@ class RouteParser {
             ]
         };
 
+        const showLabels = options.include_labels !== false && options.show_labels !== false;
         return {
+            include_labels: showLabels,
             departure: depPoint ? { icao: depPoint.ident, name: depPoint.name, lat: depPoint.latitude, lon: depPoint.longitude, runway: depRwy } : null,
             arrival: arrPoint ? { icao: arrPoint.ident, name: arrPoint.name, lat: arrPoint.latitude, lon: arrPoint.longitude, runway: arrRwy } : null,
             total_waypoints: processedWaypoints.length,

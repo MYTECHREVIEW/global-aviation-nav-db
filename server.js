@@ -483,12 +483,14 @@ app.post('/api/v1/route/trace', (req, res) => {
     }
 
     const routeStr = route || `${departure} ${arrival}`;
+    const include_labels = req.body?.include_labels ?? req.body?.show_labels ?? true;
     const result = routeParser.parseRoute(
         routeStr,
         departure,
         arrival,
         altitude_ft ? parseInt(altitude_ft, 10) : 35000,
-        speed_kts ? parseInt(speed_kts, 10) : 450
+        speed_kts ? parseInt(speed_kts, 10) : 450,
+        { include_labels }
     );
 
     // Build Static Map URL with GeoJSON overlay
