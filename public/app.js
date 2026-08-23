@@ -7,8 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setupTabs();
     setupEventListeners();
     setupSimbrief();
+    setupApiKeyAndGitTab();
+    checkEnvironmentMode();
 
-    // Start with clean map
     const badge = document.getElementById('mapBadge');
     if (badge) badge.style.display = 'none';
 });
@@ -19,7 +20,7 @@ function initMap() {
         attributionControl: false
     }).setView([38.5, -96.0], 4);
 
-    // Dark Satellite / Carto Basemap
+    // Dark Basemap
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
         subdomains: 'abcd'
@@ -56,6 +57,32 @@ function setupEventListeners() {
         searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') executeSearch();
         });
+    }
+
+    const copyComposeBtn = document.getElementById('copyComposeBtn');
+    if (copyComposeBtn) {
+        copyComposeBtn.addEventListener('click', () => {
+            const yamlCode = document.getElementById('composeYamlCode').textContent;
+            navigator.clipboard.writeText(yamlCode).then(() => {
+                copyComposeBtn.textContent = '✅ Copied YAML!';
+                setTimeout(() => { copyComposeBtn.textContent = '📋 Copy YAML'; }, 2000);
+            });
+        });
+    }
+}
+
+async function checkEnvironmentMode() {
+    try {
+        const res = await fetch('/api/v1/config/env');
+        const data = await res.json();
+
+        // In Production Docker Container: hide dev-only tabs
+        if (!data.is_dev) {
+            document.querySelectorAll('.dev-only-tab').forEach(el => el.remove());
+            document.querySelectorAll('.dev-only-content').forEach(el => el.remove());
+        }
+    } catch (e) {
+        console.warn('Could not check environment mode:', e);
     }
 }
 
@@ -190,7 +217,6 @@ function renderRouteOnMap(data) {
 
     const latLngs = data.route_coordinates.map(c => [c[1], c[0]]);
 
-    // Glow background line
     L.polyline(latLngs, {
         color: '#00ff88',
         weight: 6,
@@ -198,7 +224,6 @@ function renderRouteOnMap(data) {
         lineCap: 'round'
     }).addTo(routeLayerGroup);
 
-    // Primary flight path polyline
     const flightPath = L.polyline(latLngs, {
         color: '#00ff88',
         weight: 3,
@@ -207,21 +232,18 @@ function renderRouteOnMap(data) {
         lineCap: 'round'
     }).addTo(routeLayerGroup);
 
-    // Markers for waypoints
     data.waypoints.forEach((wp, idx) => {
-        const isDep = idx === 0;
-        const isArr = idx === data.waypoints.length - 1;
         const isVor = wp.type.includes('VOR') || wp.type.includes('TACAN');
         const isApt = wp.type === 'AIRPORT';
 
-        let markerColor = '#ff1e42'; // Waypoint red
+        let markerColor = '#ff1e42';
         let radius = 4;
 
         if (isApt) {
-            markerColor = '#38bdf8'; // Airport cyan
+            markerColor = '#38bdf8';
             radius = 6;
         } else if (isVor) {
-            markerColor = '#00ff88'; // VOR green
+            markerColor = '#00ff88';
             radius = 5;
         }
 
@@ -326,4 +348,204 @@ window.zoomToFix = function(lat, lon, ident, type) {
         weight: 2,
         fillOpacity: 1
     }).addTo(routeLayerGroup).bindPopup(`<strong>${ident}</strong> (${type})<br>📍 ${lat.toFixed(4)}, ${lon.toFixed(4)}`).openPopup();
+};
+
+function setupApiKeyAndGitTab() {
+    const gitPushBtn = document.getElementById('gitPushBtn');
+    if (gitPushBtn) gitPushBtn.addEventListener('click', pushToGithub);
+
+    const gitRefreshBtn = document.getElementById('gitRefreshBtn');
+    if (gitRefreshBtn) gitRefreshBtn.addEventListener('click', checkGitStatus);
+
+    const genKeyBtn = document.getElementById('generateKeyBtn');
+    if (genKeyBtn) genKeyBtn.addEventListener('click', generateApiKey);
+
+    const copyKeyBtn = document.getElementById('copyKeyBtn');
+    if (copyKeyBtn) {
+        copyKeyBtn.addEventListener('click', () => {
+            const keyVal = document.getElementById('createdKeyVal').textContent;
+            navigator.clipboard.writeText(keyVal).then(() => {
+                copyKeyBtn.textContent = '✅ Copied!';
+                setTimeout(() => { copyKeyBtn.textContent = '📋 Copy'; }, 2000);
+            });
+        });
+    }
+
+    const refreshKeysBtn = document.getElementById('refreshKeysBtn');
+    if (refreshKeysBtn) refreshKeysBtn.addEventListener('click', loadApiKeys);
+
+    checkGitStatus();
+    loadApiKeys();
+}
+
+async function checkGitStatus() {
+    const dot = document.getElementById('gitStatusDot');
+    const text = document.getElementById('gitStatusText');
+    const countSpan = document.getElementById('gitFilesCount');
+    const listDiv = document.getElementById('gitFilesList');
+
+    if (!dot || !text) return;
+
+    try {
+        const res = await fetch('/api/v1/git/status');
+        const data = await res.json();
+
+        if (data.success) {
+            if (countSpan) countSpan.textContent = data.changed_files_count || 0;
+
+            if (data.has_uncommitted_changes && data.files && data.files.length > 0) {
+                dot.className = 'status-indicator-dot pending';
+                text.textContent = `${data.changed_files_count} file(s) modified locally (uncommitted)`;
+
+                if (listDiv) {
+                    listDiv.innerHTML = data.files.map(f => {
+                        let badgeClass = 'git-badge-m';
+                        if (f.status_badge === 'A') badgeClass = 'git-badge-a';
+                        else if (f.status_badge === 'D') badgeClass = 'git-badge-d';
+                        else if (f.status_badge === '?') badgeClass = 'git-badge-u';
+
+                        return `
+                            <div class="git-file-item" title="${f.status_label}: ${f.path}">
+                                <span class="git-badge ${badgeClass}">${f.status_label.toUpperCase()}</span>
+                                <span class="git-file-path">${f.path}</span>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } else {
+                dot.className = 'status-indicator-dot';
+                text.textContent = `In Sync: ${data.latest_commit}`;
+                if (listDiv) listDiv.innerHTML = '<div class="git-file-empty">✅ Clean: All files committed & synced to GitHub main</div>';
+            }
+        }
+    } catch (e) {}
+}
+
+async function pushToGithub() {
+    const btn = document.getElementById('gitPushBtn');
+    const resultBox = document.getElementById('gitPushResult');
+    const msgInput = document.getElementById('gitCommitMsg');
+    const msg = msgInput ? msgInput.value.trim() : '';
+
+    if (!btn || !resultBox) return;
+
+    btn.innerHTML = '<span>⏳ Pushing to GitHub...</span>';
+    btn.disabled = true;
+    resultBox.style.display = 'none';
+
+    try {
+        const res = await fetch('/api/v1/git/push', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: msg || undefined })
+        });
+        const data = await res.json();
+
+        btn.innerHTML = '<span>⬆️ Push Changes to GitHub</span>';
+        btn.disabled = false;
+        resultBox.style.display = 'block';
+
+        if (data.success) {
+            resultBox.className = 'git-push-result success';
+            resultBox.innerHTML = `✅ <strong>Pushed to GitHub successfully!</strong><br><small>TrueNAS / Portainer can now pull the updated stack.</small>`;
+            if (msgInput) msgInput.value = '';
+            checkGitStatus();
+        } else {
+            resultBox.className = 'git-push-result error';
+            resultBox.textContent = `Push Error: ${data.error || 'Failed to push'}`;
+        }
+    } catch (err) {
+        btn.innerHTML = '<span>⬆️ Push Changes to GitHub</span>';
+        btn.disabled = false;
+        resultBox.style.display = 'block';
+        resultBox.className = 'git-push-result error';
+        resultBox.textContent = `Network error: ${err.message}`;
+    }
+}
+
+async function loadApiKeys() {
+    const tbody = document.getElementById('keysTableBody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">Loading keys...</td></tr>';
+
+    try {
+        const res = await fetch('/api/v1/auth/keys');
+        const data = await res.json();
+
+        if (!data.keys || data.keys.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">No API keys generated yet.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = data.keys.map(k => `
+            <tr>
+                <td><strong>${k.name || 'Unnamed Client'}</strong></td>
+                <td><code>${k.masked_key}</code></td>
+                <td>${k.request_count || 0}</td>
+                <td><span style="color: ${k.status === 'active' ? '#00ff88' : '#ef4444'}; font-weight: 600;">${k.status.toUpperCase()}</span></td>
+                <td>
+                    ${k.status === 'active' ? `<button class="btn-revoke" onclick="revokeKey('${k.id}')">Revoke</button>` : '<span style="color:#64748b;">Revoked</span>'}
+                </td>
+            </tr>
+        `).join('');
+    } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">Failed to load API keys.</td></tr>';
+    }
+}
+
+async function generateApiKey() {
+    const nameInput = document.getElementById('newKeyName');
+    const expiresSelect = document.getElementById('newKeyExpires');
+    const name = nameInput ? nameInput.value.trim() || 'API Client' : 'API Client';
+    const expiresInDays = expiresSelect && expiresSelect.value ? parseInt(expiresSelect.value, 10) : null;
+
+    const btn = document.getElementById('generateKeyBtn');
+    if (btn) {
+        btn.innerHTML = '<span>⏳ Generating...</span>';
+        btn.disabled = true;
+    }
+
+    try {
+        const res = await fetch('/api/v1/auth/keys', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, expires_in_days: expiresInDays })
+        });
+        const data = await res.json();
+
+        if (btn) {
+            btn.innerHTML = '<span>⚡ Generate API Key</span>';
+            btn.disabled = false;
+        }
+
+        if (data.success && data.api_key) {
+            document.getElementById('createdKeyVal').textContent = data.api_key.key;
+            document.getElementById('createdKeyBox').style.display = 'block';
+            if (nameInput) nameInput.value = '';
+            loadApiKeys();
+        }
+    } catch (err) {
+        if (btn) {
+            btn.innerHTML = '<span>⚡ Generate API Key</span>';
+            btn.disabled = false;
+        }
+        alert('Failed to generate API Key: ' + err.message);
+    }
+}
+
+window.revokeKey = async function(id) {
+    if (!confirm(`Are you sure you want to revoke API Key ${id}?`)) return;
+
+    try {
+        const res = await fetch(`/api/v1/auth/keys/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+            loadApiKeys();
+        } else {
+            alert('Error revoking key: ' + (data.error || 'Unknown error'));
+        }
+    } catch (e) {
+        alert('Network error: ' + e.message);
+    }
 };

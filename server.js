@@ -203,6 +203,19 @@ app.get('/api/v1/client-context', (req, res) => {
     });
 });
 
+
+/**
+ * Environment configuration endpoint
+ * GET /api/v1/config/env
+ */
+app.get('/api/v1/config/env', (req, res) => {
+    const isDev = process.env.NODE_ENV !== 'production';
+    res.json({
+        environment: isDev ? 'development' : 'production',
+        is_dev: isDev
+    });
+});
+
 app.get('/health', (req, res) => {
     res.json({
         status: 'healthy',
