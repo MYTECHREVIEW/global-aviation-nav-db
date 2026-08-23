@@ -176,9 +176,7 @@
 
 services:
   global-aviation-nav-db:
-    # Build directly from GitHub or local directory
-    build: https://github.com/MYTECHREVIEW/global-aviation-nav-db.git#main
-    image: global-aviation-nav-db:latest
+    image: ghcr.io/mytechreview/global-aviation-nav-db:latest
     container_name: global-aviation-nav-db
     restart: unless-stopped
     ports:
@@ -188,7 +186,6 @@ services:
       - NODE_ENV=production
       - MAPBOX_ACCESS_TOKEN=
     volumes:
-      # Persist API keys across container rebuilds
       - aeronav_keys:/app/data/api-keys.json
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3510/health"]
