@@ -17,5 +17,15 @@
     "last_used_at": null,
     "request_count": 0,
     "status": "active"
+  },
+  {
+    "id": "key_3344d971d1d1",
+    "name": "STT",
+    "key": "aeronav_live_076495ffe275307fbc4d71aa87c878df50976112",
+    "created_at": "2026-08-23T18:13:32.177Z",
+    "expires_at": null,
+    "last_used_at": null,
+    "request_count": 0,
+    "status": "active"
   }
 ]
