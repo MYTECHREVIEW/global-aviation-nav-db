@@ -10,6 +10,7 @@ A high-performance global navigation database and flight plan route parser engin
 - **Runway & Transition-Aware Procedures**: Multi-branch procedure solver that matches filed departure/arrival runways and enroute transition fixes while automatically excluding mutually exclusive branches.
 - **Airway Sequence Expansion**: Automatically expands airway segments (e.g. `Q87`, `J79`, `V1`) into ordered waypoint chains.
 - **SimBrief Auto-Import**: One-click flight plan fetching and instant route tracing by SimBrief Username or Pilot ID.
+- **Waypoint Labels & Visibility Toggling**: Optional ident label rendering on maps and charts for enhanced readability.
 - **Geodesic Trajectory Engine**: Computes great-circle distances, leg bearings, estimated enroute times, and GeoJSON lines.
 - **Built-in API Key Authentication**: Secure token-based access with usage tracking, request counting, and key revocation.
 - **Docker & Portainer Ready**: Public multi-arch Docker container hosted on GitHub Container Registry (`ghcr.io`) for instant deployment in TrueNAS, Portainer, or Dockage.
@@ -111,7 +112,8 @@ curl -X POST http://localhost:3510/api/v1/route/trace \
     "arrival": "KLGA",
     "route": "KEYW/09 N0460F380 BUFTT1 MATLK Q87 ZERBO/N0461F370 Q87 TAALN/N0457F390 Q87 HURTS PROUD2 KLGA/04",
     "altitude_ft": 38000,
-    "airspeed_kts": 460
+    "airspeed_kts": 460,
+    "include_labels": true
   }'
 ```
 

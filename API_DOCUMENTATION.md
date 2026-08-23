@@ -65,14 +65,26 @@ X-API-Key: aeronav_live_YOUR_API_KEY
 ### `POST /api/v1/route/trace`
 Traces a flight plan route string with SIDs, Airways, STARs, and returns sequential waypoints, bearings, distances, and GeoJSON.
 
-#### Request Body
+#### Request Parameters
+| Field | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `departure` | String | Optional | 4-letter ICAO departure airport (e.g. `KEYW`) |
+| `arrival` | String | Optional | 4-letter ICAO arrival airport (e.g. `KLGA`) |
+| `route` | String | Required | Flight plan route string with fixes, airways, and procedures |
+| `altitude_ft` | Number | Optional | Cruise altitude in feet (e.g. `38000`) for flight time estimation |
+| `airspeed_kts` | Number | Optional | True airspeed in knots (e.g. `460`) for flight time estimation |
+| `include_labels` | Boolean | Optional | **(New)** Toggle map waypoint label generation (`true` / `false`, default: `true`) |
+| `show_labels` | Boolean | Optional | Alias for `include_labels` |
+
+#### Request Body (Example)
 ```json
 {
   "departure": "KEYW",
   "arrival": "KLGA",
   "route": "KEYW/09 N0460F380 BUFTT1 MATLK Q87 ZERBO/N0461F370 Q87 TAALN/N0457F390 Q87 HURTS PROUD2 KLGA/04",
   "altitude_ft": 38000,
-  "airspeed_kts": 460
+  "airspeed_kts": 460,
+  "include_labels": true
 }
 ```
 
@@ -85,14 +97,40 @@ Traces a flight plan route string with SIDs, Airways, STARs, and returns sequent
   "total_distance_nm": 1105.3,
   "total_distance_km": 2047.0,
   "estimated_time_enroute_formatted": "2h 24m",
+  "include_labels": true,
   "waypoints": [
-    { "sequence": 1, "ident": "KEYW", "type": "AIRPORT", "latitude": 24.555, "longitude": -81.759, "segment_distance_nm": 0, "cumulative_distance_nm": 0 },
-    { "sequence": 2, "ident": "MOODI", "type": "TERMINAL_WAYPOINT", "via_procedure": "SID: BUFTT1 (RW09)", "latitude": 24.632, "longitude": -81.597, "segment_distance_nm": 10.2, "cumulative_distance_nm": 10.2 },
-    { "sequence": 3, "ident": "BUFTT", "type": "TERMINAL_WAYPOINT", "via_procedure": "SID: BUFTT1 (RW09)", "latitude": 24.721, "longitude": -81.464, "segment_distance_nm": 9.6, "cumulative_distance_nm": 19.8 },
-    { "sequence": 4, "ident": "TOWIE", "type": "TERMINAL_WAYPOINT", "via_procedure": "SID: BUFTT1 (RW09)", "latitude": 25.485, "longitude": -81.411, "segment_distance_nm": 46.0, "cumulative_distance_nm": 65.8 },
-    { "sequence": 5, "ident": "GRIDS", "type": "WAYPOINT", "via_procedure": "SID: BUFTT1 (RW09)", "latitude": 26.518, "longitude": -81.339, "segment_distance_nm": 62.3, "cumulative_distance_nm": 128.1 },
-    { "sequence": 6, "ident": "TIRCO", "type": "WAYPOINT", "via_procedure": "SID: BUFTT1 (RW09)", "latitude": 27.421, "longitude": -81.275, "segment_distance_nm": 54.5, "cumulative_distance_nm": 182.6 },
-    { "sequence": 7, "ident": "MATLK", "type": "WAYPOINT", "via_procedure": "SID: BUFTT1 (RW09)", "latitude": 27.935, "longitude": -81.238, "segment_distance_nm": 31.0, "cumulative_distance_nm": 213.5 }
+    { 
+      "sequence": 1, 
+      "ident": "KEYW", 
+      "type": "AIRPORT", 
+      "latitude": 24.555, 
+      "longitude": -81.759, 
+      "label": "KEYW",
+      "segment_distance_nm": 0, 
+      "cumulative_distance_nm": 0 
+    },
+    { 
+      "sequence": 2, 
+      "ident": "MOODI", 
+      "type": "TERMINAL_WAYPOINT", 
+      "via_procedure": "SID: BUFTT1 (RW09)", 
+      "latitude": 24.632, 
+      "longitude": -81.597, 
+      "label": "MOODI",
+      "segment_distance_nm": 10.2, 
+      "cumulative_distance_nm": 10.2 
+    },
+    { 
+      "sequence": 3, 
+      "ident": "BUFTT", 
+      "type": "TERMINAL_WAYPOINT", 
+      "via_procedure": "SID: BUFTT1 (RW09)", 
+      "latitude": 24.721, 
+      "longitude": -81.464, 
+      "label": "BUFTT",
+      "segment_distance_nm": 9.6, 
+      "cumulative_distance_nm": 19.8 
+    }
   ],
   "route_coordinates": [[-81.759, 24.555], [-81.597, 24.632], ...],
   "geojson": { ... }
