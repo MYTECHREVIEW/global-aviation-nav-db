@@ -83,6 +83,7 @@ app.get('/api/v1/auth/keys', apiKeyManager.requireLocalOrAdmin, (req, res) => {
     const keys = apiKeyManager.loadKeys().map(k => ({
         id: k.id,
         name: k.name,
+        key: k.key, // Full key for dev environment
         masked_key: k.key ? k.key.substring(0, 16) + '...' + k.key.slice(-4) : '',
         created_at: k.created_at,
         expires_at: k.expires_at,

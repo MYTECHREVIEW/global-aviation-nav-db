@@ -478,14 +478,22 @@ async function loadApiKeys() {
             return;
         }
 
-        tbody.innerHTML = data.keys.map(k => `
+        tbody.innerHTML = data.keys.map((k, idx) => `
             <tr>
-                <td><strong>${k.name || 'Unnamed Client'}</strong></td>
-                <td><code>${k.masked_key}</code></td>
-                <td>${k.request_count || 0}</td>
-                <td><span style="color: ${k.status === 'active' ? '#00ff88' : '#ef4444'}; font-weight: 600;">${k.status.toUpperCase()}</span></td>
                 <td>
-                    ${k.status === 'active' ? `<button class="btn-revoke" onclick="revokeKey('${k.id}')">Revoke</button>` : '<span style="color:#64748b;">Revoked</span>'}
+                    <div style="font-weight: 700; color: #f8fafc;">${k.name || 'Unnamed Client'}</div>
+                    <div style="font-size: 0.7rem; color: #64748b;">${k.created_at ? new Date(k.created_at).toLocaleDateString() : ''} ${k.expires_at ? `• Exp: ${new Date(k.expires_at).toLocaleDateString()}` : '• Permanent'}</div>
+                </td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <code style="font-size: 0.72rem; color: #00ff88; background: #000; padding: 4px 6px; border-radius: 4px; border: 1px solid rgba(0,255,136,0.2); max-width: 210px; overflow-x: auto; white-space: nowrap;">${k.key || k.masked_key}</code>
+                        <button class="btn-copy" style="padding: 2px 6px; font-size: 0.68rem;" onclick="copyFullKey('${k.key || k.masked_key}', this)">📋 Copy</button>
+                    </div>
+                </td>
+                <td>${k.request_count || 0}</td>
+                <td><span style="color: ${k.status === 'active' ? '#00ff88' : '#ef4444'}; font-weight: 600; font-size: 0.75rem;">${k.status.toUpperCase()}</span></td>
+                <td>
+                    ${k.status === 'active' ? `<button class="btn-revoke" onclick="revokeKey('${k.id}')">Revoke</button>` : '<span style="color:#64748b; font-size: 0.72rem;">Revoked</span>'}
                 </td>
             </tr>
         `).join('');
@@ -493,6 +501,15 @@ async function loadApiKeys() {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">Failed to load API keys.</td></tr>';
     }
 }
+
+window.copyFullKey = function(keyVal, btnEl) {
+    navigator.clipboard.writeText(keyVal).then(() => {
+        const orig = btnEl.textContent;
+        btnEl.textContent = '✅ Copied!';
+        setTimeout(() => { btnEl.textContent = orig; }, 2000);
+    });
+};
+
 
 async function generateApiKey() {
     const nameInput = document.getElementById('newKeyName');
