@@ -1,28 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Aviation Nav & Flight Route Tracing Engine</title>
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AeroNav Global | Navigation Database & Flight Plan Route Engine</title>
+    
+    <!-- Google Fonts & Leaflet CSS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <header class="app-header">
-        <div class="brand">
-            <div class="logo-icon">✈️</div>
+    <!-- Top Cockpit Header -->
+    <header class="top-header">
+        <div class="header-brand">
+            <div class="brand-icon">✈️</div>
             <div>
                 <h1>AeroNav Global & Route Engine</h1>
                 <p class="subtitle">Global NavAids, Waypoints & Flight Plan Route Visualizer</p>
             </div>
         </div>
-        <div class="header-stats" id="headerStats">
+
+        <!-- Global Database Stats -->
+        <div class="db-stats" id="dbStats">
             <div class="stat-pill"><span class="stat-label">Airports:</span> <strong id="statAirports">85,901</strong></div>
             <div class="stat-pill"><span class="stat-label">VOR/NavAids:</span> <strong id="statNavaids">11,008</strong></div>
-            <div class="stat-pill"><span class="stat-label">Waypoints:</span> <strong id="statWaypoints">32,431</strong></div>
+            <div class="stat-pill"><span class="stat-label">Waypoints:</span> <strong id="statWaypoints">70,052</strong></div>
+            <div class="stat-pill"><span class="stat-label">SIDs:</span> <strong id="statSids">2,139</strong></div>
+            <div class="stat-pill"><span class="stat-label">STARs:</span> <strong id="statStars">1,871</strong></div>
             <div class="stat-pill"><span class="stat-label">Airways:</span> <strong id="statAirways">1,466</strong></div>
         </div>
     </header>
@@ -40,7 +48,6 @@
 
             <!-- TAB 1: ROUTE TRACER -->
             <div class="tab-content active" id="tab-route">
-                
                 <!-- SimBrief Quick-Import Card -->
                 <div class="simbrief-card">
                     <div class="simbrief-header">
@@ -88,8 +95,6 @@
                             <input type="number" id="speedInput" placeholder="e.g. 450" step="10" />
                         </div>
                     </div>
-
-                    
 
                     <button id="traceBtn" class="btn-primary">
                         <span>⚡ Trace Flight Path</span>
@@ -157,7 +162,6 @@
                 </div>
             </div>
 
-            
             <!-- TAB 3: API DOCS & DOCKER / DOCKAGE COMPOSE -->
             <div class="tab-content" id="tab-api">
                 <!-- Docker Compose / Portainer / Dockage Template Card -->
@@ -315,8 +319,6 @@ volumes:
                 </div>
             </div>
 
-            </div>
-
             <!-- TAB 4: API KEYS & GIT SYNC -->
             <div class="tab-content" id="tab-keys">
                 <!-- Git Push Card -->
@@ -413,7 +415,6 @@ volumes:
                     </div>
                 </div>
             </div>
-
         </aside>
 
         <!-- Map Container -->
