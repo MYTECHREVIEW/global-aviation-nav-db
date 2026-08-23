@@ -1,0 +1,30 @@
+{
+  "name": "global-aviation-nav-db",
+  "version": "1.0.0",
+  "description": "Extensive Global Database of Waypoints, Fixes, VORs, NDBs & Flight Plan Route Tracing Engine",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "ingest": "node src/ingestion/ingest-global-nav.js"
+  },
+  "keywords": [
+    "aviation",
+    "waypoints",
+    "navaids",
+    "vor",
+    "vortac",
+    "ndb",
+    "flight-plan",
+    "route-tracing",
+    "geojson",
+    "navigation"
+  ],
+  "author": "STT Development Team",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.2"
+  }
+}

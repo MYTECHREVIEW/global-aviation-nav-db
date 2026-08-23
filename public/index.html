@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Aviation Nav & Flight Route Tracing Engine</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="app-header">
+        <div class="brand">
+            <div class="logo-icon">✈️</div>
+            <div>
+                <h1>AeroNav Global & Route Engine</h1>
+                <p class="subtitle">Global NavAids, Waypoints & Flight Plan Route Visualizer</p>
+            </div>
+        </div>
+        <div class="header-stats" id="headerStats">
+            <div class="stat-pill"><span class="stat-label">Airports:</span> <strong id="statAirports">85,901</strong></div>
+            <div class="stat-pill"><span class="stat-label">VOR/NavAids:</span> <strong id="statNavaids">11,008</strong></div>
+            <div class="stat-pill"><span class="stat-label">Waypoints:</span> <strong id="statWaypoints">32,431</strong></div>
+            <div class="stat-pill"><span class="stat-label">Airways:</span> <strong id="statAirways">1,466</strong></div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Sidebar Controls -->
+        <aside class="sidebar">
+            <!-- Tabs -->
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="tab-route">🛩️ Route Tracer</button>
+                <button class="tab-btn" data-tab="tab-search">🔍 Waypoint Search</button>
+                <button class="tab-btn" data-tab="tab-api">📡 API Docs</button>
+            </div>
+
+            <!-- TAB 1: ROUTE TRACER -->
+            <div class="tab-content active" id="tab-route">
+                
+                <!-- SimBrief Quick-Import Card -->
+                <div class="simbrief-card">
+                    <div class="simbrief-header">
+                        <div class="simbrief-title">
+                            <span class="simbrief-badge">SIMBRIEF</span> Flight Plan Import
+                        </div>
+                    </div>
+                    <p class="simbrief-hint">Enter your SimBrief Username or Pilot ID to automatically pull your latest OFP.</p>
+                    <div class="simbrief-input-row">
+                        <input type="text" id="simbriefUser" placeholder="SimBrief Username or ID..." />
+                        <button id="simbriefFetchBtn" class="btn-simbrief">
+                            <span>📥 Fetch OFP</span>
+                        </button>
+                    </div>
+                    <div id="simbriefStatus" class="simbrief-status" style="display: none;"></div>
+                </div>
+
+                <div class="control-card">
+                    <h3>Flight Plan Route</h3>
+                    <p class="help-text">Enter ICAO departure/arrival and route string with fixes, VORs, or airways.</p>
+
+                    <div class="input-grid">
+                        <div>
+                            <label>Departure ICAO</label>
+                            <input type="text" id="depIcao" placeholder="e.g. KEYW" maxlength="4" />
+                        </div>
+                        <div>
+                            <label>Arrival ICAO</label>
+                            <input type="text" id="arrIcao" placeholder="e.g. KLGA" maxlength="4" />
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Route String</label>
+                        <textarea id="routeInput" rows="3" placeholder="e.g. KEYW/09 BUFTT1 MATLK Q87 HURTS PROUD2 KLGA/04"></textarea>
+                    </div>
+
+                    <div class="input-grid">
+                        <div>
+                            <label>Cruise Altitude (ft)</label>
+                            <input type="number" id="altitudeInput" placeholder="e.g. 35000" step="1000" />
+                        </div>
+                        <div>
+                            <label>True Airspeed (kts)</label>
+                            <input type="number" id="speedInput" placeholder="e.g. 450" step="10" />
+                        </div>
+                    </div>
+
+                    
+
+                    <button id="traceBtn" class="btn-primary">
+                        <span>⚡ Trace Flight Path</span>
+                    </button>
+                </div>
+
+                <!-- Route Telemetry Summary -->
+                <div class="telemetry-card" id="telemetryCard" style="display: none;">
+                    <h3>Route Performance Summary</h3>
+                    <div class="telemetry-grid">
+                        <div class="telem-box">
+                            <span class="telem-title">Total Distance</span>
+                            <span class="telem-value highlight" id="telemDist">-- NM</span>
+                        </div>
+                        <div class="telem-box">
+                            <span class="telem-title">Est. Flight Time</span>
+                            <span class="telem-value" id="telemEte">--</span>
+                        </div>
+                        <div class="telem-box">
+                            <span class="telem-title">Waypoints</span>
+                            <span class="telem-value" id="telemCount">--</span>
+                        </div>
+                        <div class="telem-box">
+                            <span class="telem-title">Metric Distance</span>
+                            <span class="telem-value" id="telemKm">-- km</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Waypoint Sequence Log -->
+                <div class="waypoint-log-card" id="waypointLogCard" style="display: none;">
+                    <h3>Waypoint Sequence</h3>
+                    <div class="table-scroll">
+                        <table class="wp-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Ident</th>
+                                    <th>Type</th>
+                                    <th>Leg NM</th>
+                                    <th>Brg</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="waypointTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: WAYPOINT SEARCH -->
+            <div class="tab-content" id="tab-search">
+                <div class="control-card">
+                    <h3>AeroNav Search</h3>
+                    <p class="help-text">Lookup any VOR, NDB, Waypoint fix, or Airport worldwide.</p>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search by ident (e.g. MERIT, JFK, BOS)..." />
+                        <button id="searchSubmitBtn" class="btn-search">Search</button>
+                    </div>
+                    <div id="searchResults" class="search-results-list">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: API DOCS -->
+            <div class="tab-content" id="tab-api">
+                <div class="docs-card">
+                    <h3>Developer REST API</h3>
+                                        <div class="api-doc-block">
+                        <span class="method get">GET</span> <code>/api/v1/simbrief/fetch?username=myuser</code>
+                        <p>Pull the latest flight plan from SimBrief by username or pilot ID.</p>
+                    </div>
+                    <div class="api-doc-block">
+                        <span class="method post">POST</span> <code>/api/v1/simbrief/trace</code>
+                        <p>Pull latest OFP from SimBrief and automatically trace route into waypoints & GeoJSON.</p>
+                    </div>
+                    <div class="api-doc-block">
+                        <span class="method post">POST</span> <code>/api/v1/route/trace</code>
+                        <p>Traces flight plan route and returns geodesic coordinates, distance, and GeoJSON.</p>
+                    </div>
+                    <div class="api-doc-block">
+                        <span class="method get">GET</span> <code>/api/v1/waypoints/search?q=MERIT</code>
+                        <p>Search global waypoints, VORs, NDBs, and airports.</p>
+                    </div>
+                    <div class="api-doc-block">
+                        <span class="method get">GET</span> <code>/api/v1/waypoints/:ident</code>
+                        <p>Fetch details and location of any waypoint or NavAid.</p>
+                    </div>
+                    <div class="api-doc-block">
+                        <span class="method get">GET</span> <code>/api/v1/airport/:icao/navaids</code>
+                        <p>Get all NavAids associated or within 30 NM of an airport.</p>
+                    </div>
+                    <div class="api-doc-block">
+                        <span class="method get">GET</span> <code>/api/v1/airways/:ident</code>
+                        <p>Get fix sequence along an enroute airway (e.g. J79).</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Map Container -->
+        <main class="map-section">
+            <div id="map"></div>
+            <div class="map-overlay-badge" id="mapBadge">
+                <span class="badge-dot"></span> Interactive Great-Circle Flight Path Active
+            </div>
+        </main>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

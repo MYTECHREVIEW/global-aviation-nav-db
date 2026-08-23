@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  global-aviation-nav-db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: global-aviation-nav-db:latest
+    container_name: global-aviation-nav-db
+    restart: unless-stopped
+    ports:
+      - "3510:3510"
+    environment:
+      - PORT=3510
+      - NODE_ENV=production
+      - MAPBOX_ACCESS_TOKEN=${MAPBOX_ACCESS_TOKEN:-}
+    volumes:
+      # Persist API Keys across container redeployments
+      - nav_data_keys:/app/data/api-keys.json
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3510/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  nav_data_keys:
+    name: global_aviation_nav_keys

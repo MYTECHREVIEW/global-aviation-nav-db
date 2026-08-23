@@ -1,0 +1,21 @@
+[
+  {
+    "id": "key_4d2cdff09637",
+    "name": "Master Developer Key",
+    "key": "aeronav_live_87b716a75f9f6e976a935219c99268adfe29f4fe",
+    "created_at": "2026-08-23T18:06:07.321Z",
+    "last_used_at": null,
+    "request_count": 0,
+    "status": "active"
+  },
+  {
+    "id": "key_b9533837adf0",
+    "name": "Production Portainer Client",
+    "key": "aeronav_live_088fef8ba2c51276092e61ebf3cf3527bfa43a89",
+    "created_at": "2026-08-23T18:06:17.777Z",
+    "expires_at": "2027-08-23T18:06:17.777Z",
+    "last_used_at": null,
+    "request_count": 0,
+    "status": "active"
+  }
+]

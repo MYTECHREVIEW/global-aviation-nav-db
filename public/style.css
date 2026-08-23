@@ -1,0 +1,555 @@
+
+:root {
+    --bg-dark: #0a0e17;
+    --bg-card: #111827;
+    --bg-card-hover: #1f293d;
+    --border-color: rgba(94, 179, 228, 0.18);
+    --border-highlight: rgba(0, 255, 136, 0.4);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent-blue: #38bdf8;
+    --accent-green: #00ff88;
+    --accent-orange: #f97316;
+    --accent-red: #ff1e42;
+    --accent-amber: #fbbf24;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Header */
+.app-header {
+    background: linear-gradient(180deg, rgba(17, 24, 39, 0.98) 0%, rgba(10, 14, 23, 0.95) 100%);
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(12px);
+    z-index: 1000;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    font-size: 26px;
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+}
+
+.brand h1 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, #f8fafc, #38bdf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.brand .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.header-stats {
+    display: flex;
+    gap: 10px;
+}
+
+.stat-pill {
+    background: rgba(17, 24, 39, 0.8);
+    border: 1px solid var(--border-color);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-secondary);
+}
+
+.stat-pill strong {
+    color: var(--accent-green);
+    font-weight: 600;
+}
+
+/* Layout */
+.main-container {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+}
+
+.sidebar {
+    width: 440px;
+    background: var(--bg-card);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    z-index: 500;
+}
+
+.tab-nav {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    background: rgba(10, 14, 23, 0.6);
+}
+
+.tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 12px 8px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    color: var(--accent-blue);
+    border-bottom-color: var(--accent-blue);
+    background: rgba(56, 189, 248, 0.06);
+}
+
+.tab-content {
+    display: none;
+    padding: 18px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Control Cards */
+.control-card, .telemetry-card, .waypoint-log-card, .docs-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.control-card h3, .telemetry-card h3, .waypoint-log-card h3, .docs-card h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.help-text {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.input-group {
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+input, textarea {
+    width: 100%;
+    background: rgba(10, 14, 23, 0.8);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.88rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input:focus, textarea:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.25);
+}
+
+
+
+.btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    border: 1px solid rgba(56, 189, 248, 0.5);
+    color: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+}
+
+/* Telemetry Grid */
+.telemetry-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.telem-box {
+    background: rgba(10, 14, 23, 0.7);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.telem-title {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+
+.telem-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.telem-value.highlight {
+    color: var(--accent-green);
+}
+
+/* Table */
+.table-scroll {
+    max-height: 280px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.wp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+}
+
+.wp-table th, .wp-table td {
+    padding: 6px 8px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.wp-table th {
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    position: sticky;
+    top: 0;
+    background: var(--bg-card);
+}
+
+.type-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+}
+
+.type-badge.airport { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+.type-badge.vor { background: rgba(0, 255, 136, 0.2); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.4); }
+.type-badge.fix { background: rgba(255, 30, 66, 0.2); color: #ff1e42; border: 1px solid rgba(255, 30, 66, 0.4); }
+
+/* Search Box */
+.search-box {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.btn-search {
+    background: var(--accent-blue);
+    border: none;
+    color: #000;
+    font-weight: 700;
+    padding: 0 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.search-results-list {
+    max-height: 480px;
+    overflow-y: auto;
+}
+
+.search-item {
+    background: rgba(10, 14, 23, 0.8);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.search-item:hover {
+    border-color: var(--accent-blue);
+    background: rgba(56, 189, 248, 0.08);
+}
+
+.search-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.search-item-ident {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--accent-green);
+}
+
+.search-item-coords {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+}
+
+/* API Docs Block */
+.api-doc-block {
+    background: rgba(10, 14, 23, 0.8);
+    border: 1px solid var(--border-color);
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.method {
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 6px;
+}
+
+.method.post { background: #16a34a; color: #fff; }
+.method.get { background: #0284c7; color: #fff; }
+
+.api-doc-block code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    color: #f8fafc;
+}
+
+.api-doc-block p {
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+/* Map Section */
+.map-section {
+    flex: 1;
+    position: relative;
+    height: 100%;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    background: #090d16;
+}
+
+.map-overlay-badge {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(17, 24, 39, 0.9);
+    border: 1px solid var(--border-highlight);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    box-shadow: 0 0 10px var(--accent-green);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+}
+
+/* Custom Marker Styling */
+.wp-marker {
+    background: #ff1e42;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 30, 66, 0.8);
+}
+
+.vor-marker {
+    background: #00ff88;
+    border: 2px solid #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 0 12px rgba(0, 255, 136, 0.8);
+    transform: rotate(45deg);
+}
+
+.apt-marker {
+    background: #38bdf8;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.9);
+}
+
+/* SimBrief Card */
+.simbrief-card {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(17, 24, 39, 0.85) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.05);
+}
+
+.simbrief-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.simbrief-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #fde68a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.simbrief-badge {
+    background: #f59e0b;
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+}
+
+.simbrief-hint {
+    font-size: 0.76rem;
+    color: #cbd5e1;
+    margin-bottom: 10px;
+}
+
+.simbrief-input-row {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-simbrief {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border: 1px solid rgba(245, 158, 11, 0.5);
+    color: #000;
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 0 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-simbrief:hover {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.simbrief-status {
+    margin-top: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.76rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.simbrief-status.success {
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    color: #86efac;
+}
+
+.simbrief-status.error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+}
