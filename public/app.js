@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupTabs();
     setupEventListeners();
     setupSimbrief();
+    setupApiKeyAndGitTab();
 
     // Start with clean map
     document.getElementById('mapBadge').style.display = 'none';
@@ -305,5 +306,173 @@ async function fetchSimbrief() {
         statusBox.style.display = 'block';
         statusBox.className = 'simbrief-status error';
         statusBox.textContent = 'Network error fetching SimBrief OFP.';
+    }
+}
+
+
+function setupApiKeyAndGitTab() {
+    // Check git status
+    checkGitStatus();
+
+    // Push to GitHub button
+    document.getElementById('gitPushBtn').addEventListener('click', pushToGithub);
+
+    // Generate API Key button
+    document.getElementById('generateKeyBtn').addEventListener('click', generateApiKey);
+
+    // Copy key button
+    document.getElementById('copyKeyBtn').addEventListener('click', () => {
+        const keyVal = document.getElementById('createdKeyVal').textContent;
+        navigator.clipboard.writeText(keyVal).then(() => {
+            const btn = document.getElementById('copyKeyBtn');
+            btn.textContent = '✅ Copied!';
+            setTimeout(() => { btn.textContent = '📋 Copy'; }, 2000);
+        });
+    });
+
+    // Refresh Keys button
+    document.getElementById('refreshKeysBtn').addEventListener('click', loadApiKeys);
+
+    // Load initial keys
+    loadApiKeys();
+}
+
+async function checkGitStatus() {
+    try {
+        const res = await fetch('/api/v1/git/status');
+        const data = await res.json();
+        const dot = document.getElementById('gitStatusDot');
+        const text = document.getElementById('gitStatusText');
+
+        if (data.success) {
+            if (data.has_uncommitted_changes) {
+                dot.className = 'status-indicator-dot pending';
+                text.textContent = `${data.changed_files_count} uncommitted local change(s) ready to push`;
+            } else {
+                dot.className = 'status-indicator-dot';
+                text.textContent = `In Sync: ${data.latest_commit}`;
+            }
+        }
+    } catch (e) {
+        console.error('Error checking git status:', e);
+    }
+}
+
+async function pushToGithub() {
+    const btn = document.getElementById('gitPushBtn');
+    const resultBox = document.getElementById('gitPushResult');
+    const msgInput = document.getElementById('gitCommitMsg');
+    const msg = msgInput.value.trim();
+
+    btn.innerHTML = '<span>⏳ Pushing to GitHub...</span>';
+    btn.disabled = true;
+    resultBox.style.display = 'none';
+
+    try {
+        const res = await fetch('/api/v1/git/push', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: msg || undefined })
+        });
+        const data = await res.json();
+
+        btn.innerHTML = '<span>⬆️ Push Changes to GitHub</span>';
+        btn.disabled = false;
+        resultBox.style.display = 'block';
+
+        if (data.success) {
+            resultBox.className = 'git-push-result success';
+            resultBox.innerHTML = `✅ <strong>Pushed to GitHub successfully!</strong><br><small>TrueNAS / Portainer can now pull the updated stack.</small>`;
+            msgInput.value = '';
+            checkGitStatus();
+        } else {
+            resultBox.className = 'git-push-result error';
+            resultBox.textContent = `Push Error: ${data.error || 'Failed to push'}`;
+        }
+    } catch (err) {
+        btn.innerHTML = '<span>⬆️ Push Changes to GitHub</span>';
+        btn.disabled = false;
+        resultBox.style.display = 'block';
+        resultBox.className = 'git-push-result error';
+        resultBox.textContent = `Network error: ${err.message}`;
+    }
+}
+
+async function loadApiKeys() {
+    const tbody = document.getElementById('keysTableBody');
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">Loading keys...</td></tr>';
+
+    try {
+        const res = await fetch('/api/v1/auth/keys');
+        const data = await res.json();
+
+        if (!data.keys || data.keys.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">No API keys generated yet.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = data.keys.map(k => `
+            <tr>
+                <td><strong>${k.name || 'Unnamed Client'}</strong></td>
+                <td><code>${k.masked_key}</code></td>
+                <td>${k.request_count || 0}</td>
+                <td><span style="color: ${k.status === 'active' ? '#00ff88' : '#ef4444'}; font-weight: 600;">${k.status.toUpperCase()}</span></td>
+                <td>
+                    ${k.status === 'active' ? `<button class="btn-revoke" onclick="revokeKey('${k.id}')">Revoke</button>` : '<span style="color:#64748b;">Revoked</span>'}
+                </td>
+            </tr>
+        `).join('');
+    } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">Failed to load API keys.</td></tr>';
+    }
+}
+
+async function generateApiKey() {
+    const nameInput = document.getElementById('newKeyName');
+    const expiresSelect = document.getElementById('newKeyExpires');
+    const name = nameInput.value.trim() || 'API Client';
+    const expiresInDays = expiresSelect.value ? parseInt(expiresSelect.value, 10) : null;
+
+    const btn = document.getElementById('generateKeyBtn');
+    btn.innerHTML = '<span>⏳ Generating...</span>';
+    btn.disabled = true;
+
+    try {
+        const res = await fetch('/api/v1/auth/keys', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, expires_in_days: expiresInDays })
+        });
+        const data = await res.json();
+
+        btn.innerHTML = '<span>⚡ Generate API Key</span>';
+        btn.disabled = false;
+
+        if (data.success && data.api_key) {
+            document.getElementById('createdKeyVal').textContent = data.api_key.key;
+            document.getElementById('createdKeyBox').style.display = 'block';
+            nameInput.value = '';
+            loadApiKeys();
+        }
+    } catch (err) {
+        btn.innerHTML = '<span>⚡ Generate API Key</span>';
+        btn.disabled = false;
+        alert('Failed to generate API Key: ' + err.message);
+    }
+}
+
+async function revokeKey(id) {
+    if (!confirm(`Are you sure you want to revoke API Key ${id}?`)) return;
+
+    try {
+        const res = await fetch(`/api/v1/auth/keys/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+            loadApiKeys();
+        } else {
+            alert('Error revoking key: ' + (data.error || 'Unknown error'));
+        }
+    } catch (e) {
+        alert('Network error: ' + e.message);
     }
 }

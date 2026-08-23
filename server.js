@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const { exec } = require('child_process');
 const fs = require('fs');
 const RouteParser = require('./src/parser/route-parser');
 const { fetchSimbriefOfp } = require('./src/simbrief/simbrief-service');
@@ -106,6 +107,66 @@ app.delete('/api/v1/auth/keys/:id', (req, res) => {
 });
 
 // Attach API Key validation middleware
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// GIT SYNC & CLOUD DEPLOYMENT ENDPOINTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Get current Git Status and Latest Commit
+ * GET /api/v1/git/status
+ */
+app.get('/api/v1/git/status', (req, res) => {
+    const cwd = __dirname;
+    exec('git log -1 --format="%h - %s (%cr)" 2>/dev/null && git status --porcelain', { cwd }, (err, stdout, stderr) => {
+        if (err) {
+            return res.json({ success: false, error: err.message, status: 'Not a git repository' });
+        }
+        const lines = stdout.trim().split('\n');
+        const latestCommit = lines[0] || 'Initial commit';
+        const changes = lines.slice(1).filter(l => l.trim().length > 0);
+
+        res.json({
+            success: true,
+            latest_commit: latestCommit,
+            has_uncommitted_changes: changes.length > 0,
+            changed_files_count: changes.length,
+            github_url: 'https://github.com/MYTECHREVIEW/global-aviation-nav-db'
+        });
+    });
+});
+
+/**
+ * Push local changes to GitHub
+ * POST /api/v1/git/push
+ * Body: { "message": "Custom commit message" }
+ */
+app.post('/api/v1/git/push', (req, res) => {
+    const cwd = __dirname;
+    const msg = req.body?.message || `update: UI & database sync at ${new Date().toISOString()}`;
+    const cleanMsg = msg.replace(/"/g, '\\"');
+
+    const cmd = `./push-to-github.sh "${cleanMsg}"`;
+
+    exec(cmd, { cwd }, (err, stdout, stderr) => {
+        if (err) {
+            console.error('[Git Push Error]:', stderr || err.message);
+            return res.status(500).json({
+                success: false,
+                error: stderr || err.message,
+                output: stdout
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Successfully pushed all changes to GitHub (main branch).',
+            output: stdout,
+            github_url: 'https://github.com/MYTECHREVIEW/global-aviation-nav-db'
+        });
+    });
+});
+
 app.use('/api/v1', apiKeyManager.requireApiKey);
 
 app.get('/health', (req, res) => {

@@ -553,3 +553,204 @@ input:focus, textarea:focus {
     border: 1px solid rgba(239, 68, 68, 0.4);
     color: #fca5a5;
 }
+
+/* Git Card & Sync Styles */
+.git-card {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.07) 0%, rgba(17, 24, 39, 0.9) 100%);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.github-link-btn {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.github-link-btn:hover {
+    background: rgba(56, 189, 248, 0.25);
+    color: #fff;
+}
+
+.git-status-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.status-indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00ff88;
+    box-shadow: 0 0 8px #00ff88;
+}
+
+.status-indicator-dot.pending {
+    background: #f59e0b;
+    box-shadow: 0 0 8px #f59e0b;
+}
+
+.btn-git {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    border: 1px solid #38bdf8;
+}
+
+.btn-git:hover {
+    background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+}
+
+.git-push-result {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.git-push-result.success {
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    color: #86efac;
+}
+
+.git-push-result.error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+}
+
+/* Custom Select */
+.custom-select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 9px 12px;
+    color: #fff;
+    font-size: 0.85rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.custom-select:focus {
+    border-color: #00ff88;
+}
+
+/* Created Key Box */
+.created-key-box {
+    margin-top: 14px;
+    background: rgba(0, 255, 136, 0.08);
+    border: 1px solid rgba(0, 255, 136, 0.35);
+    border-radius: 10px;
+    padding: 12px 14px;
+}
+
+.created-key-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.badge-success {
+    background: #00ff88;
+    color: #000;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    width: fit-content;
+}
+
+.key-warning-text {
+    font-size: 0.72rem;
+    color: #fde047;
+}
+
+.key-display-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.key-display-row code {
+    flex: 1;
+    background: #000;
+    border: 1px solid rgba(0, 255, 136, 0.25);
+    padding: 7px 10px;
+    border-radius: 6px;
+    color: #00ff88;
+    font-size: 0.76rem;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.btn-copy {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 7px 12px;
+    border-radius: 6px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-copy:hover {
+    background: #00ff88;
+    color: #000;
+    border-color: #00ff88;
+}
+
+.btn-refresh {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #94a3b8;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    cursor: pointer;
+}
+
+.btn-refresh:hover {
+    color: #fff;
+    border-color: #38bdf8;
+}
+
+.btn-revoke {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-revoke:hover {
+    background: rgba(239, 68, 68, 0.35);
+    color: #fff;
+}
