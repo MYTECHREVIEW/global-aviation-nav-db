@@ -6,24 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initMap();
     setupTabs();
     setupEventListeners();
-
-    const copyComposeBtn = document.getElementById('copyComposeBtn');
-    if (copyComposeBtn) {
-        copyComposeBtn.addEventListener('click', () => {
-            const yamlCode = document.getElementById('composeYamlCode').textContent;
-            navigator.clipboard.writeText(yamlCode).then(() => {
-                copyComposeBtn.textContent = '✅ Copied YAML!';
-                setTimeout(() => { copyComposeBtn.textContent = '📋 Copy YAML'; }, 2000);
-            });
-        });
-    }
-
     setupSimbrief();
-    setupApiKeyAndGitTab();
-    checkClientContext();
 
     // Start with clean map
-    document.getElementById('mapBadge').style.display = 'none';
+    const badge = document.getElementById('mapBadge');
+    if (badge) badge.style.display = 'none';
 });
 
 function initMap() {
@@ -32,7 +19,7 @@ function initMap() {
         attributionControl: false
     }).setView([38.5, -96.0], 4);
 
-    // Dark Satellite Basemap
+    // Dark Satellite / Carto Basemap
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
         subdomains: 'abcd'
@@ -43,226 +30,51 @@ function initMap() {
 
 function setupTabs() {
     const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             tabBtns.forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
 
             btn.classList.add('active');
-            const targetId = btn.getAttribute('data-tab');
-            document.getElementById(targetId).classList.add('active');
+            const target = btn.getAttribute('data-tab');
+            const targetEl = document.getElementById(target);
+            if (targetEl) targetEl.classList.add('active');
         });
     });
 }
 
 function setupEventListeners() {
     document.getElementById('traceBtn').addEventListener('click', traceRoute);
-    document.getElementById('searchSubmitBtn').addEventListener('click', performSearch);
-    document.getElementById('searchInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') performSearch();
-    });
-}
 
-async function traceRoute() {
-    const dep = document.getElementById('depIcao').value.trim().toUpperCase();
-    const arr = document.getElementById('arrIcao').value.trim().toUpperCase();
-    const route = document.getElementById('routeInput').value.trim();
-    const alt = document.getElementById('altitudeInput').value || 35000;
-    const speed = document.getElementById('speedInput').value || 450;
+    const searchBtn = document.getElementById('searchSubmitBtn');
+    if (searchBtn) searchBtn.addEventListener('click', executeSearch);
 
-    if (!route && (!dep || !arr)) {
-        alert('Please enter a flight plan route string, or both departure and arrival ICAO codes.');
-        return;
-    }
-
-    const traceBtn = document.getElementById('traceBtn');
-    traceBtn.innerHTML = '<span>⏳ Computing Great-Circle Route...</span>';
-    traceBtn.disabled = true;
-
-    try {
-        const response = await fetch('/api/v1/route/trace', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                departure: dep,
-                arrival: arr,
-                route: route,
-                altitude_ft: alt,
-                speed_kts: speed
-            })
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') executeSearch();
         });
-
-        const data = await response.json();
-        traceBtn.innerHTML = '<span>⚡ Trace Flight Path</span>';
-        traceBtn.disabled = false;
-
-        if (data.error) {
-            alert('Route Error: ' + data.error);
-            return;
-        }
-
-        renderRouteOnMap(data);
-        document.getElementById('mapBadge').style.display = 'flex';
-        renderTelemetry(data);
-    } catch (err) {
-        console.error('Error tracing route:', err);
-        traceBtn.innerHTML = '<span>⚡ Trace Flight Path</span>';
-        traceBtn.disabled = false;
-        alert('Network error while resolving route.');
     }
 }
-
-function renderRouteOnMap(data) {
-    routeLayerGroup.clearLayers();
-
-    if (!data.route_coordinates || data.route_coordinates.length < 2) return;
-
-    // Convert GeoJSON [lon, lat] to Leaflet [lat, lon]
-    const latLngs = data.route_coordinates.map(c => [c[1], c[0]]);
-
-    // Outer Glow Polyline
-    const glowLine = L.polyline(latLngs, {
-        color: '#00ff88',
-        weight: 6,
-        opacity: 0.35,
-        lineCap: 'round',
-        lineJoin: 'round'
-    }).addTo(routeLayerGroup);
-
-    // Inner Core Polyline
-    const coreLine = L.polyline(latLngs, {
-        color: '#00ff88',
-        weight: 2.5,
-        opacity: 0.95,
-        dashArray: '8, 6'
-    }).addTo(routeLayerGroup);
-
-    // Add Waypoint Markers
-    data.waypoints.forEach(w => {
-        let markerClass = 'wp-marker';
-        let markerSize = [10, 10];
-
-        if (w.type === 'AIRPORT') {
-            markerClass = 'apt-marker';
-            markerSize = [14, 14];
-        } else if (w.type.includes('VOR')) {
-            markerClass = 'vor-marker';
-            markerSize = [12, 12];
-        }
-
-        const icon = L.divIcon({
-            className: markerClass,
-            iconSize: markerSize,
-            iconAnchor: [markerSize[0] / 2, markerSize[1] / 2]
-        });
-
-        const popupContent = `
-            <div style="font-family: 'Outfit', sans-serif; min-width: 180px; color: #0f172a;">
-                <div style="font-weight: 700; font-size: 14px; color: #0284c7; margin-bottom: 2px;">
-                    ${w.ident} - ${w.name}
-                </div>
-                <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #64748b; margin-bottom: 6px;">
-                    ${w.type} ${w.frequency_mhz ? `• ${w.frequency_mhz} MHz` : ''}
-                </div>
-                <div style="font-size: 12px; line-height: 1.5;">
-                    <strong>Leg:</strong> ${w.segment_distance_nm} NM @ ${w.segment_bearing_deg}°<br/>
-                    <strong>Total:</strong> ${w.cumulative_distance_nm} NM (ETE ${w.ete_minutes}m)<br/>
-                    <strong>GPS:</strong> ${w.latitude.toFixed(4)}, ${w.longitude.toFixed(4)}
-                </div>
-            </div>
-        `;
-
-        L.marker([w.latitude, w.longitude], { icon })
-            .bindPopup(popupContent)
-            .bindTooltip(w.ident, { permanent: true, direction: 'top', className: 'wp-tooltip', offset: [0, -8] })
-            .addTo(routeLayerGroup);
-    });
-
-    // Fit map bounds to route with smooth padding
-    map.fitBounds(coreLine.getBounds(), { padding: [60, 60], maxZoom: 10 });
-}
-
-function renderTelemetry(data) {
-    document.getElementById('telemetryCard').style.display = 'block';
-    document.getElementById('waypointLogCard').style.display = 'block';
-
-    document.getElementById('telemDist').textContent = `${data.total_distance_nm} NM`;
-    document.getElementById('telemEte').textContent = data.estimated_time_enroute_formatted;
-    document.getElementById('telemCount').textContent = data.total_waypoints;
-    document.getElementById('telemKm').textContent = `${data.total_distance_km} km`;
-
-    const tbody = document.getElementById('waypointTableBody');
-    tbody.innerHTML = '';
-
-    data.waypoints.forEach(w => {
-        const tr = document.createElement('tr');
-        let badgeType = 'fix';
-        if (w.type === 'AIRPORT') badgeType = 'airport';
-        else if (w.type.includes('VOR')) badgeType = 'vor';
-
-        tr.innerHTML = `
-            <td>${w.sequence}</td>
-            <td><strong>${w.ident}</strong></td>
-            <td><span class="type-badge ${badgeType}">${w.type}</span></td>
-            <td>${w.segment_distance_nm}</td>
-            <td>${w.segment_bearing_deg}°</td>
-            <td>${w.cumulative_distance_nm}</td>
-        `;
-        tbody.appendChild(tr);
-    });
-}
-
-async function performSearch() {
-    const q = document.getElementById('searchInput').value.trim();
-    if (!q) return;
-
-    const resultsContainer = document.getElementById('searchResults');
-    resultsContainer.innerHTML = '<div style="color: #94a3b8; font-size: 0.8rem; padding: 8px;">Searching navigation database...</div>';
-
-    try {
-        const res = await fetch(`/api/v1/waypoints/search?q=${encodeURIComponent(q)}&limit=25`);
-        const data = await res.json();
-
-        if (!data.results || data.results.length === 0) {
-            resultsContainer.innerHTML = '<div style="color: #94a3b8; font-size: 0.8rem; padding: 8px;">No matching waypoints or NavAids found.</div>';
-            return;
-        }
-
-        resultsContainer.innerHTML = '';
-        data.results.forEach(pt => {
-            const item = document.createElement('div');
-            item.className = 'search-item';
-            item.innerHTML = `
-                <div class="search-item-header">
-                    <span class="search-item-ident">${pt.ident}</span>
-                    <span class="type-badge ${pt.type === 'AIRPORT' ? 'airport' : (pt.type.includes('VOR') ? 'vor' : 'fix')}">${pt.type}</span>
-                </div>
-                <div style="font-size: 0.8rem; font-weight: 500; margin-bottom: 2px;">${pt.name}</div>
-                <div class="search-item-coords">${pt.latitude.toFixed(4)}, ${pt.longitude.toFixed(4)} ${pt.frequency_mhz ? `• ${pt.frequency_mhz} MHz` : ''}</div>
-            `;
-
-            item.addEventListener('click', () => {
-                map.flyTo([pt.latitude, pt.longitude], 12, { duration: 1.5 });
-            });
-
-            resultsContainer.appendChild(item);
-        });
-    } catch (err) {
-        resultsContainer.innerHTML = '<div style="color: #ef4444; font-size: 0.8rem; padding: 8px;">Error querying search API.</div>';
-    }
-}
-
 
 function setupSimbrief() {
     const savedUser = localStorage.getItem('simbrief_username');
     if (savedUser) {
-        document.getElementById('simbriefUser').value = savedUser;
+        const userEl = document.getElementById('simbriefUser');
+        if (userEl) userEl.value = savedUser;
     }
 
-    document.getElementById('simbriefFetchBtn').addEventListener('click', fetchSimbrief);
-    document.getElementById('simbriefUser').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') fetchSimbrief();
-    });
+    const fetchBtn = document.getElementById('simbriefFetchBtn');
+    const userEl = document.getElementById('simbriefUser');
+    
+    if (fetchBtn) fetchBtn.addEventListener('click', fetchSimbrief);
+    if (userEl) {
+        userEl.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') fetchSimbrief();
+        });
+    }
 }
 
 async function fetchSimbrief() {
@@ -297,7 +109,6 @@ async function fetchSimbrief() {
             return;
         }
 
-        // Fill form fields
         const depStr = ofp.departure_runway ? `${ofp.departure_icao}/${ofp.departure_runway}` : ofp.departure_icao;
         const arrStr = ofp.arrival_runway ? `${ofp.arrival_icao}/${ofp.arrival_runway}` : ofp.arrival_icao;
 
@@ -311,7 +122,6 @@ async function fetchSimbrief() {
         statusBox.className = 'simbrief-status success';
         statusBox.innerHTML = `✅ Loaded Flight <strong>${ofp.flight_number || ofp.aircraft_type}</strong> (${depStr} ➔ ${arrStr}) • FL${Math.round(ofp.cruise_altitude_ft / 100)}`;
 
-        // Automatically trigger route trace
         traceRoute();
     } catch (err) {
         fetchBtn.innerHTML = '<span>📥 Fetch OFP</span>';
@@ -322,217 +132,198 @@ async function fetchSimbrief() {
     }
 }
 
+async function traceRoute() {
+    const dep = document.getElementById('depIcao').value.trim().toUpperCase();
+    const arr = document.getElementById('arrIcao').value.trim().toUpperCase();
+    const route = document.getElementById('routeInput').value.trim();
+    const alt = document.getElementById('altitudeInput').value || 35000;
+    const speed = document.getElementById('speedInput').value || 450;
 
-function setupApiKeyAndGitTab() {
-    // Check git status
-    checkGitStatus();
-
-    // Push to GitHub button
-    document.getElementById('gitPushBtn').addEventListener('click', pushToGithub);
-    document.getElementById('gitRefreshBtn').addEventListener('click', checkGitStatus);
-
-    // Generate API Key button
-    document.getElementById('generateKeyBtn').addEventListener('click', generateApiKey);
-
-    // Copy key button
-    document.getElementById('copyKeyBtn').addEventListener('click', () => {
-        const keyVal = document.getElementById('createdKeyVal').textContent;
-        navigator.clipboard.writeText(keyVal).then(() => {
-            const btn = document.getElementById('copyKeyBtn');
-            btn.textContent = '✅ Copied!';
-            setTimeout(() => { btn.textContent = '📋 Copy'; }, 2000);
-        });
-    });
-
-    // Refresh Keys button
-    document.getElementById('refreshKeysBtn').addEventListener('click', loadApiKeys);
-
-    // Load initial keys
-    loadApiKeys();
-}
-
-async function checkGitStatus() {
-    try {
-        const res = await fetch('/api/v1/git/status');
-        const data = await res.json();
-        const dot = document.getElementById('gitStatusDot');
-        const text = document.getElementById('gitStatusText');
-        const countSpan = document.getElementById('gitFilesCount');
-        const listDiv = document.getElementById('gitFilesList');
-
-        if (data.success) {
-            countSpan.textContent = data.changed_files_count || 0;
-
-            if (data.has_uncommitted_changes && data.files && data.files.length > 0) {
-                dot.className = 'status-indicator-dot pending';
-                text.textContent = `${data.changed_files_count} file(s) modified locally (uncommitted)`;
-
-                listDiv.innerHTML = data.files.map(f => {
-                    let badgeClass = 'git-badge-m';
-                    if (f.status_badge === 'A') badgeClass = 'git-badge-a';
-                    else if (f.status_badge === 'D') badgeClass = 'git-badge-d';
-                    else if (f.status_badge === '?') badgeClass = 'git-badge-u';
-
-                    return `
-                        <div class="git-file-item" title="${f.status_label}: ${f.path}">
-                            <span class="git-badge ${badgeClass}">${f.status_label.toUpperCase()}</span>
-                            <span class="git-file-path">${f.path}</span>
-                        </div>
-                    `;
-                }).join('');
-            } else {
-                dot.className = 'status-indicator-dot';
-                text.textContent = `In Sync: ${data.latest_commit}`;
-                listDiv.innerHTML = '<div class="git-file-empty">✅ Clean: All files committed & synced to GitHub main</div>';
-            }
-        }
-    } catch (e) {
-        console.error('Error checking git status:', e);
+    if (!route && (!dep || !arr)) {
+        alert('Please enter a flight plan route string, or both departure and arrival ICAO codes.');
+        return;
     }
-}
 
-async function pushToGithub() {
-    const btn = document.getElementById('gitPushBtn');
-    const resultBox = document.getElementById('gitPushResult');
-    const msgInput = document.getElementById('gitCommitMsg');
-    const msg = msgInput.value.trim();
-
-    btn.innerHTML = '<span>⏳ Pushing to GitHub...</span>';
+    const btn = document.getElementById('traceBtn');
+    btn.innerHTML = '<span>⏳ Computing Trajectory...</span>';
     btn.disabled = true;
-    resultBox.style.display = 'none';
 
     try {
-        const res = await fetch('/api/v1/git/push', {
+        const response = await fetch('/api/v1/route/trace', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: msg || undefined })
+            body: JSON.stringify({
+                departure: dep || undefined,
+                arrival: arr || undefined,
+                route: route || undefined,
+                altitude_ft: parseInt(alt, 10),
+                airspeed_kts: parseInt(speed, 10)
+            })
         });
-        const data = await res.json();
 
-        btn.innerHTML = '<span>⬆️ Push Changes to GitHub</span>';
+        const data = await response.json();
+
+        btn.innerHTML = '<span>⚡ Trace Flight Path</span>';
         btn.disabled = false;
-        resultBox.style.display = 'block';
 
-        if (data.success) {
-            resultBox.className = 'git-push-result success';
-            resultBox.innerHTML = `✅ <strong>Pushed to GitHub successfully!</strong><br><small>TrueNAS / Portainer can now pull the updated stack.</small>`;
-            msgInput.value = '';
-            checkGitStatus();
-        } else {
-            resultBox.className = 'git-push-result error';
-            resultBox.textContent = `Push Error: ${data.error || 'Failed to push'}`;
-        }
-    } catch (err) {
-        btn.innerHTML = '<span>⬆️ Push Changes to GitHub</span>';
-        btn.disabled = false;
-        resultBox.style.display = 'block';
-        resultBox.className = 'git-push-result error';
-        resultBox.textContent = `Network error: ${err.message}`;
-    }
-}
-
-async function loadApiKeys() {
-    const tbody = document.getElementById('keysTableBody');
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">Loading keys...</td></tr>';
-
-    try {
-        const res = await fetch('/api/v1/auth/keys');
-        const data = await res.json();
-
-        if (!data.keys || data.keys.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">No API keys generated yet.</td></tr>';
+        if (data.error) {
+            alert('Route Error: ' + data.error);
             return;
         }
 
-        tbody.innerHTML = data.keys.map(k => `
-            <tr>
-                <td><strong>${k.name || 'Unnamed Client'}</strong></td>
-                <td><code>${k.masked_key}</code></td>
-                <td>${k.request_count || 0}</td>
-                <td><span style="color: ${k.status === 'active' ? '#00ff88' : '#ef4444'}; font-weight: 600;">${k.status.toUpperCase()}</span></td>
-                <td>
-                    ${k.status === 'active' ? `<button class="btn-revoke" onclick="revokeKey('${k.id}')">Revoke</button>` : '<span style="color:#64748b;">Revoked</span>'}
-                </td>
-            </tr>
+        renderRouteOnMap(data);
+        const mapBadge = document.getElementById('mapBadge');
+        if (mapBadge) mapBadge.style.display = 'flex';
+        updateTelemetryCard(data);
+        updateWaypointLog(data.waypoints);
+    } catch (err) {
+        btn.innerHTML = '<span>⚡ Trace Flight Path</span>';
+        btn.disabled = false;
+        alert('Failed to contact Route Engine API: ' + err.message);
+    }
+}
+
+function renderRouteOnMap(data) {
+    routeLayerGroup.clearLayers();
+
+    if (!data.route_coordinates || data.route_coordinates.length === 0) return;
+
+    const latLngs = data.route_coordinates.map(c => [c[1], c[0]]);
+
+    // Glow background line
+    L.polyline(latLngs, {
+        color: '#00ff88',
+        weight: 6,
+        opacity: 0.25,
+        lineCap: 'round'
+    }).addTo(routeLayerGroup);
+
+    // Primary flight path polyline
+    const flightPath = L.polyline(latLngs, {
+        color: '#00ff88',
+        weight: 3,
+        opacity: 0.9,
+        dashArray: '8, 4',
+        lineCap: 'round'
+    }).addTo(routeLayerGroup);
+
+    // Markers for waypoints
+    data.waypoints.forEach((wp, idx) => {
+        const isDep = idx === 0;
+        const isArr = idx === data.waypoints.length - 1;
+        const isVor = wp.type.includes('VOR') || wp.type.includes('TACAN');
+        const isApt = wp.type === 'AIRPORT';
+
+        let markerColor = '#ff1e42'; // Waypoint red
+        let radius = 4;
+
+        if (isApt) {
+            markerColor = '#38bdf8'; // Airport cyan
+            radius = 6;
+        } else if (isVor) {
+            markerColor = '#00ff88'; // VOR green
+            radius = 5;
+        }
+
+        const marker = L.circleMarker([wp.latitude, wp.longitude], {
+            radius: radius,
+            fillColor: markerColor,
+            color: '#fff',
+            weight: 1.5,
+            opacity: 1,
+            fillOpacity: 0.9
+        }).addTo(routeLayerGroup);
+
+        const popupContent = `
+            <div style="font-family: 'Inter', sans-serif; font-size: 12px; color: #fff; min-width: 150px;">
+                <div style="font-weight: 700; font-size: 14px; color: ${markerColor}; margin-bottom: 4px;">
+                    #${wp.sequence} ${wp.ident} ${wp.name && wp.name !== wp.ident ? `(${wp.name})` : ''}
+                </div>
+                <div style="color: #94a3b8; font-size: 11px; margin-bottom: 6px;">${wp.type} ${wp.via_procedure ? `• ${wp.via_procedure}` : (wp.via_airway ? `• Airway ${wp.via_airway}` : '')}</div>
+                <div>📍 <strong>Lat/Lon:</strong> ${wp.latitude.toFixed(4)}, ${wp.longitude.toFixed(4)}</div>
+                ${wp.frequency_mhz ? `<div>📻 <strong>Freq:</strong> ${wp.frequency_mhz} MHz</div>` : ''}
+                ${wp.elevation_ft ? `<div>⛰️ <strong>Elev:</strong> ${wp.elevation_ft} ft</div>` : ''}
+                <div style="margin-top: 4px; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.1); color: #00ff88;">
+                    📏 <strong>Leg:</strong> ${wp.segment_distance_nm} NM (${wp.segment_bearing_deg}°) | <strong>Total:</strong> ${wp.cumulative_distance_nm} NM
+                </div>
+            </div>
+        `;
+        marker.bindPopup(popupContent);
+    });
+
+    map.fitBounds(flightPath.getBounds(), { padding: [50, 50] });
+}
+
+function updateTelemetryCard(data) {
+    document.getElementById('telemetryCard').style.display = 'block';
+    document.getElementById('telemDist').textContent = `${data.total_distance_nm} NM`;
+    document.getElementById('telemEte').textContent = data.estimated_time_enroute_formatted || '--';
+    document.getElementById('telemCount').textContent = `${data.total_waypoints} Fixes`;
+    document.getElementById('telemKm').textContent = `${data.total_distance_km} km`;
+}
+
+function updateWaypointLog(waypoints) {
+    document.getElementById('waypointLogCard').style.display = 'block';
+    const tbody = document.getElementById('waypointTableBody');
+    tbody.innerHTML = '';
+
+    waypoints.forEach(wp => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${wp.sequence}</td>
+            <td><strong>${wp.ident}</strong></td>
+            <td><span class="type-badge ${wp.type}">${wp.type.replace('_', ' ')}</span></td>
+            <td>${wp.segment_distance_nm > 0 ? `${wp.segment_distance_nm} NM` : '-'}</td>
+            <td>${wp.segment_bearing_deg > 0 ? `${wp.segment_bearing_deg}°` : '-'}</td>
+            <td>${wp.cumulative_distance_nm} NM</td>
+        `;
+
+        tr.addEventListener('click', () => {
+            map.flyTo([wp.latitude, wp.longitude], 8, { duration: 1.2 });
+        });
+
+        tbody.appendChild(tr);
+    });
+}
+
+async function executeSearch() {
+    const q = document.getElementById('searchInput').value.trim();
+    if (!q) return;
+
+    const resultsDiv = document.getElementById('searchResults');
+    resultsDiv.innerHTML = '<div style="color: #94a3b8; font-size: 0.8rem; padding: 10px;">Searching database...</div>';
+
+    try {
+        const response = await fetch(`/api/v1/waypoints/search?q=${encodeURIComponent(q)}`);
+        const data = await response.json();
+
+        if (!data.results || data.results.length === 0) {
+            resultsDiv.innerHTML = '<div style="color: #ef4444; font-size: 0.8rem; padding: 10px;">No fixes or airports found matching query.</div>';
+            return;
+        }
+
+        resultsDiv.innerHTML = data.results.map(r => `
+            <div class="search-item" onclick="zoomToFix(${r.latitude}, ${r.longitude}, '${r.ident}', '${r.type}')">
+                <div class="search-item-header">
+                    <strong>${r.ident}</strong>
+                    <span class="type-badge ${r.type}">${r.type}</span>
+                </div>
+                <div style="font-size: 0.76rem; color: #94a3b8;">${r.name || r.ident} ${r.country_code ? `(${r.country_code})` : ''}</div>
+                <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">📍 ${r.latitude.toFixed(4)}, ${r.longitude.toFixed(4)} ${r.frequency_mhz ? `• ${r.frequency_mhz} MHz` : ''}</div>
+            </div>
         `).join('');
     } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">Failed to load API keys.</td></tr>';
+        resultsDiv.innerHTML = '<div style="color: #ef4444; font-size: 0.8rem; padding: 10px;">Search request failed.</div>';
     }
 }
 
-async function generateApiKey() {
-    const nameInput = document.getElementById('newKeyName');
-    const expiresSelect = document.getElementById('newKeyExpires');
-    const name = nameInput.value.trim() || 'API Client';
-    const expiresInDays = expiresSelect.value ? parseInt(expiresSelect.value, 10) : null;
-
-    const btn = document.getElementById('generateKeyBtn');
-    btn.innerHTML = '<span>⏳ Generating...</span>';
-    btn.disabled = true;
-
-    try {
-        const res = await fetch('/api/v1/auth/keys', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, expires_in_days: expiresInDays })
-        });
-        const data = await res.json();
-
-        btn.innerHTML = '<span>⚡ Generate API Key</span>';
-        btn.disabled = false;
-
-        if (data.success && data.api_key) {
-            document.getElementById('createdKeyVal').textContent = data.api_key.key;
-            document.getElementById('createdKeyBox').style.display = 'block';
-            nameInput.value = '';
-            loadApiKeys();
-        }
-    } catch (err) {
-        btn.innerHTML = '<span>⚡ Generate API Key</span>';
-        btn.disabled = false;
-        alert('Failed to generate API Key: ' + err.message);
-    }
-}
-
-async function revokeKey(id) {
-    if (!confirm(`Are you sure you want to revoke API Key ${id}?`)) return;
-
-    try {
-        const res = await fetch(`/api/v1/auth/keys/${id}`, { method: 'DELETE' });
-        const data = await res.json();
-        if (data.success) {
-            loadApiKeys();
-        } else {
-            alert('Error revoking key: ' + (data.error || 'Unknown error'));
-        }
-    } catch (e) {
-        alert('Network error: ' + e.message);
-    }
-}
-
-
-async function checkClientContext() {
-    try {
-        const res = await fetch('/api/v1/client-context');
-        const data = await res.json();
-        
-        const apiDocsBtn = document.querySelector('.tab-btn[data-tab="tab-api"]');
-        const apiKeysBtn = document.querySelector('.tab-btn[data-tab="tab-keys"]');
-        const apiDocsContent = document.getElementById('tab-api');
-        const apiKeysContent = document.getElementById('tab-keys');
-
-        if (!data.is_local_admin) {
-            // Hide admin tabs for public visitors
-            if (apiDocsBtn) apiDocsBtn.style.display = 'none';
-            if (apiKeysBtn) apiKeysBtn.style.display = 'none';
-            if (apiDocsContent) apiDocsContent.remove();
-            if (apiKeysContent) apiKeysContent.remove();
-        } else {
-            // Keep visible for local/private admin
-            if (apiDocsBtn) apiDocsBtn.style.display = 'block';
-            if (apiKeysBtn) apiKeysBtn.style.display = 'block';
-        }
-    } catch (e) {
-        console.warn('Could not verify client context:', e);
-    }
-}
+window.zoomToFix = function(lat, lon, ident, type) {
+    map.flyTo([lat, lon], 9, { duration: 1 });
+    L.circleMarker([lat, lon], {
+        radius: 7,
+        fillColor: '#38bdf8',
+        color: '#fff',
+        weight: 2,
+        fillOpacity: 1
+    }).addTo(routeLayerGroup).bindPopup(`<strong>${ident}</strong> (${type})<br>📍 ${lat.toFixed(4)}, ${lon.toFixed(4)}`).openPopup();
+};
