@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=1.2" />
 </head>
 <body>
     <!-- Top Cockpit Header -->
@@ -164,13 +164,15 @@
 
             <!-- TAB 3: API DOCS & DOCKER / DOCKAGE COMPOSE -->
             <div class="tab-content" id="tab-api">
+                
                 <!-- Docker Compose / Portainer / Dockage Template Card -->
                 <div class="control-card compose-card">
                     <div class="card-header-flex">
                         <h3>🐳 Docker Compose & Dockage Stack</h3>
                         <button id="copyComposeBtn" class="btn-copy">📋 Copy YAML</button>
                     </div>
-                    <p class="help-text">Paste this directly into the <strong>Portainer Web Editor</strong>, <strong>Dockage</strong>, or your local <code>docker-compose.yml</code> file.</p>
+                    <p class="help-text">Copy and paste this configuration directly into <strong>Portainer Web Editor</strong>, <strong>Dockage</strong>, or your server's <code>docker-compose.yml</code>.</p>
+                    
                     <div class="code-block-wrapper">
                         <pre class="code-pre"><code id="composeYamlCode">version: '3.8'
 
@@ -186,7 +188,7 @@ services:
       - NODE_ENV=production
       - MAPBOX_ACCESS_TOKEN=
     volumes:
-      # Directory volume for persistent API keys
+      # Persistent directory volume for API keys
       - aeronav_keys:/app/data/keys
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3510/health"]
@@ -197,6 +199,13 @@ services:
 volumes:
   aeronav_keys:
     name: aeronav_api_keys</code></pre>
+                    </div>
+
+                    <div style="margin-top: 12px; font-size: 0.76rem; color: #94a3b8; line-height: 1.5;">
+                        <strong style="color: #38bdf8;">Quick Setup in Portainer:</strong><br>
+                        1. Go to <strong>Stacks</strong> ➔ <strong>Add stack</strong> ➔ <strong>Web Editor</strong>.<br>
+                        2. Paste the YAML above and name it <code>aeronav-db</code>.<br>
+                        3. Click <strong>Deploy the stack</strong> (pulls public GHCR image in seconds).
                     </div>
                 </div>
 
@@ -426,6 +435,6 @@ volumes:
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=1.2"></script>
 </body>
 </html>
