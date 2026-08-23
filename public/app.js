@@ -59,7 +59,7 @@ function setupEventListeners() {
             showWaypointLabels = e.target.checked;
             localStorage.setItem('show_wp_labels', showWaypointLabels);
             if (currentRouteData) {
-                renderRouteOnMap(currentRouteData);
+                renderRouteOnMap(currentRouteData, false); // Keep current zoom & pan position
             }
         });
     }
@@ -416,7 +416,7 @@ async function traceRoute() {
 let currentRouteData = null;
 let showWaypointLabels = localStorage.getItem('show_wp_labels') !== 'false';
 
-function renderRouteOnMap(data) {
+function renderRouteOnMap(data, autoFit = true) {
     currentRouteData = data;
     routeLayerGroup.clearLayers();
 
@@ -471,7 +471,7 @@ function renderRouteOnMap(data) {
             fillOpacity: 0.9
         }).addTo(routeLayerGroup);
 
-        // Bind Permanent Tooltip (Label)
+        // Bind Permanent Tooltip (Label) if enabled
         if (showWaypointLabels) {
             marker.bindTooltip(wp.ident, {
                 permanent: true,
@@ -498,7 +498,9 @@ function renderRouteOnMap(data) {
         marker.bindPopup(popupContent);
     });
 
-    map.fitBounds(flightPath.getBounds(), { padding: [50, 50] });
+    if (autoFit) {
+        map.fitBounds(flightPath.getBounds(), { padding: [50, 50] });
+    }
 }
 
 function updateTelemetryCard(data) {
