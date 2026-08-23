@@ -118,19 +118,40 @@ app.delete('/api/v1/auth/keys/:id', (req, res) => {
  */
 app.get('/api/v1/git/status', (req, res) => {
     const cwd = __dirname;
-    exec('git log -1 --format="%h - %s (%cr)" 2>/dev/null && git status --porcelain', { cwd }, (err, stdout, stderr) => {
+    exec('git log -1 --format="%h - %s (%cr)" 2>/dev/null && echo "---STATUS_DELIM---" && git status --porcelain', { cwd }, (err, stdout, stderr) => {
         if (err) {
             return res.json({ success: false, error: err.message, status: 'Not a git repository' });
         }
-        const lines = stdout.trim().split('\n');
-        const latestCommit = lines[0] || 'Initial commit';
-        const changes = lines.slice(1).filter(l => l.trim().length > 0);
+        const parts = stdout.split('---STATUS_DELIM---');
+        const latestCommit = (parts[0] || '').trim() || 'Initial commit';
+        const statusOutput = (parts[1] || '').trim();
+        
+        const rawLines = statusOutput.split('\n').filter(l => l.trim().length > 0);
+        const files = rawLines.map(line => {
+            const statusCode = line.substring(0, 2).trim();
+            const filePath = line.substring(2).trim();
+            let label = 'Modified';
+            let badge = 'M';
+
+            if (statusCode.includes('A')) { label = 'Added'; badge = 'A'; }
+            else if (statusCode.includes('D')) { label = 'Deleted'; badge = 'D'; }
+            else if (statusCode.includes('R')) { label = 'Renamed'; badge = 'R'; }
+            else if (statusCode.includes('?')) { label = 'Untracked'; badge = '?'; }
+
+            return {
+                status_code: statusCode,
+                status_badge: badge,
+                status_label: label,
+                path: filePath
+            };
+        });
 
         res.json({
             success: true,
             latest_commit: latestCommit,
-            has_uncommitted_changes: changes.length > 0,
-            changed_files_count: changes.length,
+            has_uncommitted_changes: files.length > 0,
+            changed_files_count: files.length,
+            files: files,
             github_url: 'https://github.com/MYTECHREVIEW/global-aviation-nav-db'
         });
     });

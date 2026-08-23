@@ -6,6 +6,18 @@ document.addEventListener('DOMContentLoaded', () => {
     initMap();
     setupTabs();
     setupEventListeners();
+
+    const copyComposeBtn = document.getElementById('copyComposeBtn');
+    if (copyComposeBtn) {
+        copyComposeBtn.addEventListener('click', () => {
+            const yamlCode = document.getElementById('composeYamlCode').textContent;
+            navigator.clipboard.writeText(yamlCode).then(() => {
+                copyComposeBtn.textContent = '✅ Copied YAML!';
+                setTimeout(() => { copyComposeBtn.textContent = '📋 Copy YAML'; }, 2000);
+            });
+        });
+    }
+
     setupSimbrief();
     setupApiKeyAndGitTab();
 
@@ -316,6 +328,7 @@ function setupApiKeyAndGitTab() {
 
     // Push to GitHub button
     document.getElementById('gitPushBtn').addEventListener('click', pushToGithub);
+    document.getElementById('gitRefreshBtn').addEventListener('click', checkGitStatus);
 
     // Generate API Key button
     document.getElementById('generateKeyBtn').addEventListener('click', generateApiKey);
@@ -343,14 +356,33 @@ async function checkGitStatus() {
         const data = await res.json();
         const dot = document.getElementById('gitStatusDot');
         const text = document.getElementById('gitStatusText');
+        const countSpan = document.getElementById('gitFilesCount');
+        const listDiv = document.getElementById('gitFilesList');
 
         if (data.success) {
-            if (data.has_uncommitted_changes) {
+            countSpan.textContent = data.changed_files_count || 0;
+
+            if (data.has_uncommitted_changes && data.files && data.files.length > 0) {
                 dot.className = 'status-indicator-dot pending';
-                text.textContent = `${data.changed_files_count} uncommitted local change(s) ready to push`;
+                text.textContent = `${data.changed_files_count} file(s) modified locally (uncommitted)`;
+
+                listDiv.innerHTML = data.files.map(f => {
+                    let badgeClass = 'git-badge-m';
+                    if (f.status_badge === 'A') badgeClass = 'git-badge-a';
+                    else if (f.status_badge === 'D') badgeClass = 'git-badge-d';
+                    else if (f.status_badge === '?') badgeClass = 'git-badge-u';
+
+                    return `
+                        <div class="git-file-item" title="${f.status_label}: ${f.path}">
+                            <span class="git-badge ${badgeClass}">${f.status_label.toUpperCase()}</span>
+                            <span class="git-file-path">${f.path}</span>
+                        </div>
+                    `;
+                }).join('');
             } else {
                 dot.className = 'status-indicator-dot';
                 text.textContent = `In Sync: ${data.latest_commit}`;
+                listDiv.innerHTML = '<div class="git-file-empty">✅ Clean: All files committed & synced to GitHub main</div>';
             }
         }
     } catch (e) {

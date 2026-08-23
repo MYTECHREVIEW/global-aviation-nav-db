@@ -157,43 +157,164 @@
                 </div>
             </div>
 
-            <!-- TAB 3: API DOCS -->
+            
+            <!-- TAB 3: API DOCS & DOCKER / DOCKAGE COMPOSE -->
             <div class="tab-content" id="tab-api">
-                <div class="docs-card">
-                    <h3>Developer REST API</h3>
-                                                            <div class="api-doc-block">
-                        <span class="method get">DOCKER</span> <code>docker run -d -p 3510:3510 global-aviation-nav-db</code>
-                        <p>Deploy directly in Portainer as a Stack via GitHub repository URL.</p>
+                <!-- Docker Compose / Portainer / Dockage Template Card -->
+                <div class="control-card compose-card">
+                    <div class="card-header-flex">
+                        <h3>🐳 Docker Compose & Dockage Stack</h3>
+                        <button id="copyComposeBtn" class="btn-copy">📋 Copy YAML</button>
                     </div>
-                    <div class="api-doc-block">
-                        <span class="method get">GET</span> <code>/api/v1/simbrief/fetch?username=myuser</code>
-                        <p>Pull the latest flight plan from SimBrief by username or pilot ID.</p>
-                    </div>
-                    <div class="api-doc-block">
-                        <span class="method post">POST</span> <code>/api/v1/simbrief/trace</code>
-                        <p>Pull latest OFP from SimBrief and automatically trace route into waypoints & GeoJSON.</p>
-                    </div>
-                    <div class="api-doc-block">
-                        <span class="method post">POST</span> <code>/api/v1/route/trace</code>
-                        <p>Traces flight plan route and returns geodesic coordinates, distance, and GeoJSON.</p>
-                    </div>
-                    <div class="api-doc-block">
-                        <span class="method get">GET</span> <code>/api/v1/waypoints/search?q=MERIT</code>
-                        <p>Search global waypoints, VORs, NDBs, and airports.</p>
-                    </div>
-                    <div class="api-doc-block">
-                        <span class="method get">GET</span> <code>/api/v1/waypoints/:ident</code>
-                        <p>Fetch details and location of any waypoint or NavAid.</p>
-                    </div>
-                    <div class="api-doc-block">
-                        <span class="method get">GET</span> <code>/api/v1/airport/:icao/navaids</code>
-                        <p>Get all NavAids associated or within 30 NM of an airport.</p>
-                    </div>
-                    <div class="api-doc-block">
-                        <span class="method get">GET</span> <code>/api/v1/airways/:ident</code>
-                        <p>Get fix sequence along an enroute airway (e.g. J79).</p>
+                    <p class="help-text">Paste this directly into the <strong>Portainer Web Editor</strong>, <strong>Dockage</strong>, or your local <code>docker-compose.yml</code> file.</p>
+                    <div class="code-block-wrapper">
+                        <pre class="code-pre"><code id="composeYamlCode">version: '3.8'
+
+services:
+  global-aviation-nav-db:
+    # Build directly from GitHub or local directory
+    build: https://github.com/MYTECHREVIEW/global-aviation-nav-db.git#main
+    image: global-aviation-nav-db:latest
+    container_name: global-aviation-nav-db
+    restart: unless-stopped
+    ports:
+      - "3510:3510"
+    environment:
+      - PORT=3510
+      - NODE_ENV=production
+      - MAPBOX_ACCESS_TOKEN=
+    volumes:
+      # Persist API keys across container rebuilds
+      - aeronav_keys:/app/data/api-keys.json
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3510/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  aeronav_keys:
+    name: aeronav_api_keys</code></pre>
                     </div>
                 </div>
+
+                <!-- API Authentication Guide -->
+                <div class="control-card">
+                    <h3>🔑 Authentication</h3>
+                    <p class="help-text">All <code>/api/v1/*</code> endpoints require an API Key (generate one in the <strong>API Keys & Git</strong> tab).</p>
+                    <div class="auth-methods-box">
+                        <div class="auth-row">
+                            <span class="auth-label">HTTP Header (Recommended):</span>
+                            <code>X-API-Key: aeronav_live_YOUR_KEY</code>
+                        </div>
+                        <div class="auth-row">
+                            <span class="auth-label">Query Parameter:</span>
+                            <code>?api_key=aeronav_live_YOUR_KEY</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comprehensive REST Endpoints Reference -->
+                <div class="control-card">
+                    <h3>📡 REST API Endpoints</h3>
+
+                    <!-- Endpoint 1: Route Trace -->
+                    <div class="api-doc-item">
+                        <div class="api-doc-header">
+                            <span class="method post">POST</span>
+                            <code>/api/v1/route/trace</code>
+                        </div>
+                        <p class="api-doc-desc">Traces a flight plan route string with SIDs, Airways, STARs, and outputs sequential waypoints, bearings, distances, and GeoJSON.</p>
+                        <div class="api-code-snippet">
+                            <span class="snippet-title">Request Body (JSON):</span>
+                            <pre class="snippet-pre"><code>{
+  "departure": "KEYW",
+  "arrival": "KLGA",
+  "route": "KEYW/09 BUFTT1 MATLK Q87 HURTS PROUD2 KLGA/04",
+  "altitude_ft": 38000,
+  "airspeed_kts": 460
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Endpoint 2: SimBrief One-Step Trace -->
+                    <div class="api-doc-item">
+                        <div class="api-doc-header">
+                            <span class="method post">POST</span>
+                            <code>/api/v1/simbrief/trace</code>
+                        </div>
+                        <p class="api-doc-desc">Fetches the user's latest flight plan from SimBrief and automatically traces the entire route into waypoints and GeoJSON in one step.</p>
+                        <div class="api-code-snippet">
+                            <span class="snippet-title">Request Body (JSON):</span>
+                            <pre class="snippet-pre"><code>{
+  "username": "my_simbrief_pilot_id"
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Endpoint 3: SimBrief Fetch -->
+                    <div class="api-doc-item">
+                        <div class="api-doc-header">
+                            <span class="method get">GET</span>
+                            <code>/api/v1/simbrief/fetch?username=myuser</code>
+                        </div>
+                        <p class="api-doc-desc">Fetches raw OFP flight plan details (origin, destination, runways, route, altitude, airspeed, aircraft) from SimBrief.</p>
+                    </div>
+
+                    <!-- Endpoint 4: Waypoint Search -->
+                    <div class="api-doc-item">
+                        <div class="api-doc-header">
+                            <span class="method get">GET</span>
+                            <code>/api/v1/waypoints/search?q=MATLK</code>
+                        </div>
+                        <p class="api-doc-desc">Searches global airports, VORs, NDBs, and waypoints by name or ident.</p>
+                    </div>
+
+                    <!-- Endpoint 5: Waypoint Details -->
+                    <div class="api-doc-item">
+                        <div class="api-doc-header">
+                            <span class="method get">GET</span>
+                            <code>/api/v1/waypoints/:ident</code>
+                        </div>
+                        <p class="api-doc-desc">Get high-precision GPS coordinates, frequency, and airport associations for any waypoint.</p>
+                    </div>
+
+                    <!-- Endpoint 6: Airport NavAids -->
+                    <div class="api-doc-item">
+                        <div class="api-doc-header">
+                            <span class="method get">GET</span>
+                            <code>/api/v1/airport/:icao/navaids</code>
+                        </div>
+                        <p class="api-doc-desc">Retrieve all VOR, VORTAC, and NDB navigation aids located within 30 NM of an airport.</p>
+                    </div>
+
+                    <!-- Endpoint 7: Airway Sequence -->
+                    <div class="api-doc-item">
+                        <div class="api-doc-header">
+                            <span class="method get">GET</span>
+                            <code>/api/v1/airways/:ident</code>
+                        </div>
+                        <p class="api-doc-desc">Get ordered fix sequence along an enroute airway (e.g. <code>Q87</code> or <code>J79</code>).</p>
+                    </div>
+
+                    <!-- Endpoint 8: API Key Creation -->
+                    <div class="api-doc-item">
+                        <div class="api-doc-header">
+                            <span class="method post">POST</span>
+                            <code>/api/v1/auth/keys</code>
+                        </div>
+                        <p class="api-doc-desc">Generate a new API key programmatically.</p>
+                        <div class="api-code-snippet">
+                            <span class="snippet-title">Request Body (JSON):</span>
+                            <pre class="snippet-pre"><code>{
+  "name": "My Client App",
+  "expires_in_days": 365
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             </div>
 
             <!-- TAB 4: API KEYS & GIT SYNC -->
@@ -210,6 +331,17 @@
                     <div class="git-status-row">
                         <span class="status-indicator-dot" id="gitStatusDot"></span>
                         <span id="gitStatusText">Checking GitHub sync status...</span>
+                    </div>
+
+                    <!-- Changed Files Preview Area -->
+                    <div id="gitFilesContainer" class="git-files-container">
+                        <div class="git-files-header">
+                            <span class="git-files-title">📂 Pending Local Changes (<span id="gitFilesCount">0</span>)</span>
+                            <button id="gitRefreshBtn" class="btn-refresh-sm">🔄 Refresh</button>
+                        </div>
+                        <div id="gitFilesList" class="git-files-list">
+                            <div class="git-file-empty">Checking working directory...</div>
+                        </div>
                     </div>
                     <div class="input-group">
                         <label>Commit Message (Optional)</label>
