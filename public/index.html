@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
-    <link rel="stylesheet" href="style.css?v=2.5" />
+    <link rel="stylesheet" href="style.css?v=3.0" />
 </head>
 <body>
     <!-- Top Cockpit Header -->
@@ -38,12 +38,10 @@
     <div class="main-container">
         <!-- Sidebar Controls -->
         <aside class="sidebar">
-            <!-- Tabs -->
-            <div class="tab-nav">
+            <!-- Tabs (Base: Route Tracer & Waypoint Search) -->
+            <div class="tab-nav" id="tabNavContainer">
                 <button class="tab-btn active" data-tab="tab-route">🛩️ Route Tracer</button>
                 <button class="tab-btn" data-tab="tab-search">🔍 Waypoint Search</button>
-                <button class="tab-btn dev-only-tab" data-tab="tab-api">📡 API Docs</button>
-                <button class="tab-btn dev-only-tab" data-tab="tab-keys">🔑 API Keys & Git</button>
             </div>
 
             <!-- TAB 1: ROUTE TRACER -->
@@ -162,210 +160,8 @@
                 </div>
             </div>
 
-            <!-- TAB 3: API DOCS (DEV ONLY) -->
-            <div class="tab-content dev-only-content" id="tab-api">
-                <!-- Docker Compose / Portainer / Dockage Template Card -->
-                <div class="control-card compose-card">
-                    <div class="card-header-flex">
-                        <h3>🐳 Docker Compose & Dockage Stack</h3>
-                        <button id="copyComposeBtn" class="btn-copy">📋 Copy YAML</button>
-                    </div>
-                    <p class="help-text">Copy and paste this configuration directly into <strong>Portainer Web Editor</strong>, <strong>Dockage</strong>, or your server's <code>docker-compose.yml</code>.</p>
-                    
-                    <div class="code-block-wrapper">
-                        <pre class="code-pre"><code id="composeYamlCode">version: '3.8'
-
-services:
-  global-aviation-nav-db:
-    image: ghcr.io/mytechreview/global-aviation-nav-db:latest
-    container_name: global-aviation-nav-db
-    restart: unless-stopped
-    ports:
-      - "3510:3510"
-    environment:
-      - PORT=3510
-      - NODE_ENV=production
-      - MAPBOX_ACCESS_TOKEN=
-    volumes:
-      # Persistent directory volume for API keys
-      - aeronav_keys:/app/data/keys
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3510/health"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-
-volumes:
-  aeronav_keys:
-    name: aeronav_api_keys</code></pre>
-                    </div>
-
-                    <div style="margin-top: 12px; font-size: 0.76rem; color: #94a3b8; line-height: 1.5;">
-                        <strong style="color: #38bdf8;">Quick Setup in Portainer:</strong><br>
-                        1. Go to <strong>Stacks</strong> ➔ <strong>Add stack</strong> ➔ <strong>Web Editor</strong>.<br>
-                        2. Paste the YAML above and name it <code>aeronav-db</code>.<br>
-                        3. Click <strong>Deploy the stack</strong>.
-                    </div>
-                </div>
-
-                <!-- API Authentication Guide -->
-                <div class="control-card">
-                    <h3>🔑 Authentication</h3>
-                    <p class="help-text">All <code>/api/v1/*</code> endpoints support API Key verification via header or query parameter.</p>
-                    <div class="auth-methods-box">
-                        <div class="auth-row">
-                            <span class="auth-label">HTTP Header (Recommended):</span>
-                            <code>X-API-Key: aeronav_live_YOUR_KEY</code>
-                        </div>
-                        <div class="auth-row">
-                            <span class="auth-label">Query Parameter:</span>
-                            <code>?api_key=aeronav_live_YOUR_KEY</code>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- REST Endpoints Reference -->
-                <div class="control-card">
-                    <h3>📡 REST API Endpoints</h3>
-
-                    <div class="api-doc-item">
-                        <div class="api-doc-header">
-                            <span class="method post">POST</span>
-                            <code>/api/v1/route/trace</code>
-                        </div>
-                        <p class="api-doc-desc">Traces a flight plan route string with SIDs, Airways, STARs, and returns sequential waypoints, bearings, distances, and GeoJSON.</p>
-                    </div>
-
-                    <div class="api-doc-item">
-                        <div class="api-doc-header">
-                            <span class="method post">POST</span>
-                            <code>/api/v1/simbrief/trace</code>
-                        </div>
-                        <p class="api-doc-desc">Fetches the user's latest flight plan from SimBrief and automatically traces the entire route into waypoints and GeoJSON in one step.</p>
-                    </div>
-
-                    <div class="api-doc-item">
-                        <div class="api-doc-header">
-                            <span class="method get">GET</span>
-                            <code>/api/v1/simbrief/fetch?username=myuser</code>
-                        </div>
-                        <p class="api-doc-desc">Fetches raw OFP flight plan details from SimBrief.</p>
-                    </div>
-
-                    <div class="api-doc-item">
-                        <div class="api-doc-header">
-                            <span class="method get">GET</span>
-                            <code>/api/v1/waypoints/search?q=MATLK</code>
-                        </div>
-                        <p class="api-doc-desc">Search airports, VORs, NDBs, and fixes worldwide.</p>
-                    </div>
-
-                    <div class="api-doc-item">
-                        <div class="api-doc-header">
-                            <span class="method post">POST</span>
-                            <code>/api/v1/auth/keys</code>
-                        </div>
-                        <p class="api-doc-desc">Generate a new API key programmatically.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 4: API KEYS & GIT SYNC (DEV ONLY) -->
-            <div class="tab-content dev-only-content" id="tab-keys">
-                <!-- Git Push Card -->
-                <div class="control-card git-card">
-                    <div class="card-header-flex">
-                        <h3>🚀 GitHub Cloud Sync</h3>
-                        <a href="https://github.com/MYTECHREVIEW/global-aviation-nav-db" target="_blank" class="github-link-btn">
-                            <span>View Repo ↗</span>
-                        </a>
-                    </div>
-                    <p class="help-text">Push changes directly to GitHub so Portainer on TrueNAS can pull and update.</p>
-                    <div class="git-status-row">
-                        <span class="status-indicator-dot" id="gitStatusDot"></span>
-                        <span id="gitStatusText">Checking GitHub sync status...</span>
-                    </div>
-
-                    <!-- Changed Files Preview Area -->
-                    <div id="gitFilesContainer" class="git-files-container">
-                        <div class="git-files-header">
-                            <span class="git-files-title">📂 Pending Local Changes (<span id="gitFilesCount">0</span>)</span>
-                            <button id="gitRefreshBtn" class="btn-refresh-sm">🔄 Refresh</button>
-                        </div>
-                        <div id="gitFilesList" class="git-files-list">
-                            <div class="git-file-empty">Checking working directory...</div>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label>Commit Message (Optional)</label>
-                        <input type="text" id="gitCommitMsg" placeholder="e.g. Update route parser and database" />
-                    </div>
-                    <button id="gitPushBtn" class="btn-primary btn-git">
-                        <span>⬆️ Push Changes to GitHub</span>
-                    </button>
-                    <div id="gitPushResult" class="git-push-result" style="display: none;"></div>
-                </div>
-
-                <!-- API Key Generator Card -->
-                <div class="control-card">
-                    <h3>🔑 Generate API Key</h3>
-                    <p class="help-text">Create secure API keys for webhooks, Portainer, or custom flight applications.</p>
-                    <div class="input-grid">
-                        <div>
-                            <label>Key Name / Description</label>
-                            <input type="text" id="newKeyName" placeholder="e.g. Flight Tracker Webhook" />
-                        </div>
-                        <div>
-                            <label>Expiration</label>
-                            <select id="newKeyExpires" class="custom-select">
-                                <option value="">Never (Permanent)</option>
-                                <option value="30">30 Days</option>
-                                <option value="90">90 Days</option>
-                                <option value="365" selected>1 Year (365 Days)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button id="generateKeyBtn" class="btn-primary" style="margin-top: 10px;">
-                        <span>⚡ Generate API Key</span>
-                    </button>
-
-                    <!-- Newly Created Key Box -->
-                    <div id="createdKeyBox" class="created-key-box" style="display: none;">
-                        <div class="created-key-header">
-                            <span class="badge-success">New API Key Created</span>
-                            <span class="key-warning-text">Copy now — this key will not be shown in full again.</span>
-                        </div>
-                        <div class="key-display-row">
-                            <code id="createdKeyVal">aeronav_live_...</code>
-                            <button id="copyKeyBtn" class="btn-copy">📋 Copy</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Active API Keys Table -->
-                <div class="control-card">
-                    <div class="card-header-flex">
-                        <h3>Active API Keys</h3>
-                        <button id="refreshKeysBtn" class="btn-refresh">🔄 Refresh</button>
-                    </div>
-                    <div class="table-scroll">
-                        <table class="wp-table keys-table">
-                            <thead>
-                                <tr>
-                                    <th>Client Name</th>
-                                    <th>Masked Key</th>
-                                    <th>Reqs</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="keysTableBody">
-                                <!-- Populated dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <!-- Dynamic Dev Containers Placeholder (Only populated on localhost) -->
+            <div id="devTabsContainer"></div>
         </aside>
 
         <!-- Map Container -->
@@ -379,6 +175,6 @@ volumes:
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="app.js?v=2.5"></script>
+    <script src="app.js?v=3.0"></script>
 </body>
 </html>

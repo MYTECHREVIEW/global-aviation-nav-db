@@ -210,9 +210,9 @@ app.get('/api/v1/client-context', (req, res) => {
  * GET /api/v1/config/env
  */
 app.get('/api/v1/config/env', (req, res) => {
-    const isDev = process.env.NODE_ENV !== 'production';
+    const isDev = process.env.NODE_ENV !== 'production' && apiKeyManager.isLocalOrPrivateIp(req);
     res.json({
-        environment: isDev ? 'development' : 'production',
+        environment: process.env.NODE_ENV === 'production' ? 'production' : 'development',
         is_dev: isDev
     });
 });

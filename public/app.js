@@ -7,8 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setupTabs();
     setupEventListeners();
     setupSimbrief();
-    setupApiKeyAndGitTab();
-    checkEnvironmentMode();
+
+    // Check if we are in Local Dev mode; only inject dev tools if confirmed
+    initDevEnvironmentIfLocal();
 
     const badge = document.getElementById('mapBadge');
     if (badge) badge.style.display = 'none';
@@ -20,7 +21,7 @@ function initMap() {
         attributionControl: false
     }).setView([38.5, -96.0], 4);
 
-    // Dark Basemap
+    // Dark Carto Basemap
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
         subdomains: 'abcd'
@@ -30,19 +31,21 @@ function initMap() {
 }
 
 function setupTabs() {
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
+    const tabNav = document.getElementById('tabNavContainer');
+    tabNav.addEventListener('click', (e) => {
+        const btn = e.target.closest('.tab-btn');
+        if (!btn) return;
 
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
+        const allBtns = document.querySelectorAll('.tab-btn');
+        const allContents = document.querySelectorAll('.tab-content');
 
-            btn.classList.add('active');
-            const target = btn.getAttribute('data-tab');
-            const targetEl = document.getElementById(target);
-            if (targetEl) targetEl.classList.add('active');
-        });
+        allBtns.forEach(b => b.classList.remove('active'));
+        allContents.forEach(c => c.classList.remove('active'));
+
+        btn.classList.add('active');
+        const target = btn.getAttribute('data-tab');
+        const targetEl = document.getElementById(target);
+        if (targetEl) targetEl.classList.add('active');
     });
 }
 
@@ -58,32 +61,219 @@ function setupEventListeners() {
             if (e.key === 'Enter') executeSearch();
         });
     }
-
-    const copyComposeBtn = document.getElementById('copyComposeBtn');
-    if (copyComposeBtn) {
-        copyComposeBtn.addEventListener('click', () => {
-            const yamlCode = document.getElementById('composeYamlCode').textContent;
-            navigator.clipboard.writeText(yamlCode).then(() => {
-                copyComposeBtn.textContent = '✅ Copied YAML!';
-                setTimeout(() => { copyComposeBtn.textContent = '📋 Copy YAML'; }, 2000);
-            });
-        });
-    }
 }
 
-async function checkEnvironmentMode() {
+async function initDevEnvironmentIfLocal() {
     try {
         const res = await fetch('/api/v1/config/env');
         const data = await res.json();
 
-        // In Production Docker Container: hide dev-only tabs
-        if (!data.is_dev) {
-            document.querySelectorAll('.dev-only-tab').forEach(el => el.remove());
-            document.querySelectorAll('.dev-only-content').forEach(el => el.remove());
+        // ONLY inject Dev Tabs if confirmed Local Dev environment
+        if (data.is_dev) {
+            injectDevTabs();
         }
-    } catch (e) {
-        console.warn('Could not check environment mode:', e);
+    } catch (e) {}
+}
+
+function injectDevTabs() {
+    const tabNav = document.getElementById('tabNavContainer');
+    const devContainer = document.getElementById('devTabsContainer');
+
+    // Add Tab Buttons
+    const docsBtn = document.createElement('button');
+    docsBtn.className = 'tab-btn';
+    docsBtn.setAttribute('data-tab', 'tab-api');
+    docsBtn.textContent = '📡 API Docs';
+
+    const keysBtn = document.createElement('button');
+    keysBtn.className = 'tab-btn';
+    keysBtn.setAttribute('data-tab', 'tab-keys');
+    keysBtn.textContent = '🔑 API Keys & Git';
+
+    tabNav.appendChild(docsBtn);
+    tabNav.appendChild(keysBtn);
+
+    // Inject Tab Content
+    devContainer.innerHTML = `
+        <!-- TAB 3: API DOCS (DEV ONLY) -->
+        <div class="tab-content" id="tab-api">
+            <div class="control-card compose-card">
+                <div class="card-header-flex">
+                    <h3>🐳 Docker Compose & Dockage Stack</h3>
+                    <button id="copyComposeBtn" class="btn-copy">📋 Copy YAML</button>
+                </div>
+                <p class="help-text">Copy and paste this configuration directly into <strong>Portainer Web Editor</strong>, <strong>Dockage</strong>, or your server's <code>docker-compose.yml</code>.</p>
+                <div class="code-block-wrapper">
+                    <pre class="code-pre"><code id="composeYamlCode">version: '3.8'
+
+services:
+  global-aviation-nav-db:
+    image: ghcr.io/mytechreview/global-aviation-nav-db:latest
+    container_name: global-aviation-nav-db
+    restart: unless-stopped
+    ports:
+      - "3510:3510"
+    environment:
+      - PORT=3510
+      - NODE_ENV=production
+      - MAPBOX_ACCESS_TOKEN=
+    volumes:
+      - aeronav_keys:/app/data/keys
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3510/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  aeronav_keys:
+    name: aeronav_api_keys</code></pre>
+                </div>
+            </div>
+
+            <div class="control-card">
+                <h3>🔑 Authentication</h3>
+                <p class="help-text">Pass API Key via <code>X-API-Key</code> header or <code>?api_key=</code> parameter.</p>
+            </div>
+
+            <div class="control-card">
+                <h3>📡 REST API Endpoints</h3>
+                <div class="api-doc-item">
+                    <div class="api-doc-header"><span class="method post">POST</span> <code>/api/v1/route/trace</code></div>
+                    <p class="api-doc-desc">Traces flight plan with SIDs, Airways, and STARs into waypoints and GeoJSON.</p>
+                </div>
+                <div class="api-doc-item">
+                    <div class="api-doc-header"><span class="method post">POST</span> <code>/api/v1/simbrief/trace</code></div>
+                    <p class="api-doc-desc">Auto-import and trace SimBrief OFP in 1 step.</p>
+                </div>
+                <div class="api-doc-item">
+                    <div class="api-doc-header"><span class="method get">GET</span> <code>/api/v1/waypoints/search?q=MATLK</code></div>
+                    <p class="api-doc-desc">Search airports and navigation fixes.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: API KEYS & GIT (DEV ONLY) -->
+        <div class="tab-content" id="tab-keys">
+            <div class="control-card git-card">
+                <div class="card-header-flex">
+                    <h3>🚀 GitHub Cloud Sync</h3>
+                    <a href="https://github.com/MYTECHREVIEW/global-aviation-nav-db" target="_blank" class="github-link-btn">View Repo ↗</a>
+                </div>
+                <p class="help-text">Push changes directly to GitHub so Portainer on TrueNAS can pull and update.</p>
+                <div class="git-status-row">
+                    <span class="status-indicator-dot" id="gitStatusDot"></span>
+                    <span id="gitStatusText">Checking GitHub sync status...</span>
+                </div>
+                <div id="gitFilesContainer" class="git-files-container">
+                    <div class="git-files-header">
+                        <span class="git-files-title">📂 Pending Local Changes (<span id="gitFilesCount">0</span>)</span>
+                        <button id="gitRefreshBtn" class="btn-refresh-sm">🔄 Refresh</button>
+                    </div>
+                    <div id="gitFilesList" class="git-files-list">
+                        <div class="git-file-empty">Checking working directory...</div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Commit Message (Optional)</label>
+                    <input type="text" id="gitCommitMsg" placeholder="e.g. Update route parser and database" />
+                </div>
+                <button id="gitPushBtn" class="btn-primary btn-git"><span>⬆️ Push Changes to GitHub</span></button>
+                <div id="gitPushResult" class="git-push-result" style="display: none;"></div>
+            </div>
+
+            <div class="control-card">
+                <h3>🔑 Generate API Key</h3>
+                <div class="input-grid">
+                    <div>
+                        <label>Key Name</label>
+                        <input type="text" id="newKeyName" placeholder="e.g. Flight Tracker Webhook" />
+                    </div>
+                    <div>
+                        <label>Expiration</label>
+                        <select id="newKeyExpires" class="custom-select">
+                            <option value="">Never (Permanent)</option>
+                            <option value="30">30 Days</option>
+                            <option value="90">90 Days</option>
+                            <option value="365" selected>1 Year</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="generateKeyBtn" class="btn-primary" style="margin-top: 10px;"><span>⚡ Generate API Key</span></button>
+                <div id="createdKeyBox" class="created-key-box" style="display: none;">
+                    <div class="created-key-header">
+                        <span class="badge-success">New API Key Created</span>
+                    </div>
+                    <div class="key-display-row">
+                        <code id="createdKeyVal">aeronav_live_...</code>
+                        <button id="copyKeyBtn" class="btn-copy">📋 Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-card">
+                <div class="card-header-flex">
+                    <h3>Active API Keys</h3>
+                    <button id="refreshKeysBtn" class="btn-refresh">🔄 Refresh</button>
+                </div>
+                <div class="table-scroll">
+                    <table class="wp-table keys-table">
+                        <thead>
+                            <tr>
+                                <th>Client Name</th>
+                                <th>API Key</th>
+                                <th>Reqs</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="keysTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    `;
+
+    setupDevTabEvents();
+}
+
+function setupDevTabEvents() {
+    const copyComposeBtn = document.getElementById('copyComposeBtn');
+    if (copyComposeBtn) {
+        copyComposeBtn.addEventListener('click', () => {
+            const yaml = document.getElementById('composeYamlCode').textContent;
+            navigator.clipboard.writeText(yaml).then(() => {
+                copyComposeBtn.textContent = '✅ Copied!';
+                setTimeout(() => { copyComposeBtn.textContent = '📋 Copy YAML'; }, 2000);
+            });
+        });
     }
+
+    const gitPushBtn = document.getElementById('gitPushBtn');
+    if (gitPushBtn) gitPushBtn.addEventListener('click', pushToGithub);
+
+    const gitRefreshBtn = document.getElementById('gitRefreshBtn');
+    if (gitRefreshBtn) gitRefreshBtn.addEventListener('click', checkGitStatus);
+
+    const genKeyBtn = document.getElementById('generateKeyBtn');
+    if (genKeyBtn) genKeyBtn.addEventListener('click', generateApiKey);
+
+    const copyKeyBtn = document.getElementById('copyKeyBtn');
+    if (copyKeyBtn) {
+        copyKeyBtn.addEventListener('click', () => {
+            const val = document.getElementById('createdKeyVal').textContent;
+            navigator.clipboard.writeText(val).then(() => {
+                copyKeyBtn.textContent = '✅ Copied!';
+                setTimeout(() => { copyKeyBtn.textContent = '📋 Copy'; }, 2000);
+            });
+        });
+    }
+
+    const refreshKeysBtn = document.getElementById('refreshKeysBtn');
+    if (refreshKeysBtn) refreshKeysBtn.addEventListener('click', loadApiKeys);
+
+    checkGitStatus();
+    loadApiKeys();
 }
 
 function setupSimbrief() {
@@ -350,34 +540,6 @@ window.zoomToFix = function(lat, lon, ident, type) {
     }).addTo(routeLayerGroup).bindPopup(`<strong>${ident}</strong> (${type})<br>📍 ${lat.toFixed(4)}, ${lon.toFixed(4)}`).openPopup();
 };
 
-function setupApiKeyAndGitTab() {
-    const gitPushBtn = document.getElementById('gitPushBtn');
-    if (gitPushBtn) gitPushBtn.addEventListener('click', pushToGithub);
-
-    const gitRefreshBtn = document.getElementById('gitRefreshBtn');
-    if (gitRefreshBtn) gitRefreshBtn.addEventListener('click', checkGitStatus);
-
-    const genKeyBtn = document.getElementById('generateKeyBtn');
-    if (genKeyBtn) genKeyBtn.addEventListener('click', generateApiKey);
-
-    const copyKeyBtn = document.getElementById('copyKeyBtn');
-    if (copyKeyBtn) {
-        copyKeyBtn.addEventListener('click', () => {
-            const keyVal = document.getElementById('createdKeyVal').textContent;
-            navigator.clipboard.writeText(keyVal).then(() => {
-                copyKeyBtn.textContent = '✅ Copied!';
-                setTimeout(() => { copyKeyBtn.textContent = '📋 Copy'; }, 2000);
-            });
-        });
-    }
-
-    const refreshKeysBtn = document.getElementById('refreshKeysBtn');
-    if (refreshKeysBtn) refreshKeysBtn.addEventListener('click', loadApiKeys);
-
-    checkGitStatus();
-    loadApiKeys();
-}
-
 async function checkGitStatus() {
     const dot = document.getElementById('gitStatusDot');
     const text = document.getElementById('gitStatusText');
@@ -478,7 +640,7 @@ async function loadApiKeys() {
             return;
         }
 
-        tbody.innerHTML = data.keys.map((k, idx) => `
+        tbody.innerHTML = data.keys.map(k => `
             <tr>
                 <td>
                     <div style="font-weight: 700; color: #f8fafc;">${k.name || 'Unnamed Client'}</div>
@@ -501,15 +663,6 @@ async function loadApiKeys() {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">Failed to load API keys.</td></tr>';
     }
 }
-
-window.copyFullKey = function(keyVal, btnEl) {
-    navigator.clipboard.writeText(keyVal).then(() => {
-        const orig = btnEl.textContent;
-        btnEl.textContent = '✅ Copied!';
-        setTimeout(() => { btnEl.textContent = orig; }, 2000);
-    });
-};
-
 
 async function generateApiKey() {
     const nameInput = document.getElementById('newKeyName');
@@ -565,4 +718,12 @@ window.revokeKey = async function(id) {
     } catch (e) {
         alert('Network error: ' + e.message);
     }
+};
+
+window.copyFullKey = function(keyVal, btnEl) {
+    navigator.clipboard.writeText(keyVal).then(() => {
+        const orig = btnEl.textContent;
+        btnEl.textContent = '✅ Copied!';
+        setTimeout(() => { btnEl.textContent = orig; }, 2000);
+    });
 };
