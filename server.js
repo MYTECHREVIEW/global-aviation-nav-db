@@ -64,7 +64,7 @@ function haversineNm(lat1, lon1, lat2, lon2) {
  * POST /api/v1/auth/keys
  * Body: { "name": "Flight Tracker Client", "expires_in_days": 365 }
  */
-app.post('/api/v1/auth/keys', (req, res) => {
+app.post('/api/v1/auth/keys', apiKeyManager.requireLocalOrAdmin, (req, res) => {
     const name = req.body?.name || 'API Client';
     const expires = req.body?.expires_in_days ? parseInt(req.body.expires_in_days, 10) : null;
     const newKey = apiKeyManager.generateApiKey(name, expires);
@@ -79,7 +79,7 @@ app.post('/api/v1/auth/keys', (req, res) => {
  * List all API Keys
  * GET /api/v1/auth/keys
  */
-app.get('/api/v1/auth/keys', (req, res) => {
+app.get('/api/v1/auth/keys', apiKeyManager.requireLocalOrAdmin, (req, res) => {
     const keys = apiKeyManager.loadKeys().map(k => ({
         id: k.id,
         name: k.name,
@@ -97,7 +97,7 @@ app.get('/api/v1/auth/keys', (req, res) => {
  * Revoke an API Key
  * DELETE /api/v1/auth/keys/:id
  */
-app.delete('/api/v1/auth/keys/:id', (req, res) => {
+app.delete('/api/v1/auth/keys/:id', apiKeyManager.requireLocalOrAdmin, (req, res) => {
     const id = req.params.id;
     const success = apiKeyManager.revokeApiKey(id);
     if (!success) {
@@ -116,7 +116,7 @@ app.delete('/api/v1/auth/keys/:id', (req, res) => {
  * Get current Git Status and Latest Commit
  * GET /api/v1/git/status
  */
-app.get('/api/v1/git/status', (req, res) => {
+app.get('/api/v1/git/status', apiKeyManager.requireLocalOrAdmin, (req, res) => {
     const cwd = __dirname;
     exec('git log -1 --format="%h - %s (%cr)" 2>/dev/null && echo "---STATUS_DELIM---" && git status --porcelain', { cwd }, (err, stdout, stderr) => {
         if (err) {
@@ -162,7 +162,7 @@ app.get('/api/v1/git/status', (req, res) => {
  * POST /api/v1/git/push
  * Body: { "message": "Custom commit message" }
  */
-app.post('/api/v1/git/push', (req, res) => {
+app.post('/api/v1/git/push', apiKeyManager.requireLocalOrAdmin, (req, res) => {
     const cwd = __dirname;
     const msg = req.body?.message || `update: UI & database sync at ${new Date().toISOString()}`;
     const cleanMsg = msg.replace(/"/g, '\\"');
@@ -189,6 +189,19 @@ app.post('/api/v1/git/push', (req, res) => {
 });
 
 app.use('/api/v1', apiKeyManager.requireApiKey);
+
+
+/**
+ * Check if current client has local/admin access
+ * GET /api/v1/client-context
+ */
+app.get('/api/v1/client-context', (req, res) => {
+    const isLocal = apiKeyManager.isLocalOrPrivateIp(req);
+    res.json({
+        is_local_admin: isLocal,
+        mode: isLocal ? 'local_admin' : 'public'
+    });
+});
 
 app.get('/health', (req, res) => {
     res.json({

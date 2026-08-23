@@ -135,7 +135,42 @@ function requireApiKey(req, res, next) {
     next();
 }
 
+
+function isLocalOrPrivateIp(req) {
+    if (process.env.PUBLIC_MODE === 'true') return false;
+
+    const rawIp = req.headers['x-forwarded-for']?.split(',')[0].trim() || 
+                  req.socket?.remoteAddress || 
+                  req.ip || '';
+    
+    const ip = rawIp.replace(/^::ffff:/, '');
+
+    // Local loopback
+    if (ip === '127.0.0.1' || ip === '::1' || ip === 'localhost') return true;
+
+    // Private Local Area Networks (LAN)
+    if (/^10\./.test(ip)) return true;
+    if (/^192\.168\./.test(ip)) return true;
+    if (/^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(ip)) return true;
+
+    // Optional Admin secret header
+    if (process.env.ADMIN_KEY && req.headers['x-admin-key'] === process.env.ADMIN_KEY) return true;
+
+    return false;
+}
+
+function requireLocalOrAdmin(req, res, next) {
+    if (isLocalOrPrivateIp(req)) {
+        return next();
+    }
+    return res.status(403).json({
+        error: 'Forbidden: API Key management and administrative docs are restricted to local/private network access.'
+    });
+}
+
 module.exports = {
+    isLocalOrPrivateIp,
+    requireLocalOrAdmin,
     initializeKeys,
     loadKeys,
     generateApiKey,

@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupSimbrief();
     setupApiKeyAndGitTab();
+    checkClientContext();
 
     // Start with clean map
     document.getElementById('mapBadge').style.display = 'none';
@@ -506,5 +507,32 @@ async function revokeKey(id) {
         }
     } catch (e) {
         alert('Network error: ' + e.message);
+    }
+}
+
+
+async function checkClientContext() {
+    try {
+        const res = await fetch('/api/v1/client-context');
+        const data = await res.json();
+        
+        const apiDocsBtn = document.querySelector('.tab-btn[data-tab="tab-api"]');
+        const apiKeysBtn = document.querySelector('.tab-btn[data-tab="tab-keys"]');
+        const apiDocsContent = document.getElementById('tab-api');
+        const apiKeysContent = document.getElementById('tab-keys');
+
+        if (!data.is_local_admin) {
+            // Hide admin tabs for public visitors
+            if (apiDocsBtn) apiDocsBtn.style.display = 'none';
+            if (apiKeysBtn) apiKeysBtn.style.display = 'none';
+            if (apiDocsContent) apiDocsContent.remove();
+            if (apiKeysContent) apiKeysContent.remove();
+        } else {
+            // Keep visible for local/private admin
+            if (apiDocsBtn) apiDocsBtn.style.display = 'block';
+            if (apiKeysBtn) apiKeysBtn.style.display = 'block';
+        }
+    } catch (e) {
+        console.warn('Could not verify client context:', e);
     }
 }
