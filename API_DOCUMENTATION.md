@@ -186,3 +186,77 @@ List registered keys with masked tokens and request statistics.
 
 ### `DELETE /api/v1/auth/keys/:id`
 Revoke an API key.
+
+
+---
+
+## 📡 5. Multi-Network Live Aircraft Tracking (VATSIM, IVAO, FSHub)
+
+Track online aircraft in real time with live telemetry, heading, groundspeed, altitude, and SimBrief route correlation.
+
+### `POST /api/v1/live/track`
+Unified multi-network live tracking request with SimBrief auto-import and cross-track deviation calculation.
+
+#### Request Parameters
+| Field | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `network` | String | Required | Target network: `"VATSIM"`, `"IVAO"`, or `"FSHUB"` |
+| `identifier` | String | Required | Callsign (e.g. `"UAL2"`), VATSIM CID, IVAO VID, or FSHub Token |
+| `simbrief_username` | String | Optional | Auto-fetches user's latest SimBrief OFP to correlate flight path |
+| `manual_route` | String | Optional | Explicit route string if not using SimBrief |
+
+#### Request Body
+```json
+{
+  "network": "VATSIM",
+  "identifier": "UAL2",
+  "simbrief_username": "my_simbrief_user"
+}
+```
+
+#### Response Payload (Sample)
+```json
+{
+  "success": true,
+  "network": "VATSIM",
+  "telemetry": {
+    "network": "VATSIM",
+    "identifier": "UAL2",
+    "cid": 1474621,
+    "callsign": "UAL2",
+    "pilot_name": "Arbin Bagamaspad",
+    "latitude": 39.2181,
+    "longitude": -112.9964,
+    "altitude_ft": 39977,
+    "groundspeed_kts": 550,
+    "heading_deg": 82,
+    "transponder": "2000",
+    "flight_phase": "CRUISE",
+    "cross_track_deviation_nm": -6.7,
+    "distance_flown_nm": 6905.5,
+    "distance_remaining_nm": 465.1,
+    "progress_percent": 94,
+    "estimated_time_remaining_formatted": "0h 51m",
+    "next_waypoint": {
+      "ident": "OSI",
+      "type": "VORTAC",
+      "sequence": 5,
+      "distance_to_go_nm": 450.7,
+      "bearing_deg": 259
+    }
+  },
+  "simbrief_correlated": true,
+  "route": { ... }
+}
+```
+
+---
+
+### `GET /api/v1/live/vatsim/:identifier`
+Directly query a pilot on VATSIM by CID or Callsign.
+
+### `GET /api/v1/live/ivao/:identifier`
+Directly query a pilot on IVAO by VID or Callsign.
+
+### `GET /api/v1/live/fshub/:identifier`
+Directly query a pilot on FSHub by User ID or Token.

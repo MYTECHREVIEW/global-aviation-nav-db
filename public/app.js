@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupTabs();
     setupEventListeners();
     setupSimbrief();
+    setupLiveTracking();
 
     // Check if we are in Local Dev mode; only inject dev tools if confirmed
     initDevEnvironmentIfLocal();
@@ -767,3 +768,251 @@ window.copyFullKey = function(keyVal, btnEl) {
         setTimeout(() => { btnEl.textContent = orig; }, 2000);
     });
 };
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 📡 LIVE MULTI-NETWORK RADAR TRACKER (VATSIM, IVAO, FSHUB)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+let activeLiveNetwork = 'VATSIM';
+let liveRadarInterval = null;
+let aircraftMarker = null;
+let aircraftTrailLayer = null;
+let aircraftTrailPoints = [];
+
+function setupLiveTracking() {
+    // Network buttons
+    const netBtns = document.querySelectorAll('.network-btn');
+    const netLabel = document.getElementById('netIdLabel');
+    const inputEl = document.getElementById('liveIdentifier');
+
+    netBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            netBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeLiveNetwork = btn.getAttribute('data-net');
+
+            if (activeLiveNetwork === 'VATSIM') {
+                if (netLabel) netLabel.textContent = 'VATSIM Callsign or CID';
+                if (inputEl) inputEl.placeholder = 'e.g. UAL2 or CID...';
+            } else if (activeLiveNetwork === 'IVAO') {
+                if (netLabel) netLabel.textContent = 'IVAO Callsign or VID';
+                if (inputEl) inputEl.placeholder = 'e.g. AFR456 or VID...';
+            } else if (activeLiveNetwork === 'FSHUB') {
+                if (netLabel) netLabel.textContent = 'FSHub User ID or Token';
+                if (inputEl) inputEl.placeholder = 'e.g. User ID / Token...';
+            }
+        });
+    });
+
+    const trackBtn = document.getElementById('liveTrackBtn');
+    if (trackBtn) trackBtn.addEventListener('click', () => executeLiveTrack(true));
+
+    if (inputEl) {
+        inputEl.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') executeLiveTrack(true);
+        });
+    }
+
+    const autoToggle = document.getElementById('toggleAutoRadar');
+    if (autoToggle) {
+        autoToggle.addEventListener('change', (e) => {
+            if (!e.target.checked && liveRadarInterval) {
+                clearInterval(liveRadarInterval);
+                liveRadarInterval = null;
+            } else if (e.target.checked && document.getElementById('liveIdentifier').value.trim()) {
+                startRadarPolling();
+            }
+        });
+    }
+}
+
+function startRadarPolling() {
+    if (liveRadarInterval) clearInterval(liveRadarInterval);
+    liveRadarInterval = setInterval(() => {
+        const autoToggle = document.getElementById('toggleAutoRadar');
+        if (autoToggle && autoToggle.checked) {
+            executeLiveTrack(false);
+        }
+    }, 15000);
+}
+
+async function executeLiveTrack(manualClick = false) {
+    const identInput = document.getElementById('liveIdentifier');
+    const simbriefInput = document.getElementById('liveSimbriefUser');
+    const statusBox = document.getElementById('liveTrackStatus');
+    const btn = document.getElementById('liveTrackBtn');
+
+    const identifier = identInput ? identInput.value.trim() : '';
+    const simbriefUser = simbriefInput ? simbriefInput.value.trim() : '';
+
+    if (!identifier) {
+        if (statusBox) {
+            statusBox.style.display = 'block';
+            statusBox.className = 'simbrief-status error';
+            statusBox.textContent = `Please enter a ${activeLiveNetwork} Callsign, CID, or Token.`;
+        }
+        return;
+    }
+
+    if (manualClick && btn) {
+        btn.innerHTML = '<span>⏳ Acquiring Radar Lock...</span>';
+        btn.disabled = true;
+    }
+
+    try {
+        const response = await fetch('/api/v1/live/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                network: activeLiveNetwork,
+                identifier: identifier,
+                simbrief_username: simbriefUser || undefined
+            })
+        });
+
+        const data = await response.json();
+
+        if (manualClick && btn) {
+            btn.innerHTML = '<span>📡 Track Aircraft Live</span>';
+            btn.disabled = false;
+        }
+
+        if (data.error || !data.success) {
+            if (statusBox) {
+                statusBox.style.display = 'block';
+                statusBox.className = 'simbrief-status error';
+                statusBox.textContent = `Radar Error: ${data.error}`;
+            }
+            return;
+        }
+
+        if (statusBox) {
+            statusBox.style.display = 'block';
+            statusBox.className = 'simbrief-status success';
+            statusBox.innerHTML = `🎯 <strong>${data.telemetry.callsign}</strong> locked on ${data.network} • FL${Math.round(data.telemetry.altitude_ft / 100)} @ ${data.telemetry.groundspeed_kts} kts`;
+        }
+
+        // Render route if returned
+        if (data.route) {
+            renderRouteOnMap(data.route, manualClick);
+            updateTelemetryCard(data.route);
+            updateWaypointLog(data.route.waypoints);
+        }
+
+        // Update Live HUD
+        updateLiveHud(data.telemetry);
+
+        // Update Moving Aircraft Marker
+        updateAircraftMarker(data.telemetry, manualClick);
+
+        if (manualClick) {
+            startRadarPolling();
+        }
+    } catch (err) {
+        if (manualClick && btn) {
+            btn.innerHTML = '<span>📡 Track Aircraft Live</span>';
+            btn.disabled = false;
+        }
+        if (statusBox) {
+            statusBox.style.display = 'block';
+            statusBox.className = 'simbrief-status error';
+            statusBox.textContent = `Connection Error: ${err.message}`;
+        }
+    }
+}
+
+function updateLiveHud(t) {
+    const hud = document.getElementById('liveHudCard');
+    if (!hud) return;
+
+    hud.style.display = 'block';
+    document.getElementById('hudCallsign').textContent = t.callsign;
+    document.getElementById('hudAircraft').textContent = t.flight_plan?.aircraft 
+        ? `${t.flight_plan.aircraft} • ${t.flight_plan.departure || 'DEP'} ➔ ${t.flight_plan.arrival || 'ARR'}` 
+        : t.network;
+    
+    document.getElementById('hudPhase').textContent = (t.flight_phase || 'ENROUTE').replace('_', ' ');
+    document.getElementById('hudAlt').textContent = `${(t.altitude_ft || 0).toLocaleString()} ft`;
+    document.getElementById('hudGs').textContent = `${t.groundspeed_kts || 0} kts`;
+    document.getElementById('hudHdg').textContent = `${String(t.heading_deg || 0).padStart(3, '0')}°`;
+
+    const xtdVal = t.cross_track_deviation_nm || 0;
+    const xtdText = Math.abs(xtdVal) < 0.1 ? 'ON TRACK' : `${Math.abs(xtdVal)} NM ${xtdVal < 0 ? 'L' : 'R'}`;
+    document.getElementById('hudXtd').textContent = xtdText;
+
+    document.getElementById('hudRemDist').textContent = `${t.distance_remaining_nm || 0} NM`;
+    document.getElementById('hudEte').textContent = t.estimated_time_remaining_formatted || '--';
+
+    const prog = t.progress_percent || 0;
+    document.getElementById('hudProgressText').textContent = `${prog}%`;
+    document.getElementById('hudProgressFill').style.width = `${prog}%`;
+
+    const nextWpEl = document.getElementById('hudNextWp');
+    if (t.next_waypoint) {
+        nextWpEl.textContent = `${t.next_waypoint.ident} (${t.next_waypoint.distance_to_go_nm} NM @ ${t.next_waypoint.bearing_deg}°)`;
+    } else {
+        nextWpEl.textContent = 'Destination Final';
+    }
+}
+
+function updateAircraftMarker(telemetry, panToPlane = false) {
+    const lat = telemetry.latitude;
+    const lon = telemetry.longitude;
+    const hdg = telemetry.heading_deg || 0;
+
+    if (!aircraftTrailLayer) {
+        aircraftTrailLayer = L.polyline([], {
+            color: '#c084fc',
+            weight: 3,
+            opacity: 0.8,
+            dashArray: '4, 4'
+        }).addTo(map);
+    }
+
+    aircraftTrailPoints.push([lat, lon]);
+    if (aircraftTrailPoints.length > 50) aircraftTrailPoints.shift();
+    aircraftTrailLayer.setLatLngs(aircraftTrailPoints);
+
+    // SVG Airplane Icon
+    const planeSvg = `
+        <div class="aircraft-marker-container">
+            <div class="aircraft-halo"></div>
+            <svg class="aircraft-icon-svg" style="transform: rotate(${hdg}deg);" viewBox="0 0 24 24" fill="#00ff88">
+                <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+            </svg>
+        </div>
+    `;
+
+    const customIcon = L.divIcon({
+        html: planeSvg,
+        className: 'aircraft-div-icon',
+        iconSize: [36, 36],
+        iconAnchor: [18, 18]
+    });
+
+    if (!aircraftMarker) {
+        aircraftMarker = L.marker([lat, lon], { icon: customIcon, zIndexOffset: 1000 }).addTo(map);
+    } else {
+        aircraftMarker.setLatLng([lat, lon]);
+        aircraftMarker.setIcon(customIcon);
+    }
+
+    const popupHtml = `
+        <div style="font-family: 'Inter', sans-serif; font-size: 12px; color: #fff; min-width: 160px;">
+            <div style="font-weight: 800; font-size: 15px; color: #00ff88; margin-bottom: 4px;">
+                ✈️ ${telemetry.callsign}
+            </div>
+            <div style="color: #c084fc; font-weight: 600; font-size: 11px; margin-bottom: 6px;">${telemetry.network} Live Target</div>
+            <div>📍 <strong>Altitude:</strong> ${(telemetry.altitude_ft || 0).toLocaleString()} ft</div>
+            <div>⚡ <strong>Groundspeed:</strong> ${telemetry.groundspeed_kts || 0} kts</div>
+            <div>🧭 <strong>Heading:</strong> ${hdg}°</div>
+            ${telemetry.flight_plan?.departure ? `<div style="margin-top: 4px; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.1); color: #38bdf8;">${telemetry.flight_plan.departure} ➔ ${telemetry.flight_plan.arrival}</div>` : ''}
+        </div>
+    `;
+    aircraftMarker.bindPopup(popupHtml);
+
+    if (panToPlane) {
+        map.panTo([lat, lon]);
+    }
+}

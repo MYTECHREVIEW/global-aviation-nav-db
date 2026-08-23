@@ -6,6 +6,7 @@ A high-performance global navigation database and flight plan route parser engin
 
 ## 🚀 Features
 
+- **Multi-Network Live Flight Tracking**: Live aircraft tracking for **VATSIM**, **IVAO**, and **FSHub** with moving rotating plane markers, magnetic heading, live altitude/speed, and real-time cross-track deviation (XTD) math.
 - **Global Aeronautical Database**: Accurate GPS coordinates, elevations, frequencies, magnetic variations, and terminal airport associations.
 - **Runway & Transition-Aware Procedures**: Multi-branch procedure solver that matches filed departure/arrival runways and enroute transition fixes while automatically excluding mutually exclusive branches.
 - **Airway Sequence Expansion**: Automatically expands airway segments (e.g. `Q87`, `J79`, `V1`) into ordered waypoint chains.

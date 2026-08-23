@@ -6,6 +6,7 @@ const fs = require('fs');
 const RouteParser = require('./src/parser/route-parser');
 const { fetchSimbriefOfp } = require('./src/simbrief/simbrief-service');
 const apiKeyManager = require('./src/auth/api-key-manager');
+const liveTrackerService = require('./src/tracking/live-tracker-service');
 
 apiKeyManager.initializeKeys();
 
@@ -565,6 +566,160 @@ app.post('/api/v1/simbrief/trace', async (req, res) => {
         });
     } catch (err) {
         res.status(404).json({ error: err.message });
+    }
+});
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🛩️ MULTI-NETWORK LIVE AIRCRAFT TRACKING ENDPOINTS (VATSIM, IVAO, FSHUB)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Track pilot on VATSIM by CID or Callsign
+ * GET /api/v1/live/vatsim/:identifier
+ */
+app.get('/api/v1/live/vatsim/:identifier', async (req, res) => {
+    try {
+        const pilot = await liveTrackerService.fetchVatsimPilot(req.params.identifier);
+        if (!pilot) {
+            return res.status(404).json({ error: `Pilot "${req.params.identifier}" not found online on VATSIM.` });
+        }
+        res.json({ success: true, telemetry: pilot });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+/**
+ * Track pilot on IVAO by VID or Callsign
+ * GET /api/v1/live/ivao/:identifier
+ */
+app.get('/api/v1/live/ivao/:identifier', async (req, res) => {
+    try {
+        const pilot = await liveTrackerService.fetchIvaoPilot(req.params.identifier);
+        if (!pilot) {
+            return res.status(404).json({ error: `Pilot "${req.params.identifier}" not found online on IVAO.` });
+        }
+        res.json({ success: true, telemetry: pilot });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+/**
+ * Track pilot on FSHub by User ID or Token
+ * GET /api/v1/live/fshub/:identifier
+ */
+app.get('/api/v1/live/fshub/:identifier', async (req, res) => {
+    try {
+        const pilot = await liveTrackerService.fetchFshubPilot(req.params.identifier, req.query.token);
+        if (!pilot) {
+            return res.status(404).json({ error: `Pilot "${req.params.identifier}" not found on FSHub live feed.` });
+        }
+        res.json({ success: true, telemetry: pilot });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+/**
+ * Unified Live Tracking & SimBrief Route Correlation
+ * POST /api/v1/live/track
+ * Body: { "network": "VATSIM", "identifier": "AAL123", "simbrief_username": "my_user" }
+ */
+app.post('/api/v1/live/track', async (req, res) => {
+    const { network = 'VATSIM', identifier, simbrief_username, manual_route, departure, arrival } = req.body || {};
+
+    if (!identifier) {
+        return res.status(400).json({ error: 'Missing aircraft "identifier" (CID, VID, Callsign, or FSHub Token).' });
+    }
+
+    try {
+        // 1. Fetch live telemetry from network
+        let telemetry = null;
+        const netUpper = network.toUpperCase();
+
+        if (netUpper === 'VATSIM') {
+            telemetry = await liveTrackerService.fetchVatsimPilot(identifier);
+        } else if (netUpper === 'IVAO') {
+            telemetry = await liveTrackerService.fetchIvaoPilot(identifier);
+        } else if (netUpper === 'FSHUB') {
+            telemetry = await liveTrackerService.fetchFshubPilot(identifier);
+        } else {
+            return res.status(400).json({ error: `Unsupported network "${network}". Use "VATSIM", "IVAO", or "FSHub".` });
+        }
+
+        if (!telemetry) {
+            return res.status(404).json({ error: `Aircraft "${identifier}" not found online on ${netUpper}.` });
+        }
+
+        // 2. Fetch or match route (SimBrief > Filed Network Flight Plan > Manual)
+        let routeStr = manual_route || null;
+        let depIcao = departure || telemetry.flight_plan?.departure || null;
+        let arrIcao = arrival || telemetry.flight_plan?.arrival || null;
+        let cruiseAlt = telemetry.flight_plan?.cruising_altitude || 35000;
+        let cruiseTas = telemetry.flight_plan?.cruise_tas || 450;
+        let simbriefOfp = null;
+
+        if (simbrief_username) {
+            try {
+                simbriefOfp = await simbriefService.fetchSimbriefOfp(simbrief_username);
+                if (simbriefOfp && simbriefOfp.route) {
+                    depIcao = simbriefOfp.departure_icao;
+                    arrIcao = simbriefOfp.arrival_icao;
+                    const depRwy = simbriefOfp.departure_runway ? `${depIcao}/${simbriefOfp.departure_runway}` : depIcao;
+                    const arrRwy = simbriefOfp.arrival_runway ? `${arrIcao}/${simbriefOfp.arrival_runway}` : arrIcao;
+                    routeStr = `${depRwy} ${simbriefOfp.route} ${arrRwy}`;
+                    cruiseAlt = simbriefOfp.cruise_altitude_ft || cruiseAlt;
+                    cruiseTas = simbriefOfp.cruise_tas_kts || cruiseTas;
+                }
+            } catch (e) {
+                console.warn('[LiveTracker] SimBrief fetch fallback:', e.message);
+            }
+        }
+
+        if (!routeStr && telemetry.flight_plan?.route) {
+            routeStr = `${depIcao || ''} ${telemetry.flight_plan.route} ${arrIcao || ''}`.trim();
+        }
+
+        // 3. Trace route if available
+        let routeResult = null;
+        if (routeStr) {
+            try {
+                routeResult = routeParser.parseRoute(
+                    routeStr,
+                    depIcao,
+                    arrIcao,
+                    typeof cruiseAlt === 'number' ? cruiseAlt : parseInt(cruiseAlt, 10) || 35000,
+                    typeof cruiseTas === 'number' ? cruiseTas : parseInt(cruiseTas, 10) || 450,
+                    { include_labels: true }
+                );
+            } catch (e) {
+                console.warn('[LiveTracker] Route parsing error:', e.message);
+            }
+        }
+
+        // 4. Correlate live aircraft position with route
+        const correlation = liveTrackerService.correlateAircraftWithRoute(telemetry, routeResult);
+
+        res.json({
+            success: true,
+            network: netUpper,
+            telemetry: {
+                ...telemetry,
+                flight_phase: correlation.flight_phase,
+                cross_track_deviation_nm: correlation.cross_track_deviation_nm,
+                distance_flown_nm: correlation.distance_flown_nm,
+                distance_remaining_nm: correlation.distance_remaining_nm,
+                progress_percent: correlation.progress_percent,
+                estimated_time_remaining_formatted: correlation.estimated_time_remaining_formatted,
+                next_waypoint: correlation.next_waypoint
+            },
+            simbrief_correlated: Boolean(simbriefOfp),
+            route: routeResult
+        });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
     }
 });
 

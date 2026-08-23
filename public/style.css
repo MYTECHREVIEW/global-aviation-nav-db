@@ -1072,3 +1072,209 @@ input:checked + .slider:before {
     transform: translateX(17px);
     background-color: #00ff88;
 }
+
+
+/* 📡 Live Flight Tracking Cockpit Styles */
+.live-tracking-card {
+    background: linear-gradient(135deg, rgba(30, 27, 75, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.network-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.network-btn {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 6px 4px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.network-btn:hover {
+    border-color: rgba(139, 92, 246, 0.6);
+    color: #fff;
+}
+
+.network-btn.active {
+    background: rgba(139, 92, 246, 0.25);
+    border-color: #a855f7;
+    color: #c084fc;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+}
+
+.network-btn.active[data-net="VATSIM"] {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: #38bdf8;
+    color: #38bdf8;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+}
+
+.network-btn.active[data-net="IVAO"] {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: #10b981;
+    color: #10b981;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.network-btn.active[data-net="FSHUB"] {
+    background: rgba(245, 158, 11, 0.2);
+    border-color: #f59e0b;
+    color: #fbbf24;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+}
+
+.btn-live-track {
+    width: 100%;
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 9px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 10px rgba(139, 92, 246, 0.4);
+    transition: all 0.2s ease;
+    margin-top: 10px;
+}
+
+.btn-live-track:hover {
+    filter: brightness(1.15);
+    transform: translateY(-1px);
+}
+
+.live-hud-card {
+    background: rgba(10, 15, 30, 0.9);
+    border: 1px solid rgba(0, 255, 136, 0.4);
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 14px;
+    box-shadow: 0 4px 20px rgba(0, 255, 136, 0.15);
+}
+
+.live-hud-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.live-callsign-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #00ff88;
+    letter-spacing: 1px;
+}
+
+.live-phase-pill {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: rgba(56, 189, 248, 0.2);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.live-gauge-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.live-gauge-box {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 6px 8px;
+    text-align: center;
+}
+
+.live-gauge-label {
+    font-size: 0.64rem;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 600;
+    display: block;
+}
+
+.live-gauge-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #f8fafc;
+}
+
+.live-gauge-val.green { color: #00ff88; }
+.live-gauge-val.cyan { color: #38bdf8; }
+.live-gauge-val.amber { color: #fbbf24; }
+
+/* Rotating Plane Marker */
+.aircraft-marker-container {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.aircraft-icon-svg {
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.8));
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.aircraft-halo {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 255, 136, 0.4);
+    animation: aircraftPulse 2s infinite ease-out;
+}
+
+@keyframes aircraftPulse {
+    0% { transform: scale(0.8); opacity: 0.8; }
+    100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Progress Bar */
+.flight-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+.flight-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #38bdf8 0%, #00ff88 100%);
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
