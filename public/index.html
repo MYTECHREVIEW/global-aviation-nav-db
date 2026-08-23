@@ -186,7 +186,8 @@ services:
       - NODE_ENV=production
       - MAPBOX_ACCESS_TOKEN=
     volumes:
-      - aeronav_keys:/app/data/api-keys.json
+      # Directory volume for persistent API keys
+      - aeronav_keys:/app/data/keys
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3510/health"]
       interval: 30s

@@ -3,9 +3,18 @@ const path = require('path');
 const crypto = require('crypto');
 
 const DATA_DIR = path.join(__dirname, '..', '..', 'data');
-const KEYS_FILE = path.join(DATA_DIR, 'api-keys.json');
+const KEYS_DIR = process.env.KEYS_DIR || path.join(DATA_DIR, 'keys');
+if (!fs.existsSync(KEYS_DIR)) fs.mkdirSync(KEYS_DIR, { recursive: true });
 
-if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+const KEYS_FILE = path.join(KEYS_DIR, 'api-keys.json');
+const LEGACY_KEYS_FILE = path.join(DATA_DIR, 'api-keys.json');
+
+// Auto-migrate legacy keys file if present
+if (fs.existsSync(LEGACY_KEYS_FILE) && !fs.existsSync(KEYS_FILE)) {
+    try {
+        fs.copyFileSync(LEGACY_KEYS_FILE, KEYS_FILE);
+    } catch (e) {}
+}
 
 function loadKeys() {
     try {
