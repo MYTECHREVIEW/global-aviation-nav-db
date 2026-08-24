@@ -15,7 +15,6 @@ const config = {
     fshub: urlParams.get('fshub') || '',
     ivao: urlParams.get('ivao') || '',
     route: urlParams.get('route') || '',
-    showHud: urlParams.get('hud') !== 'false',
     pollIntervalMs: parseInt(urlParams.get('interval') || '4000', 10),
     style: urlParams.get('style') || 'dark'
 };
@@ -24,9 +23,10 @@ let map = null;
 let tileLayer = null;
 let currentTileStyle = 'dark';
 let activeRouteLayer = null;
+let activeWaypointsLayerGroup = null;
 let activeRouteData = null;
 let selectedPilotId = null;
-let isHudVisible = config.showHud;
+let initialBoundsFitted = false;
 
 // Aircraft tracking buffers
 const fleetBuffers = new Map();
@@ -39,6 +39,237 @@ const TILE_STYLES = {
     satellite: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     voyager: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
 };
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ✈️ AIRCRAFT TYPE CLASSIFIER & SVG RENDERER (IDENTICAL TO MAIN API WEB APP)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function classifyAircraftType(rawIcao, routeStr = '') {
+    if (!rawIcao) return { icao: '', name: '', category: 'NARROWBODY_TWIN', label: '', size: 32, haloSize: 36 };
+
+    const cleanIcao = String(rawIcao).trim().toUpperCase();
+    const rawUpper = `${cleanIcao} ${String(routeStr).toUpperCase()}`;
+
+    // 1. Helicopters
+    if (
+        /(^|\b|_|-)(H1[2345][05]|H225|EC[1234][0-9]{2}|AS3[56][0-9]|B06|B407|B429|S76|S92|UH60|AH64|CH47|R22|R44|R66|AW1[0368]9|A109|MD50|BK117)(\b|_|-|$)/i.test(rawUpper) ||
+        rawUpper.includes('ROTOR') || rawUpper.includes('COPTER') || rawUpper.includes('HELI')
+    ) {
+        return {
+            icao: cleanIcao || 'HELI',
+            name: `Helicopter (${cleanIcao || 'Rotorcraft'})`,
+            category: 'HELICOPTER',
+            label: `🚁 ${cleanIcao || 'Rotorcraft'}`,
+            size: 32,
+            haloSize: 36
+        };
+    }
+
+    // 2. 4-Engine Heavy Jets
+    if (
+        /(^|\b|_|-)(B74[1-8]|A34[2-6]|A388|AN22|A124|A225|IL76|IL96|BA46|B46[1-3]|RJ[78][0-9]|RJ100|B52|C5M)(\b|_|-|$)/i.test(rawUpper) ||
+        rawUpper.includes('747') || rawUpper.includes('380') || rawUpper.includes('340') || rawUpper.includes('ANTONOV')
+    ) {
+        return {
+            icao: cleanIcao || 'B744',
+            name: `Heavy Quad-Jet (${cleanIcao || 'B747'})`,
+            category: 'HEAVY_4_JET',
+            label: `✈️ Heavy Quad-Jet (${cleanIcao})`,
+            size: 44,
+            haloSize: 48
+        };
+    }
+
+    // 3. Widebody Twin Jets
+    if (
+        /(^|\b|_|-)(B77[2389W]|B78[89X]|A35[9K]|A33[2389]|B76[234]|DC10|MD11|L101)(\b|_|-|$)/i.test(rawUpper) ||
+        rawUpper.includes('777') || rawUpper.includes('787') || rawUpper.includes('350') || rawUpper.includes('330') || rawUpper.includes('767')
+    ) {
+        return {
+            icao: cleanIcao || 'B772',
+            name: `Widebody Twin (${cleanIcao || 'B777'})`,
+            category: 'WIDEBODY_TWIN',
+            label: `✈️ Widebody Twin (${cleanIcao})`,
+            size: 38,
+            haloSize: 42
+        };
+    }
+
+    // 4. Regional Rear-Engine Jets
+    if (
+        /(^|\b|_|-)(CRJ[1279X]|E145|E135|MD8[0-8]|MD90|B712|F70|F100|F28)(\b|_|-|$)/i.test(rawUpper) ||
+        rawUpper.includes('CRJ') || rawUpper.includes('MD8') || rawUpper.includes('MD-8')
+    ) {
+        return {
+            icao: cleanIcao || 'CRJ',
+            name: `Regional Jet (${cleanIcao || 'CRJ'})`,
+            category: 'REAR_ENGINE_JET',
+            label: `✈️ Regional Jet (${cleanIcao})`,
+            size: 28,
+            haloSize: 32
+        };
+    }
+
+    // 5. Business Jets
+    if (
+        /(^|\b|_|-)(GLF[2-7]|GLEX|C5[0-9]{2}|C680|C700|C750|CL3[05]|CL60|E55P|E50P|FA[578]X|FA50|LJ[2-7][0-9]|HA420|PC24|HONDA|LEARJET|CITATION|FALCON|GULFSTREAM|PHENOM)(\b|_|-|$)/i.test(rawUpper)
+    ) {
+        return {
+            icao: cleanIcao || 'BIZJET',
+            name: `Business Jet (${cleanIcao || 'Citation'})`,
+            category: 'BIZJET',
+            label: `✈️ Business Jet (${cleanIcao})`,
+            size: 26,
+            haloSize: 30
+        };
+    }
+
+    // 6. Turboprops
+    if (
+        /(^|\b|_|-)(DH8[A-D]|AT7[256]|AT4[2356]|B350|BE20|BE99|BE19|SW4|C402|C414|PA31|PA34|PA44|DA42|DA62|DO228|DO328|DHC[2-7]|BN2P|JS[34][0-9]|L410|SF34|SB20|AT72|AT76|DASH)(\b|_|-|$)/i.test(rawUpper) ||
+        rawUpper.includes('KING AIR') || rawUpper.includes('TWIN OTTER') || rawUpper.includes('CARAVAN') || rawUpper.includes('ATR')
+    ) {
+        return {
+            icao: cleanIcao || 'TURBOPROP',
+            name: `Turboprop (${cleanIcao || 'King Air'})`,
+            category: 'TURBOPROP',
+            label: `🛩️ Turboprop (${cleanIcao})`,
+            size: 30,
+            haloSize: 34
+        };
+    }
+
+    // 7. Single Engine Light GA
+    if (
+        /(^|\b|_|-)(C1[578][0-9]|C20[68]|PA28|PA32|PA46|SR2[02]|DA40|DA20|M20[A-Z]|PC12|TBM[789]|RV[4-9]|RV1[024]|EXTRA|CAP10|DR40|AA5|P28A|C172|C182|PIPER|CESSNA|CIRRUS|MOONEY|BEECH)(\b|_|-|$)/i.test(rawUpper)
+    ) {
+        return {
+            icao: cleanIcao || 'C172',
+            name: `Light GA (${cleanIcao || 'Cessna'})`,
+            category: 'SINGLE_PROP',
+            label: `🛩️ Light GA (${cleanIcao})`,
+            size: 22,
+            haloSize: 26
+        };
+    }
+
+    // 8. Military Fighters
+    if (
+        /(^|\b|_|-)(F1[4-8]|F22|F35|EF20|TYPH|EUFI|M200|SU[23][0-9]|MIG[23][0-9]|AV8B|A10|T38|HAWK|GRIPEN|RAFALE)(\b|_|-|$)/i.test(rawUpper)
+    ) {
+        return {
+            icao: cleanIcao || 'F18',
+            name: `Fighter Jet (${cleanIcao || 'Military'})`,
+            category: 'MILITARY',
+            label: `🚀 Fighter (${cleanIcao})`,
+            size: 28,
+            haloSize: 32
+        };
+    }
+
+    // Fallback: Narrowbody Twin Jet (A320 / B738)
+    return {
+        icao: cleanIcao || '',
+        name: cleanIcao ? `${cleanIcao}` : '',
+        category: 'NARROWBODY_TWIN',
+        label: cleanIcao ? `✈️ ${cleanIcao}` : '',
+        size: 32,
+        haloSize: 36
+    };
+}
+
+function getAircraftSvgContent(category, color) {
+    switch (category) {
+        case 'HELICOPTER':
+            return `
+                <svg viewBox="0 0 32 32" width="100%" height="100%">
+                    <g transform="rotate(30, 16, 12)">
+                        <line x1="2" y1="12" x2="30" y2="12" stroke="${color}" stroke-width="2.2" stroke-linecap="round"/>
+                        <line x1="16" y1="-2" x2="16" y2="26" stroke="${color}" stroke-width="2.2" stroke-linecap="round"/>
+                        <circle cx="16" cy="12" r="2.2" fill="#ffffff"/>
+                    </g>
+                    <path d="M16 2.5 C13.5 2.5 12.2 5.5 12.2 10 C12.2 14.5 13.8 17.5 14.8 20.5 L15.2 27.5 L16.8 27.5 L17.2 20.5 C18.2 17.5 19.8 14.5 19.8 10 C19.8 5.5 18.5 2.5 16 2.5 Z" fill="${color}"/>
+                    <path d="M14.6 4.5 C15.2 3.8 16.8 3.8 17.4 4.5 C17.9 5.8 17.7 7.2 16 7.2 C14.3 7.2 14.1 5.8 14.6 4.5 Z" fill="#ffffff" opacity="0.85"/>
+                    <rect x="8.5" y="7.5" width="2" height="9.5" rx="1" fill="${color}"/>
+                    <rect x="21.5" y="7.5" width="2" height="9.5" rx="1" fill="${color}"/>
+                    <line x1="9" y1="10.5" x2="12.5" y2="10.5" stroke="${color}" stroke-width="1.6"/>
+                    <line x1="19.5" y1="10.5" x2="23" y2="10.5" stroke="${color}" stroke-width="1.6"/>
+                    <line x1="9" y1="14" x2="13.5" y2="14" stroke="${color}" stroke-width="1.6"/>
+                    <line x1="18.5" y1="14" x2="23" y2="14" stroke="${color}" stroke-width="1.6"/>
+                    <rect x="11.5" y="24" width="9" height="1.8" rx="0.9" fill="${color}"/>
+                    <rect x="17.2" y="25.5" width="4.5" height="1.6" rx="0.8" fill="#ffffff"/>
+                    <rect x="17.2" y="23" width="1.6" height="6.6" rx="0.8" fill="${color}"/>
+                </svg>
+            `;
+
+        case 'HEAVY_4_JET':
+            return `
+                <svg viewBox="0 0 64 64" width="100%" height="100%">
+                    <path d="m 30.764,3.957 c -1.030,1.995 -1.438,5.650 -1.600,7.687 -0.248,3.120 -0.114,5.478 -0.156,7.568 -0.016,0.798 -0.737,1.483 -1.435,2.163 l -4.630,4.207 c 0.136,-0.609 0.313,-2.735 0.011,-3.413 l -2.147,-0.067 c -0.337,0.636 -0.227,2.516 -0.102,3.486 l 0.414,0.033 0.179,1.447 -5.794,5.342 c 0.077,-0.914 0.114,-2.161 -0.105,-2.633 l -2.172,-0.078 c -0.367,0.716 -0.185,2.323 -0.053,3.475 h 0.394 l 0.138,0.949 -7.991,6.563 C 5.411,40.937 5.586,41.437 5.564,41.830 l -0.694,2.353 0.005,0.991 0.715,-1.236 10.464,-6.218 c 0.012,0.663 0.110,1.051 0.231,1.010 0.135,-0.045 0.328,-0.852 0.361,-1.290 l 2.274,-1.389 c -0.003,0.493 0.054,1.174 0.196,1.088 0.126,-0.076 0.384,-0.807 0.362,-1.370 l 1.528,-0.943 2.988,-1.018 c 0.073,0.381 0.122,0.929 0.292,0.896 0.159,-0.031 0.257,-0.491 0.355,-1.065 l 1.704,-0.597 c 0.025,0.437 0.163,0.976 0.297,0.914 0.149,-0.070 0.339,-0.647 0.356,-1.118 l 1.935,-0.666 0.054,10.106 c 0.183,3.800 0.173,5.797 0.919,9.127 -0.072,0.573 -0.374,0.766 -0.640,1.020 l -6.724,6.317 -0.007,2.046 8.553,-2.312 c 0.019,0.586 0.061,1.045 0.432,1.368 l 0.146,1.817 0.146,-1.817 c 0.371,-0.323 0.413,-0.782 0.432,-1.368 l 8.553,2.312 -0.007,-2.046 -6.724,-6.317 c -0.266,-0.253 -0.569,-0.446 -0.640,-1.020 0.747,-3.331 0.736,-5.327 0.919,-9.127 l 0.054,-10.106 1.935,0.666 c 0.017,0.470 0.207,1.048 0.356,1.118 0.134,0.062 0.272,-0.477 0.297,-0.914 l 1.704,0.597 c 0.098,0.574 0.196,1.034 0.355,1.065 0.170,0.033 0.219,-0.515 0.292,-0.896 l 2.988,1.018 1.528,0.943 c -0.021,0.563 0.237,1.294 0.362,1.370 0.141,0.086 0.198,-0.595 0.196,-1.088 l 2.274,1.389 c 0.033,0.439 0.227,1.245 0.361,1.290 0.121,0.041 0.219,-0.347 0.231,-1.010 l 10.464,6.218 0.715,1.236 0.005,-0.991 -0.694,-2.353 c -0.021,-0.393 0.153,-0.893 -0.151,-1.143 l -7.991,-6.563 0.138,-0.949 h 0.394 c 0.132,-1.152 0.314,-2.760 -0.053,-3.475 l -2.172,0.078 c -0.218,0.472 -0.182,1.719 -0.105,2.633 l -5.794,-5.342 0.179,-1.447 0.414,-0.033 c 0.125,-0.970 0.236,-2.850 -0.102,-3.486 l -2.147,0.067 c -0.302,0.678 -0.125,2.804 0.011,3.413 l -4.630,-4.207 c -0.698,-0.680 -1.419,-1.365 -1.435,-2.163 -0.042,-2.090 0.092,-4.448 -0.156,-7.568 -0.162,-2.037 -0.600,-5.677 -1.600,-7.687 -0.592,-1.190 -1.211,-1.157 -1.809,0 z" fill="${color}"/>
+                </svg>
+            `;
+
+        case 'WIDEBODY_TWIN':
+            return `
+                <svg viewBox="0 -3.2 64.2 64.2" width="100%" height="100%">
+                    <path d="m 31.414,2.728 c -0.314,0.712 -1.296,2.377 -1.534,6.133 l -0.086,13.379 c 0.006,0.400 -0.380,0.888 -0.945,1.252 l -2.631,1.729 c 0.157,-0.904 0.237,-3.403 -0.162,-3.850 l -2.686,0.006 c -0.336,1.065 -0.358,2.518 -0.109,4.088 h 0.434 L 24.057,26.689 8.611,36.852 7.418,38.432 7.381,39.027 8.875,38.166 l 8.295,-2.771 0.072,0.730 0.156,-0.004 0.150,-0.859 3.799,-1.234 0.074,0.727 0.119,0.004 0.117,-0.832 2.182,-0.730 h 1.670 l 0.061,0.822 h 0.176 l 0.062,-0.822 4.018,-0.002 v 13.602 c 0.051,1.559 0.465,3.272 0.826,4.963 l -6.836,5.426 c -0.097,0.802 -0.003,1.372 0.049,1.885 l 7.734,-2.795 0.477,1.973 h 0.232 l 0.477,-1.973 7.736,2.795 c 0.052,-0.513 0.146,-1.083 0.049,-1.885 l -6.836,-5.426 c 0.361,-1.691 0.775,-3.404 0.826,-4.963 V 33.193 l 4.016,0.002 0.062,0.822 h 0.178 L 38.875,33.195 h 1.672 l 2.182,0.730 0.117,0.832 0.119,-0.004 0.072,-0.727 3.799,1.234 0.152,0.859 0.154,0.004 0.072,-0.730 8.297,2.771 1.492,0.861 -0.037,-0.596 -1.191,-1.580 -15.447,-10.162 0.363,-1.225 H 41.125 c 0.248,-1.569 0.225,-3.023 -0.111,-4.088 l -2.686,-0.006 c -0.399,0.447 -0.317,2.945 -0.160,3.850 L 35.535,23.492 C 34.970,23.128 34.584,22.640 34.590,22.240 L 34.504,8.910 C 34.193,4.926 33.369,3.602 32.934,2.722 32.442,1.732 31.894,1.828 31.414,2.728 Z" fill="${color}"/>
+                </svg>
+            `;
+
+        case 'REAR_ENGINE_JET':
+        case 'BIZJET':
+            return `
+                <svg viewBox="-1 -1 20 26" width="100%" height="100%">
+                    <path d="M9.44,23c-.1.6-.35.6-.44.6s-.34,0-.44-.6l-3,.67V22.6A.54.54,0,0,1,6,22.05l2.38-1.12L8,19.33H6.69l0-.2a8.23,8.23,0,0,1-.14-3.85l.06-.18H7.73V13.19h-2L.26,14.29v-.93c0-.28.07-.46.22-.53l7.25-3.6V3.85A4.47,4.47,0,0,1,8.83.49L9,.34l.17.15a4.47,4.47,0,0,1,1.1,3.36V9.23l7.25,3.6c.14.07.22.25.22.53v.93l-5.51-1.1h-2V15.1h1.17l.06.18a8.24,8.24,0,0,1-.15,3.84l0,.2H10l-.36,1.6,2.43,1.14a.52.52,0,0,1,.35.53v1.08Z" fill="${color}"/>
+                </svg>
+            `;
+
+        case 'TURBOPROP':
+            return `
+                <svg viewBox="-2 -3 25 25" width="100%" height="100%">
+                    <path d="M10.1,18.34H7l0-.21c-.08-.54,0-.87.11-1L7.19,17l.2,0,2.35-.33c-.16-.82-.42-2.9-.42-3.14s0-2.71,0-3.51H8c-.12,1.34-.41,1.36-.55,1.37h0c-.19,0-.46,0-.6-1.55L.27,9.52l0-.25c.06-.73.31-.9.45-.93l6-.48a3.65,3.65,0,0,1,.3-2,.45.45,0,0,1,.32-.16h0a.39.39,0,0,1,.3.12A3.67,3.67,0,0,1,8,7.77l1.26-.07c0-.71,0-2.92,0-4.48A3.84,3.84,0,0,1,10.1.4a.4.4,0,0,1,.28-.16h.23A.4.4,0,0,1,10.9.4a3.84,3.84,0,0,1,.87,2.81c0,1.55,0,3.77,0,4.48L13,7.77a3.67,3.67,0,0,1,.29-1.94.38.38,0,0,1,.28-.12.46.46,0,0,1,.34.16,3.66,3.66,0,0,1,.3,2l6,.48c.18,0,.43.21.49.94l0,.25-6.53.3c-.14,1.55-.42,1.55-.59,1.55s-.45,0-.57-1.37H11.74c0,.8,0,3.27,0,3.51s-.26,2.32-.42,3.14l2.38.34h.11l.13.13c.15.18.19.51.11,1l0,.21H10.9l-.4,1Z" fill="${color}"/>
+                </svg>
+            `;
+
+        case 'SINGLE_PROP':
+            return `
+                <svg viewBox="0 -1 32 31" width="100%" height="100%">
+                    <path d="M16.36 20.96l2.57.27s.44.05.4.54l-.02.63s-.03.47-.45.54l-2.31.34-.44-.74-.22 1.63-.25-1.62-.38.73-2.35-.35s-.44-.1-.43-.6l-.02-.6s0-.5.48-.5l2.5-.27-.56-5.4-3.64-.1-5.83-1.02h-.45v-2.06s-.07-.37.46-.34l5.8-.17 3.55.12s-.1-2.52.52-2.82l-1.68-.04s-.1-.06 0-.14l1.94-.03s.35-1.18.7 0l1.91.04s.11.05 0 .14l-1.7.02s.62-.09.56 2.82l3.54-.1 5.81.17s.51-.04.48.35l-.01 2.06h-.47l-5.8 1-3.67.11z" fill="${color}"/>
+                </svg>
+            `;
+
+        case 'MILITARY':
+            return `
+                <svg viewBox="-7.8 0 80 80" width="100%" height="100%">
+                    <path d="M 30.82,61.32 29.19,54.84 29.06,60.19 27.70,60.70 22.27,60.63 21.68,59.60 l -0.01,-2.71 6.26,-5.52 -0.03,-3.99 -13.35,-0.01 -3e-6,1.15 -1.94,0.00 -0.01,-1.31 0.68,-0.65 L 13.30,37.20 c -0.01,-0.71 0.57,-0.77 0.60,0 l 0.05,1.57 0.28,0.23 0.26,4.09 L 19.90,38.48 c 0,0 -0.04,-1.26 0.20,-1.28 0.16,-0.02 0.20,0.98 0.20,0.98 l 4.40,-3.70 c 0,0 0.02,-1.28 0.20,-1.28 0.14,-0.00 0.20,0.98 0.20,0.98 l 1.80,-1.54 C 27.02,28.77 28.82,25.58 29,21.20 c 0.06,-1.41 0.23,-3.34 0.86,-3.85 0.21,-4.40 1.32,-11.03 2.39,-11.03 1.07,0 2.17,6.64 2.39,11.03 0.63,0.51 0.80,2.45 0.86,3.85 0.18,4.38 1.98,7.57 2.10,11.44 l 1.80,1.54 c 0,0 0.06,-0.99 0.20,-0.98 0.18,0.01 0.20,1.28 0.20,1.28 l 4.40,3.70 c 0,0 0.04,-1.00 0.20,-0.98 0.24,0.03 0.20,1.28 0.20,1.28 l 5.41,4.60 0.26,-4.09 0.28,-0.23 L 50.59,37.20 c 0.03,-0.77 0.61,-0.71 0.60,0 l 0.02,9.37 0.68,0.65 -0.01,1.31 -1.94,-0.00 -3e-6,-1.15 -13.35,0.01 -0.03,3.99 6.26,5.52 L 42.81,59.60 42.22,60.63 36.79,60.70 35.43,60.19 35.30,54.84 33.67,61.32 Z" fill="${color}"/>
+                </svg>
+            `;
+
+        case 'NARROWBODY_TWIN':
+        default:
+            return `
+                <svg viewBox="-1 -2 34 34" width="100%" height="100%">
+                    <path d="M16 1c-.17 0-.67.58-.9 1.03-.6 1.21-.6 1.15-.65 5.2-.04 2.97-.08 3.77-.18 3.9-.15.17-1.82 1.1-1.98 1.1-.08 0-.1-.25-.05-.83.03-.5.01-.92-.05-1.08-.1-.25-.13-.26-.71-.26-.82 0-.86.07-.78 1.5.03.6.08 1.17.11 1.25.05.12-.02.2-.25.33l-8 4.2c-.2.2-.18.1-.19 1.29 3.9-1.2 3.71-1.21 3.93-1.21.06 0 .1 0 .13.14.08.3.28.3.28-.04 0-.25.03-.27 1.16-.6.65-.2 1.22-.35 1.28-.35.05 0 .12.04.15.17.07.3.27.27.27-.08 0-.25.01-.27.7-.47.68-.1.98-.09 1.47-.1.18 0 .22 0 .26.18.06.34.22.35.27-.01.04-.2.1-.17 1.06-.14l1.07.02.05 4.2c.05 3.84.07 4.28.26 5.09.11.49.2.99.2 1.11 0 .19-.31.43-1.93 1.5l-1.93 1.26v1.02l4.13-.95.63 1.54c.05.07.12.09.19.09s.14-.02.19-.09l.63-1.54 4.13.95V29.3l-1.93-1.27c-1.62-1.06-1.93-1.3-1.93-1.49 0-.12.09-.62.2-1.11.19-.81.2-1.25.26-5.09l.05-4.2 1.07-.02c.96-.03 1.02-.05 1.06.14.05.36.21.35.27 0 .04-.17.08-.16.26-.16.49 0 .8-.02 1.48.1.68.2.69.21.69.46 0 .35.2.38.27.08.03-.13.1-.17.15-.17.06 0 .63.15 1.28.34 1.13.34 1.16.36 1.16.61 0 .35.2.34.28.04.03-.13.07-.14.13-.14.22 0 .03 0 3.93 1.2-.01-1.18.02-1.07-.19-1.27l-8-4.21c-.23-.12-.3-.21-.25-.33.03-.08.08-.65.11-1.25.08-1.43.04-1.5-.78-1.5-.58 0-.61.01-.71.26-.06.16-.08.58-.05 1.08.04.58.03.83-.05.83-.16 0-1.83-.93-1.98-1.1-.1-.13-.14-.93-.18-3.9-.05-4.05-.05-3.99-.65-5.2C16.67 1.58 16.17 1 16 1z" fill="${color}"/>
+                </svg>
+            `;
+    }
+}
+
+function getAircraftMarkerHtml(aircraftStr, heading, color, isSelected = false, haloColor = '#38bdf8', routeStr = '') {
+    const info = classifyAircraftType(aircraftStr, routeStr);
+    const svgInner = getAircraftSvgContent(info.category, color);
+    const size = info.size;
+    const haloSize = info.haloSize;
+
+    return `
+        <div class="aircraft-marker-container" style="width: ${size}px; height: ${size}px;">
+            <div class="aircraft-halo" style="border-color: ${haloColor}; width: ${haloSize}px; height: ${haloSize}px;"></div>
+            <div class="aircraft-icon-svg-wrapper" style="transform: rotate(${heading}deg); width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center;">
+                ${svgInner}
+            </div>
+        </div>
+    `;
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // ✈️ 60FPS ZERO-JUMP TELEMETRY BUFFER & MOTION SMOOTHER
@@ -55,7 +286,6 @@ class AircraftMotionBuffer {
         this.renderHeading = 0;
         this.initialized = false;
         this.marker = null;
-        this.haloLayer = null;
         this.flightData = null;
         this.lastUpdateTime = 0;
     }
@@ -109,7 +339,7 @@ class AircraftMotionBuffer {
             return;
         }
 
-        const renderDelay = 3200; // Delay playhead by ~3.2s to interpolate smoothly between 3-4s polls
+        const renderDelay = 3200;
         const renderTime = now - renderDelay;
 
         let p0 = this.snapshots[0];
@@ -131,7 +361,6 @@ class AircraftMotionBuffer {
             this.renderGs += (p0.gs - this.renderGs) * smoothFactor;
             this.renderHeading = lerpAngle(this.renderHeading, p0.heading, smoothFactor);
         } else if (renderTime >= p1.time) {
-            // Dead-reckoning extrapolation
             const extraSeconds = (renderTime - p1.time) / 1000;
             const distDeg = (p1.gs * (extraSeconds / 3600)) / 60;
             const rad = (p1.heading * Math.PI) / 180;
@@ -145,7 +374,6 @@ class AircraftMotionBuffer {
             this.renderGs += (p1.gs - this.renderGs) * smoothFactor;
             this.renderHeading = lerpAngle(this.renderHeading, p1.heading, smoothFactor);
         } else {
-            // Smooth Hermite / Linear interpolation
             const segDuration = p1.time - p0.time;
             const t = segDuration > 0 ? (renderTime - p0.time) / segDuration : 1;
             const smoothT = t * t * (3 - 2 * t);
@@ -204,10 +432,6 @@ function startMotionLoop() {
 
             buf.marker.setLatLng([buf.renderLat, buf.renderLon]);
 
-            if (buf.haloLayer && map.hasLayer(buf.haloLayer)) {
-                buf.haloLayer.setLatLng([buf.renderLat, buf.renderLon]);
-            }
-
             const markerEl = buf.marker.getElement();
             if (markerEl) {
                 const rotEl = markerEl.querySelector('.aircraft-icon-svg-wrapper');
@@ -216,7 +440,7 @@ function startMotionLoop() {
                 }
             }
 
-            // If this aircraft is the selected active flight, update Live HUD & Inspector Card
+            // If this aircraft is the selected active flight, update Inspector Card
             if (selectedPilotId === id && buf.flightData) {
                 const liveTelem = {
                     ...buf.flightData,
@@ -226,7 +450,6 @@ function startMotionLoop() {
                     altitude_ft: Math.round(buf.renderAlt),
                     groundspeed_kts: Math.round(buf.renderGs)
                 };
-                updateLiveHud(liveTelem);
                 updateLiveInspectorMetrics(liveTelem);
             }
         });
@@ -274,7 +497,6 @@ async function fetchLiveFleet() {
             });
         }
 
-        // If no targets provided, do not poll
         if (payload.targets.length === 0) {
             return;
         }
@@ -299,9 +521,6 @@ async function fetchLiveFleet() {
     }
 }
 
-let initialBoundsFitted = false;
-let activeWaypointsLayerGroup = null;
-
 function renderFleetOnMap(flights) {
     const currentFlightIds = new Set();
     const bounds = [];
@@ -320,40 +539,26 @@ function renderFleetOnMap(flights) {
 
         if (!buf.marker) {
             const isVa = f.airline && f.airline.is_va;
-            const isVatsim = f.network === 'VATSIM' || (f.vatsim && f.vatsim.is_online);
+            const acColor = '#38bdf8'; // Clean cyan
+            const haloColor = '#38bdf8';
 
-            const iconHtml = `
-                <div class="aircraft-marker-container">
-                    <div class="aircraft-pulse-ring ${isVa ? 'va-pulse' : (isVatsim ? 'vatsim-pulse' : '')}"></div>
-                    <div class="aircraft-icon-svg-wrapper">
-                        <svg class="aircraft-svg ${isVa ? 'va-color' : ''}" viewBox="0 0 24 24" width="34" height="34">
-                            <path fill="${isVa ? '#c084fc' : '#38bdf8'}" d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
-                        </svg>
-                    </div>
-                    <div class="aircraft-radar-label">
-                        <span class="callsign">${f.callsign}</span>
-                        <span class="alt-spd">FL${Math.round(buf.renderAlt / 100)} • ${Math.round(buf.renderGs)}kt</span>
-                    </div>
-                </div>
-            `;
+            const info = classifyAircraftType(f.aircraft, f.route);
+            const planeHtml = getAircraftMarkerHtml(f.aircraft, buf.renderHeading || f.heading_deg || 0, acColor, false, haloColor, f.route);
 
-            const icon = L.divIcon({
-                className: 'custom-aircraft-radar-icon',
-                html: iconHtml,
-                iconSize: [40, 40],
-                iconAnchor: [20, 20]
+            const customIcon = L.divIcon({
+                html: planeHtml,
+                className: 'aircraft-div-icon',
+                iconSize: [info.size, info.size],
+                iconAnchor: [Math.round(info.size / 2), Math.round(info.size / 2)]
             });
 
-            buf.marker = L.marker([buf.renderLat, buf.renderLon], { icon, zIndexOffset: 1000 }).addTo(map);
+            buf.marker = L.marker([buf.renderLat, buf.renderLon], { icon: customIcon, zIndexOffset: 1000 }).addTo(map);
 
-            buf.haloLayer = L.circleMarker([buf.renderLat, buf.renderLon], {
-                radius: 18,
-                color: isVa ? '#c084fc' : '#38bdf8',
-                weight: 1.5,
-                opacity: 0.8,
-                fillColor: isVa ? '#c084fc' : '#38bdf8',
-                fillOpacity: 0.12
-            }).addTo(map);
+            buf.marker.bindTooltip(`<strong>${f.callsign}</strong>`, {
+                permanent: false,
+                direction: 'top',
+                className: 'plane-leaflet-tooltip'
+            });
 
             buf.marker.on('click', () => {
                 selectPilot(id, f);
@@ -382,14 +587,13 @@ function renderFleetOnMap(flights) {
     fleetBuffers.forEach((buf, id) => {
         if (!currentFlightIds.has(id)) {
             if (buf.marker) map.removeLayer(buf.marker);
-            if (buf.haloLayer) map.removeLayer(buf.haloLayer);
             fleetBuffers.delete(id);
         }
     });
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// 🛩️ PILOT INSPECTOR & FLIGHT CORRIDOR SELECTION
+// 🛩️ PILOT INSPECTOR & FLIGHT CORRIDOR SELECTION (IDENTICAL TO API STYLE)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 async function selectPilot(id, pilotData) {
@@ -429,34 +633,61 @@ async function loadAndTraceRoute(routeStr, dep, arr) {
         if (routeData.waypoints && routeData.waypoints.length > 1) {
             const latlngs = routeData.waypoints.map(w => [w.latitude, w.longitude]);
             
+            // 1. Neon Green Glow Underlay
+            L.polyline(latlngs, {
+                color: '#00ff88',
+                weight: 6,
+                opacity: 0.25,
+                lineCap: 'round'
+            }).addTo(activeWaypointsLayerGroup);
+
+            // 2. Primary Neon Green Dashed Flight Corridor
             activeRouteLayer = L.polyline(latlngs, {
-                color: '#38bdf8',
+                color: '#00ff88',
                 weight: 3,
-                opacity: 0.85,
-                dashArray: '6, 6'
-            }).addTo(map);
+                opacity: 0.9,
+                dashArray: '8, 4',
+                lineCap: 'round'
+            }).addTo(activeWaypointsLayerGroup);
 
-            // Render waypoint fixes
+            // 3. Color-Coded Waypoint Fixes & Rectangular Pill Labels
             routeData.waypoints.forEach((wp, idx) => {
+                const isVor = (wp.type || '').includes('VOR') || (wp.type || '').includes('TACAN') || (wp.type || '').includes('NDB');
                 const isApt = wp.type === 'AIRPORT';
-                const isVor = (wp.type || '').includes('VOR') || (wp.type || '').includes('NDB');
-                const markerColor = isApt ? (idx === 0 ? '#22c55e' : '#ef4444') : (isVor ? '#a855f7' : '#38bdf8');
-                const radius = isApt ? 6 : (isVor ? 5 : 4);
+                const isFix = wp.type === 'TERMINAL_WAYPOINT' || wp.type === 'INTERSECTION' || wp.type === 'FIX';
 
-                const wpMarker = L.circleMarker([wp.latitude, wp.longitude], {
-                    radius,
+                let markerColor = '#f43f5e'; // Waypoint Rose
+                let radius = 4;
+                let labelClass = 'map-wp-label wp-waypoint';
+
+                if (isApt) {
+                    markerColor = '#fbbf24'; // Airport Amber
+                    radius = 6;
+                    labelClass = 'map-wp-label wp-apt';
+                } else if (isVor) {
+                    markerColor = '#00ff88'; // VOR Green
+                    radius = 5;
+                    labelClass = 'map-wp-label wp-vor';
+                } else if (isFix) {
+                    markerColor = '#38bdf8'; // Fix / Terminal Cyan
+                    radius = 4.5;
+                    labelClass = 'map-wp-label wp-fix';
+                }
+
+                const marker = L.circleMarker([wp.latitude, wp.longitude], {
+                    radius: radius,
                     fillColor: markerColor,
-                    color: '#ffffff',
+                    color: '#fff',
                     weight: 1.5,
                     opacity: 1,
-                    fillOpacity: 0.9
+                    fillOpacity: 0.95
                 }).addTo(activeWaypointsLayerGroup);
 
-                wpMarker.bindTooltip(wp.ident, {
+                marker.bindTooltip(wp.ident, {
                     permanent: true,
                     direction: 'top',
                     offset: [0, -6],
-                    className: 'aeronav-wp-label'
+                    className: labelClass
                 });
             });
 
@@ -483,7 +714,7 @@ function renderSelectedPilotPopup(pilot) {
     const isVa = pilot.airline && pilot.airline.is_va;
 
     content.innerHTML = `
-        <!-- Top Header -->
+        <!-- Top Header (Clean - No 'X' Close Button) -->
         <div class="inspector-header">
             <div class="inspector-pilot-identity">
                 <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${pilot.pilot_name}">
@@ -583,39 +814,9 @@ function updateLiveInspectorMetrics(t) {
     if (elPhase) elPhase.textContent = phase;
 }
 
-function updateLiveHud(data) {
-    const hud = document.getElementById('liveHudCard');
-    if (!hud || !data || !isHudVisible) {
-        if (hud) hud.style.display = 'none';
-        return;
-    }
-
-    hud.style.display = 'block';
-    document.getElementById('hudCallsign').textContent = data.callsign;
-    document.getElementById('hudAircraft').textContent = `${data.airline ? data.airline.name + ' • ' : ''}${data.aircraft || ''}`;
-    document.getElementById('hudPhase').textContent = (data.phase || 'CRUISE').replace('_', ' ');
-    document.getElementById('hudAlt').textContent = `${Math.round(data.altitude_ft || 0).toLocaleString()} ft`;
-    document.getElementById('hudGs').textContent = `${Math.round(data.groundspeed_kts || 0)} kts`;
-    document.getElementById('hudHdg').textContent = `${String(Math.round(data.heading_deg || 0) % 360).padStart(3, '0')}°`;
-}
-
 // ═══════════════════════════════════════════════════════════════════════════════
 // 🎛️ UI CONTROLS
 // ═══════════════════════════════════════════════════════════════════════════════
-
-function closeInspectorCard() {
-    const card = document.getElementById('fshubLivePopup');
-    if (card) card.classList.add('hidden');
-    selectedPilotId = null;
-}
-
-function toggleHud() {
-    isHudVisible = !isHudVisible;
-    const hud = document.getElementById('liveHudCard');
-    const btn = document.getElementById('toggleHudBtn');
-    if (hud) hud.style.display = isHudVisible ? 'block' : 'none';
-    if (btn) btn.classList.toggle('active', isHudVisible);
-}
 
 function recenterFleet() {
     if (!map) return;
