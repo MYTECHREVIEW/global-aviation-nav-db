@@ -299,6 +299,9 @@ async function fetchLiveFleet() {
     }
 }
 
+let initialBoundsFitted = false;
+let activeWaypointsLayerGroup = null;
+
 function renderFleetOnMap(flights) {
     const currentFlightIds = new Set();
     const bounds = [];
@@ -365,6 +368,16 @@ function renderFleetOnMap(flights) {
         }
     });
 
+    // Auto-focus on active fleet on initial load
+    if (!initialBoundsFitted && bounds.length > 0) {
+        if (bounds.length === 1) {
+            map.setView(bounds[0], 6);
+        } else {
+            map.fitBounds(bounds, { padding: [80, 80] });
+        }
+        initialBoundsFitted = true;
+    }
+
     // Remove inactive flights
     fleetBuffers.forEach((buf, id) => {
         if (!currentFlightIds.has(id)) {
@@ -394,10 +407,13 @@ async function selectPilot(id, pilotData) {
 
 async function loadAndTraceRoute(routeStr, dep, arr) {
     try {
-        const res = await fetch('/api/v1/route/trace', {
+        const headers = { 'Content-Type': 'application/json' };
+        if (config.apiKey) headers['X-API-Key'] = config.apiKey;
+
+        const res = await fetch(config.apiKey ? `/api/v1/route/trace?api_key=${encodeURIComponent(config.apiKey)}` : '/api/v1/route/trace', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ route: routeStr, depIcao: dep, arrIcao: arr })
+            headers,
+            body: JSON.stringify({ departure: dep, arrival: arr, route: routeStr, include_labels: true })
         });
 
         if (!res.ok) return;
@@ -405,6 +421,10 @@ async function loadAndTraceRoute(routeStr, dep, arr) {
         activeRouteData = routeData;
 
         if (activeRouteLayer) map.removeLayer(activeRouteLayer);
+        if (!activeWaypointsLayerGroup) {
+            activeWaypointsLayerGroup = L.layerGroup().addTo(map);
+        }
+        activeWaypointsLayerGroup.clearLayers();
 
         if (routeData.waypoints && routeData.waypoints.length > 1) {
             const latlngs = routeData.waypoints.map(w => [w.latitude, w.longitude]);
@@ -415,6 +435,30 @@ async function loadAndTraceRoute(routeStr, dep, arr) {
                 opacity: 0.85,
                 dashArray: '6, 6'
             }).addTo(map);
+
+            // Render waypoint fixes
+            routeData.waypoints.forEach((wp, idx) => {
+                const isApt = wp.type === 'AIRPORT';
+                const isVor = (wp.type || '').includes('VOR') || (wp.type || '').includes('NDB');
+                const markerColor = isApt ? (idx === 0 ? '#22c55e' : '#ef4444') : (isVor ? '#a855f7' : '#38bdf8');
+                const radius = isApt ? 6 : (isVor ? 5 : 4);
+
+                const wpMarker = L.circleMarker([wp.latitude, wp.longitude], {
+                    radius,
+                    fillColor: markerColor,
+                    color: '#ffffff',
+                    weight: 1.5,
+                    opacity: 1,
+                    fillOpacity: 0.9
+                }).addTo(activeWaypointsLayerGroup);
+
+                wpMarker.bindTooltip(wp.ident, {
+                    permanent: true,
+                    direction: 'top',
+                    offset: [0, -6],
+                    className: 'aeronav-wp-label'
+                });
+            });
 
             map.fitBounds(activeRouteLayer.getBounds(), { padding: [50, 50] });
         }
