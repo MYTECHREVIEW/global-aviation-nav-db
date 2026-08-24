@@ -40,6 +40,104 @@ const TILE_STYLES = {
     voyager: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
 };
 
+const AIRLINE_ICAO_DATABASE = {
+    'WLF': { name: 'Wolfair Aviation', isVa: true, callsign: 'WOLFAIR' },
+    'WVA': { name: 'Wolfair Aviation', isVa: true, callsign: 'WOLFAIR' },
+    'VAA': { name: 'Virtual Airlines of America', isVa: true, callsign: 'VIRTFLEET' },
+    'AAL': { name: 'American Airlines', country: 'US', callsign: 'AMERICAN' },
+    'UAL': { name: 'United Airlines', country: 'US', callsign: 'UNITED' },
+    'DAL': { name: 'Delta Air Lines', country: 'US', callsign: 'DELTA' },
+    'SWA': { name: 'Southwest Airlines', country: 'US', callsign: 'SOUTHWEST' },
+    'BAW': { name: 'British Airways', country: 'GB', callsign: 'SPEEDBIRD' },
+    'AFR': { name: 'Air France', country: 'FR', callsign: 'AIRFRANS' },
+    'DLH': { name: 'Lufthansa', country: 'DE', callsign: 'LUFTHANSA' },
+    'KLM': { name: 'KLM Royal Dutch Airlines', country: 'NL', callsign: 'KLM' },
+    'UAE': { name: 'Emirates', country: 'AE', callsign: 'EMIRATES' },
+    'QFA': { name: 'Qantas', country: 'AU', callsign: 'QANTAS' },
+    'ACA': { name: 'Air Canada', country: 'CA', callsign: 'AIR CANADA' },
+    'AMX': { name: 'Aeroméxico', country: 'MX', callsign: 'AEROMEXICO' },
+    'AVA': { name: 'Avianca', country: 'CO', callsign: 'AVIANCA' },
+    'LAN': { name: 'LATAM Airlines', country: 'CL', callsign: 'LAN' },
+    'CMP': { name: 'Copa Airlines', country: 'PA', callsign: 'COPA' },
+    'IBE': { name: 'Iberia', country: 'ES', callsign: 'IBERIA' },
+    'VIR': { name: 'Virgin Atlantic', country: 'GB', callsign: 'VIRGIN' },
+    'JAL': { name: 'Japan Airlines', country: 'JP', callsign: 'JAPANAIR' },
+    'ANA': { name: 'All Nippon Airways', country: 'JP', callsign: 'ALL NIPPON' },
+    'CPA': { name: 'Cathay Pacific', country: 'HK', callsign: 'CATHAY' },
+    'SIA': { name: 'Singapore Airlines', country: 'SG', callsign: 'SINGAPORE' },
+    'QTR': { name: 'Qatar Airways', country: 'QA', callsign: 'QATARI' },
+    'THY': { name: 'Turkish Airlines', country: 'TR', callsign: 'TURKISH' },
+    'WJA': { name: 'WestJet', country: 'CA', callsign: 'WESTJET' },
+    'JBU': { name: 'JetBlue', country: 'US', callsign: 'JETBLUE' },
+    'FFT': { name: 'Frontier Airlines', country: 'US', callsign: 'FRONTIER FLIGHT' },
+    'NKS': { name: 'Spirit Airlines', country: 'US', callsign: 'SPIRIT WINGS' },
+    'ASA': { name: 'Alaska Airlines', country: 'US', callsign: 'ALASKA' },
+    'VOI': { name: 'Volaris', country: 'MX', callsign: 'VOLARIS' },
+    'AZU': { name: 'Azul Brazilian Airlines', country: 'BR', callsign: 'AZUL' },
+    'GLO': { name: 'GOL Linhas Aéreas', country: 'BR', callsign: 'GOL' },
+    'TAP': { name: 'TAP Air Portugal', country: 'PT', callsign: 'AIR PORTUGAL' },
+    'SAS': { name: 'Scandinavian Airlines', country: 'SE', callsign: 'SCANDINAVIAN' },
+    'FIN': { name: 'Finnair', country: 'FI', callsign: 'FINNAIR' },
+    'RYR': { name: 'Ryanair', country: 'IE', callsign: 'RYANAIR' },
+    'EZY': { name: 'easyJet', country: 'GB', callsign: 'EASY' },
+    'WZZ': { name: 'Wizz Air', country: 'HU', callsign: 'WIZZ AIR' },
+    'FDX': { name: 'FedEx Express', country: 'US', callsign: 'FEDEX' },
+    'UPS': { name: 'UPS Airlines', country: 'US', callsign: 'UPS' },
+    'GTI': { name: 'Atlas Air', country: 'US', callsign: 'GIANT' },
+    'CLX': { name: 'Cargolux', country: 'LU', callsign: 'CARGOLUX' },
+    'BOX': { name: 'AeroLogic', country: 'DE', callsign: 'GERMAN CARGO' },
+    'ABX': { name: 'ABX Air', country: 'US', callsign: 'ABEX' },
+    'ETD': { name: 'Etihad Airways', country: 'AE', callsign: 'ETIHAD' },
+    'KAC': { name: 'Kuwait Airways', country: 'KW', callsign: 'KUWAITI' },
+    'MSR': { name: 'EgyptAir', country: 'EG', callsign: 'EGYPTAIR' },
+    'SVA': { name: 'Saudia', country: 'SA', callsign: 'SAUDIA' },
+    'AIC': { name: 'Air India', country: 'IN', callsign: 'AIRINDIA' },
+    'KAL': { name: 'Korean Air', country: 'KR', callsign: 'KOREANAIR' },
+    'EVA': { name: 'EVA Air', country: 'TW', callsign: 'EVA' },
+    'ANZ': { name: 'Air New Zealand', country: 'NZ', callsign: 'NEW ZEALAND' },
+    'VOZ': { name: 'Virgin Australia', country: 'AU', callsign: 'VELOCITY' },
+    'ETH': { name: 'Ethiopian Airlines', country: 'ET', callsign: 'ETHIOPIAN' },
+    'ARG': { name: 'Aerolíneas Argentinas', country: 'AR', callsign: 'ARGENTINA' },
+    'SWR': { name: 'Swiss International Air Lines', country: 'CH', callsign: 'SWISS' },
+    'AUA': { name: 'Austrian Airlines', country: 'AT', callsign: 'AUSTRIAN' },
+    'LOT': { name: 'LOT Polish Airlines', country: 'PL', callsign: 'POLLOT' }
+};
+
+function resolveAirlineInfo(callsign, flightData = null) {
+    if (!callsign && !flightData) return null;
+    const cs = String(callsign || flightData?.callsign || '').toUpperCase().trim();
+
+    if (flightData?.airline) {
+        const vaName = flightData.airline.name || flightData.airline.title || '';
+        const vaAbbr = (flightData.airline.abbr || flightData.airline.code || '').toUpperCase();
+        if (vaName) {
+            const isVa = flightData.airline.is_va !== false;
+            return {
+                name: isVa ? `${vaName} VA` : vaName,
+                abbr: vaAbbr || cs.slice(0, 3),
+                isVa: isVa,
+                badge: `${vaAbbr ? vaAbbr + ' • ' : ''}${vaName}${isVa ? ' VA' : ''}`
+            };
+        }
+    }
+
+    const match = cs.match(/^([A-Z]{3})/);
+    if (match) {
+        const icao3 = match[1];
+        if (AIRLINE_ICAO_DATABASE[icao3]) {
+            const entry = AIRLINE_ICAO_DATABASE[icao3];
+            const isVa = !!entry.isVa;
+            return {
+                name: isVa ? `${entry.name} VA` : entry.name,
+                abbr: icao3,
+                isVa: isVa,
+                badge: `${icao3} • ${entry.name}${isVa ? ' VA' : ''}`
+            };
+        }
+    }
+    return null;
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // ✈️ AIRCRAFT TYPE CLASSIFIER & SVG RENDERER (IDENTICAL TO MAIN API WEB APP)
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -441,6 +539,8 @@ function initMap() {
 
 function deselectPilot() {
     selectedPilotId = null;
+    selectedPilotData = null;
+    currentCardStyle = defaultCardStyle;
     const card = document.getElementById('fshubLivePopup');
     if (card) card.classList.add('hidden');
 
@@ -585,10 +685,57 @@ async function fetchLiveFleet() {
 
         if (data && data.success && Array.isArray(data.flights)) {
             renderFleetOnMap(data.flights);
+            updateFleetStatsSummary(data.flights);
         }
     } catch (err) {
         console.error('[EmbedRadar] Error polling multi-target fleet:', err);
     }
+}
+
+function isFlightAirborne(f) {
+    if (!f) return false;
+    const gs = Math.round(f.groundspeed_kts !== undefined ? f.groundspeed_kts : (f.position?.speed_tas_kts || f.speed || 0));
+    const rawPhase = (f.phase || f.flight_phase || '').toUpperCase().replace(/_/g, ' ').trim();
+    
+    // Explicit ground phases
+    const groundKeywords = ['TAXI', 'PARK', 'STANDBY', 'GATE', 'RAMP', 'GROUND', 'BOARD', 'DEBOARD', 'PREFLIGHT', 'PUSHBACK', 'HOLD'];
+    if (groundKeywords.some(kw => rawPhase.includes(kw))) {
+        return gs > 50; // Only airborne if actually moving at high speed
+    }
+
+    // If speed is slow (< 35 kts), pilot is on the ground regardless of airport elevation
+    if (gs < 35) {
+        return false;
+    }
+
+    return true;
+}
+
+function resolveFlightPhase(pilot, gs) {
+    const rawPhase = (pilot.phase || pilot.flight_phase || '').replace(/_/g, ' ').toUpperCase().trim();
+    if (gs < 35) {
+        if (!rawPhase || ['ENROUTE', 'CRUISE', 'LEVEL FLIGHT', 'AIRBORNE', 'UNKNOWN'].includes(rawPhase)) {
+            return gs < 5 ? 'PARKED' : 'TAXIING';
+        }
+    }
+    return rawPhase || (gs > 35 ? 'AIRBORNE' : 'TAXIING');
+}
+
+function updateFleetStatsSummary(flights) {
+    const list = Array.isArray(flights) ? flights : [];
+    const active = list.length;
+    const airborne = list.filter(f => isFlightAirborne(f)).length;
+    const ground = Math.max(0, active - airborne);
+    const vatsim = list.filter(f => (f.vatsim && f.vatsim.is_online) || (f.network && f.network.toUpperCase() === 'VATSIM')).length;
+
+    const elActive = document.getElementById('statsActivePilots');
+    if (elActive) elActive.textContent = active;
+    const elAirborne = document.getElementById('statsAirbornePilots');
+    if (elAirborne) elAirborne.textContent = airborne;
+    const elGround = document.getElementById('statsGroundPilots');
+    if (elGround) elGround.textContent = ground;
+    const elVatsim = document.getElementById('statsVatsimPilots');
+    if (elVatsim) elVatsim.textContent = vatsim;
 }
 
 function renderFleetOnMap(flights) {
@@ -670,6 +817,7 @@ function renderFleetOnMap(flights) {
 
 async function selectPilot(id, pilotData) {
     selectedPilotId = id;
+    currentCardStyle = defaultCardStyle;
     renderSelectedPilotPopup(pilotData);
 
     const routeStr = pilotData.route || pilotData.flight_plan?.route;
@@ -681,7 +829,89 @@ async function selectPilot(id, pilotData) {
     }
 }
 
+const clientEmbedRouteCache = new Map();
+
+function renderTracedRouteOnMap(routeData) {
+    activeRouteData = routeData;
+
+    if (activeRouteLayer) map.removeLayer(activeRouteLayer);
+    if (!activeWaypointsLayerGroup) {
+        activeWaypointsLayerGroup = L.layerGroup().addTo(map);
+    }
+    activeWaypointsLayerGroup.clearLayers();
+
+    if (routeData.waypoints && routeData.waypoints.length > 1) {
+        const latlngs = routeData.waypoints.map(w => [w.latitude, w.longitude]);
+        
+        // 1. Neon Green Glow Underlay
+        L.polyline(latlngs, {
+            color: '#00ff88',
+            weight: 6,
+            opacity: 0.25,
+            lineCap: 'round'
+        }).addTo(activeWaypointsLayerGroup);
+
+        // 2. Primary Neon Green Dashed Flight Corridor
+        activeRouteLayer = L.polyline(latlngs, {
+            color: '#00ff88',
+            weight: 3,
+            opacity: 0.9,
+            dashArray: '8, 4',
+            lineCap: 'round'
+        }).addTo(activeWaypointsLayerGroup);
+
+        // 3. Color-Coded Waypoint Fixes & Rectangular Pill Labels
+        routeData.waypoints.forEach((wp) => {
+            const isVor = (wp.type || '').includes('VOR') || (wp.type || '').includes('TACAN') || (wp.type || '').includes('NDB');
+            const isApt = wp.type === 'AIRPORT';
+            const isFix = wp.type === 'TERMINAL_WAYPOINT' || wp.type === 'INTERSECTION' || wp.type === 'FIX';
+
+            let markerColor = '#f43f5e'; // Waypoint Rose
+            let radius = 4;
+            let labelClass = 'map-wp-label wp-waypoint';
+
+            if (isApt) {
+                markerColor = '#fbbf24'; // Airport Amber
+                radius = 6;
+                labelClass = 'map-wp-label wp-apt';
+            } else if (isVor) {
+                markerColor = '#00ff88'; // VOR Green
+                radius = 5;
+                labelClass = 'map-wp-label wp-vor';
+            } else if (isFix) {
+                markerColor = '#38bdf8'; // Fix / Terminal Cyan
+                radius = 4.5;
+                labelClass = 'map-wp-label wp-fix';
+            }
+
+            const marker = L.circleMarker([wp.latitude, wp.longitude], {
+                radius: radius,
+                fillColor: markerColor,
+                color: '#fff',
+                weight: 1.5,
+                opacity: 1,
+                fillOpacity: 0.95
+            }).addTo(activeWaypointsLayerGroup);
+
+            marker.bindTooltip(wp.ident, {
+                permanent: true,
+                direction: 'top',
+                offset: [0, -6],
+                className: labelClass
+            });
+        });
+
+        map.fitBounds(activeRouteLayer.getBounds(), { padding: [50, 50] });
+    }
+}
+
 async function loadAndTraceRoute(routeStr, dep, arr) {
+    const cacheKey = `${dep || ''}:${arr || ''}:${routeStr || ''}`;
+    if (clientEmbedRouteCache.has(cacheKey)) {
+        renderTracedRouteOnMap(clientEmbedRouteCache.get(cacheKey));
+        return;
+    }
+
     try {
         const headers = { 'Content-Type': 'application/json' };
         if (config.apiKey) headers['X-API-Key'] = config.apiKey;
@@ -694,84 +924,56 @@ async function loadAndTraceRoute(routeStr, dep, arr) {
 
         if (!res.ok) return;
         const routeData = await res.json();
-        activeRouteData = routeData;
-
-        if (activeRouteLayer) map.removeLayer(activeRouteLayer);
-        if (!activeWaypointsLayerGroup) {
-            activeWaypointsLayerGroup = L.layerGroup().addTo(map);
+        
+        if (clientEmbedRouteCache.size >= 500) {
+            const firstKey = clientEmbedRouteCache.keys().next().value;
+            clientEmbedRouteCache.delete(firstKey);
         }
-        activeWaypointsLayerGroup.clearLayers();
+        clientEmbedRouteCache.set(cacheKey, routeData);
 
-        if (routeData.waypoints && routeData.waypoints.length > 1) {
-            const latlngs = routeData.waypoints.map(w => [w.latitude, w.longitude]);
-            
-            // 1. Neon Green Glow Underlay
-            L.polyline(latlngs, {
-                color: '#00ff88',
-                weight: 6,
-                opacity: 0.25,
-                lineCap: 'round'
-            }).addTo(activeWaypointsLayerGroup);
-
-            // 2. Primary Neon Green Dashed Flight Corridor
-            activeRouteLayer = L.polyline(latlngs, {
-                color: '#00ff88',
-                weight: 3,
-                opacity: 0.9,
-                dashArray: '8, 4',
-                lineCap: 'round'
-            }).addTo(activeWaypointsLayerGroup);
-
-            // 3. Color-Coded Waypoint Fixes & Rectangular Pill Labels
-            routeData.waypoints.forEach((wp, idx) => {
-                const isVor = (wp.type || '').includes('VOR') || (wp.type || '').includes('TACAN') || (wp.type || '').includes('NDB');
-                const isApt = wp.type === 'AIRPORT';
-                const isFix = wp.type === 'TERMINAL_WAYPOINT' || wp.type === 'INTERSECTION' || wp.type === 'FIX';
-
-                let markerColor = '#f43f5e'; // Waypoint Rose
-                let radius = 4;
-                let labelClass = 'map-wp-label wp-waypoint';
-
-                if (isApt) {
-                    markerColor = '#fbbf24'; // Airport Amber
-                    radius = 6;
-                    labelClass = 'map-wp-label wp-apt';
-                } else if (isVor) {
-                    markerColor = '#00ff88'; // VOR Green
-                    radius = 5;
-                    labelClass = 'map-wp-label wp-vor';
-                } else if (isFix) {
-                    markerColor = '#38bdf8'; // Fix / Terminal Cyan
-                    radius = 4.5;
-                    labelClass = 'map-wp-label wp-fix';
-                }
-
-                const marker = L.circleMarker([wp.latitude, wp.longitude], {
-                    radius: radius,
-                    fillColor: markerColor,
-                    color: '#fff',
-                    weight: 1.5,
-                    opacity: 1,
-                    fillOpacity: 0.95
-                }).addTo(activeWaypointsLayerGroup);
-
-                marker.bindTooltip(wp.ident, {
-                    permanent: true,
-                    direction: 'top',
-                    offset: [0, -6],
-                    className: labelClass
-                });
-            });
-
-            map.fitBounds(activeRouteLayer.getBounds(), { padding: [50, 50] });
-        }
+        renderTracedRouteOnMap(routeData);
     } catch (err) {
         console.error('[EmbedRadar] Error tracing route corridor:', err);
     }
 }
 
-let currentCardStyle = urlParams.get('popup_style') || urlParams.get('card_style') || urlParams.get('variant') || urlParams.get('popup') || 'auto';
+const defaultCardStyle = urlParams.get('popup_style') || urlParams.get('card_style') || urlParams.get('variant') || urlParams.get('popup') || 'auto';
+let currentCardStyle = defaultCardStyle;
 let selectedPilotData = null;
+
+// 📊 Optional Fleet Summary Stats Card (Invoked via &stats=true or API call)
+const showStatsParam = urlParams.get('stats') || urlParams.get('show_stats') || urlParams.get('fleet_stats') || urlParams.get('summary');
+const isStatsEnabled = showStatsParam === '1' || showStatsParam === 'true';
+const statsEl = document.getElementById('fleetSummaryStatsCard');
+if (statsEl) {
+    if (isStatsEnabled) statsEl.classList.remove('hidden');
+    else statsEl.classList.add('hidden');
+}
+
+window.setFleetStatsVisible = function(show) {
+    const card = document.getElementById('fleetSummaryStatsCard');
+    if (!card) return;
+    if (show) card.classList.remove('hidden');
+    else card.classList.add('hidden');
+};
+
+window.toggleFleetStats = function() {
+    const card = document.getElementById('fleetSummaryStatsCard');
+    if (!card) return;
+    card.classList.toggle('hidden');
+};
+
+window.toggleInspectorCardStyle = function(e) {
+    if (e) e.stopPropagation();
+    if (currentCardStyle === 'full') {
+        currentCardStyle = (defaultCardStyle === 'compact' || defaultCardStyle === 'mini') ? defaultCardStyle : 'mini';
+    } else {
+        currentCardStyle = 'full';
+    }
+    if (selectedPilotData) {
+        renderSelectedPilotPopup(selectedPilotData);
+    }
+};
 
 function renderSelectedPilotPopup(pilot) {
     const card = document.getElementById('fshubLivePopup');
@@ -806,8 +1008,50 @@ function renderSelectedPilotPopup(pilot) {
     const rawAc = pilot.aircraft || pilot.flight_plan?.aircraft || '';
     const acInfo = classifyAircraftType(rawAc, routeStr);
     const aircraftDisplay = acInfo && acInfo.label ? acInfo.label : (acInfo && acInfo.icao ? `✈️ ${acInfo.icao}` : '');
-    const phase = (pilot.phase || (gs > 30 ? 'AIRBORNE' : 'TAXIING')).replace(/_/g, ' ').toUpperCase();
-    const isVa = pilot.airline && pilot.airline.is_va;
+    const phase = resolveFlightPhase(pilot, gs);
+    const airlineInfo = resolveAirlineInfo(pilot.callsign, pilot);
+    const displayName = pilot.pilot_name || pilot.name || pilot.user?.name || pilot.callsign || 'Pilot';
+    const filedCallsign = pilot.flight_plan?.callsign || pilot.plan?.callsign;
+    const tailNumber = pilot.registration || pilot.tail || pilot.tail_number || pilot.aircraft?.registration || pilot.flight_plan?.registration;
+
+    // Check if pilot.callsign is literally the pilot's username
+    const isCallsignUsername = pilot.callsign && displayName && (
+        pilot.callsign.trim().toLowerCase() === displayName.trim().toLowerCase() ||
+        pilot.callsign.replace(/[\s_-]+/g, '').toLowerCase() === displayName.replace(/[\s_-]+/g, '').toLowerCase()
+    );
+
+    // Strict Rule: ONLY callsign, or tail number if no callsign. NEVER username. Otherwise empty.
+    let callsignOrTail = '';
+    if (filedCallsign && filedCallsign !== '---') {
+        callsignOrTail = filedCallsign;
+    } else if (pilot.callsign && !isCallsignUsername && pilot.callsign !== '---') {
+        callsignOrTail = pilot.callsign;
+    } else if (tailNumber && tailNumber !== '---' && tailNumber.toLowerCase() !== displayName.toLowerCase()) {
+        callsignOrTail = tailNumber;
+    } else {
+        callsignOrTail = ''; // LEAVE EMPTY
+    }
+
+    // Check if flight callsign is from another company (e.g. FDX -> FedEx Express, SWA -> Southwest) operated by the VA
+    const vaAbbr = (airlineInfo?.abbr || pilot.airline?.abbr || pilot.airline?.code || '').toUpperCase();
+    const csUpper = String(callsignOrTail || '').toUpperCase().trim();
+    const csPrefix = csUpper.match(/^([A-Z]{3})/)?.[1] || '';
+    const isDifferentCompany = vaAbbr && csPrefix && csPrefix !== vaAbbr;
+    const commercialAirline = (isDifferentCompany && AIRLINE_ICAO_DATABASE[csPrefix]) ? AIRLINE_ICAO_DATABASE[csPrefix] : null;
+
+    let leftCallsignHtml = '';
+    if (callsignOrTail) {
+        leftCallsignHtml = `<span style="color: #f1f5f9; font-family: 'JetBrains Mono', monospace; font-size: 0.80rem; font-weight: 700; letter-spacing: 0.5px;">${callsignOrTail}</span>`;
+        if (commercialAirline) {
+            leftCallsignHtml += ` <span style="color: #94a3b8; font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.74rem;">• ${commercialAirline.name}</span>`;
+        }
+    }
+
+    let rightOperatorHtml = '';
+    if (airlineInfo) {
+        const opPrefix = isDifferentCompany ? 'Op by ' : '';
+        rightOperatorHtml = `<span style="color: #38bdf8; font-weight: 600;">🏢 ${opPrefix}${airlineInfo.badge}</span>`;
+    }
 
     window.currentSelectedPilot = pilot;
 
@@ -815,14 +1059,14 @@ function renderSelectedPilotPopup(pilot) {
         content.innerHTML = `
             <div class="inspector-header">
                 <div class="inspector-pilot-identity">
-                    <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${pilot.pilot_name}">
-                    <div>
-                        <div class="inspector-callsign">${pilot.callsign}</div>
+                    <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${displayName}">
+                    <div style="min-width: 0; overflow: hidden;">
+                        <div class="inspector-callsign" title="${displayName}">${displayName}</div>
                     </div>
                 </div>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                    <button class="report-route-btn" id="btnReportRouteMini" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 12px; transition: all 0.2s;">🚩</button>
-                    <span class="live-phase-pill" id="inspectorPhasePill">${phase}</span>
+                <div class="inspector-header-right">
+                    <button class="toggle-card-style-btn" title="Expand to Full Card" onclick="window.toggleInspectorCardStyle(event)" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 11px; transition: all 0.2s; flex-shrink: 0;">⤢</button>
+                    <button class="report-route-btn" id="btnReportRouteMini" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 12px; transition: all 0.2s; flex-shrink: 0;">🚩</button>
                 </div>
             </div>
             <div class="inspector-flight-plan-box">
@@ -857,26 +1101,25 @@ function renderSelectedPilotPopup(pilot) {
             <!-- Top Header -->
             <div class="inspector-header">
                 <div class="inspector-pilot-identity">
-                    <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${pilot.pilot_name}">
-                    <div>
-                        <div class="inspector-callsign">${pilot.callsign}</div>
-                        <div class="inspector-pilot-name">👤 ${pilot.pilot_name || 'Pilot'}${isVa ? ` • <span style="color: #c084fc; font-weight: 600;">${pilot.airline.abbr} • ${pilot.airline.name} VA</span>` : ''}${aircraftDisplay ? ` • <span style="color: #38bdf8; font-weight: 500;">${aircraftDisplay}</span>` : ''}</div>
+                    <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${displayName}">
+                    <div style="min-width: 0; overflow: hidden;">
+                        <div class="inspector-callsign" title="${displayName}">${displayName}</div>
+                        ${aircraftDisplay ? `<div class="inspector-pilot-name" style="color: #38bdf8; font-weight: 500;" title="${aircraftDisplay.replace(/<[^>]+>/g, '')}">${aircraftDisplay}</div>` : ''}
                     </div>
                 </div>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                    <button class="report-route-btn" id="btnReportRoute" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 13px; transition: all 0.2s;">🚩</button>
+                <div class="inspector-header-right">
+                    <button class="toggle-card-style-btn" title="Collapse to Mini Card" onclick="window.toggleInspectorCardStyle(event)" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 12px; transition: all 0.2s; flex-shrink: 0;">⤡</button>
+                    <button class="report-route-btn" id="btnReportRoute" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 13px; transition: all 0.2s; flex-shrink: 0;">🚩</button>
                     <span class="live-phase-pill" id="inspectorPhasePill">${phase}</span>
                 </div>
             </div>
 
             <!-- Flight Plan Corridor Box -->
             <div class="inspector-flight-plan-box">
-                ${isVa ? `
-                    <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 4px; margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 0.72rem;">
-                        <span style="color: #94a3b8; font-weight: 500;">OPERATOR</span>
-                        <span style="color: #38bdf8; font-weight: 600;">🏢 ${pilot.airline.abbr} • ${pilot.airline.name} VA</span>
-                    </div>
-                ` : ''}
+                <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 4px; margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 0.72rem;">
+                    <div>${leftCallsignHtml}</div>
+                    ${rightOperatorHtml}
+                </div>
                 ${(dep === '???' || dep === 'ENROUTE' || arr === '???' || arr === 'DIRECT') ? `
                     <div class="inspector-route-header">
                         <span class="origin-arr" style="color: #38bdf8; font-size: 0.95rem;">🛰️ ${dep !== '???' ? dep : 'ENROUTE'}</span>

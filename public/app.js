@@ -654,6 +654,8 @@ async function analyzeAndFixRoute() {
     }
 }
 
+const clientAppRouteCache = new Map();
+
 async function loadFlightPlanRoute(dep, arr, route, alt = 35000, speed = 450, targetFlight = null) {
     if (!dep && !arr && !route) return;
     routeVisible = true;
@@ -673,6 +675,38 @@ async function loadFlightPlanRoute(dep, arr, route, alt = 35000, speed = 450, ta
     if (routeEl) routeEl.value = route || '';
     if (altEl) altEl.value = safeAlt;
     if (spdEl) spdEl.value = safeSpeed;
+
+    const cacheKey = `${dep || ''}:${arr || ''}:${route || ''}:${safeAlt}:${safeSpeed}`;
+
+    if (clientAppRouteCache.has(cacheKey)) {
+        const data = clientAppRouteCache.get(cacheKey);
+        renderRouteOnMap(data, false);
+        const mapBadge = document.getElementById('mapBadge');
+        if (mapBadge) mapBadge.style.display = 'flex';
+        updateTelemetryCard(data);
+        updateWaypointLog(data.waypoints);
+
+        if (targetFlight) {
+            updateLiveHud({
+                callsign: targetFlight.callsign,
+                identifier: targetFlight.callsign,
+                pilot_name: targetFlight.pilot_name,
+                network: 'FSHub',
+                latitude: targetFlight.position?.lat !== undefined ? targetFlight.position.lat : targetFlight.latitude,
+                longitude: targetFlight.position?.lng !== undefined ? targetFlight.position.lng : targetFlight.longitude,
+                altitude_ft: targetFlight.position?.altitude_ft || targetFlight.altitude_ft || safeAlt,
+                groundspeed_kts: targetFlight.position?.speed_tas_kts || targetFlight.groundspeed_kts || safeSpeed,
+                heading_deg: targetFlight.position?.heading || targetFlight.heading_deg || 0,
+                flight_plan: {
+                    departure: dep,
+                    arrival: arr,
+                    route: route,
+                    aircraft: targetFlight.aircraft
+                }
+            });
+        }
+        return;
+    }
 
     try {
         let payload = {
@@ -711,6 +745,12 @@ async function loadFlightPlanRoute(dep, arr, route, alt = 35000, speed = 450, ta
             console.error('[Route] Route engine failed:', data.error);
             return;
         }
+
+        if (clientAppRouteCache.size >= 500) {
+            const firstKey = clientAppRouteCache.keys().next().value;
+            clientAppRouteCache.delete(firstKey);
+        }
+        clientAppRouteCache.set(cacheKey, data);
 
         renderRouteOnMap(data, false);
 
@@ -3190,6 +3230,7 @@ function clearRouteFromMap() {
     const popup = document.getElementById('fshubLivePopup');
     if (popup) popup.classList.add('hidden');
 
+    window.currentCardStyle = window.defaultCardStyle || 'full';
     activeVaFlightId = null;
 
     // Refresh active halos on fleet markers without removing any aircraft markers
@@ -3205,10 +3246,12 @@ function clearRouteFromMap() {
     }
 }
 
+window.defaultCardStyle = 'full';
 window.currentCardStyle = 'full';
 window.selectedPilotData = null;
 
 window.setSidebarCardStyle = function(style) {
+    window.defaultCardStyle = style;
     window.currentCardStyle = style;
     document.querySelectorAll('.card-variation-card .network-btn').forEach(btn => btn.classList.remove('active'));
     if (style === 'full') document.getElementById('cardVarFull')?.classList.add('active');
@@ -3241,6 +3284,31 @@ window.previewDemoFlightCard = function() {
         vatsim: { cid: 'Not Linked', is_online: false }
     };
     renderSelectedPilotPopup(demoPilot);
+};
+
+window.toggleInspectorCardStyle = function(e) {
+    if (e) e.stopPropagation();
+    if (window.currentCardStyle === 'full') {
+        window.currentCardStyle = (window.defaultCardStyle === 'compact' || window.defaultCardStyle === 'mini') ? window.defaultCardStyle : 'mini';
+    } else {
+        window.currentCardStyle = 'full';
+    }
+    if (window.selectedPilotData) {
+        renderSelectedPilotPopup(window.selectedPilotData);
+    }
+};
+
+window.setFleetStatsVisible = function(show) {
+    const card = document.getElementById('fleetSummaryStatsCard');
+    if (!card) return;
+    if (show) card.classList.remove('hidden');
+    else card.classList.add('hidden');
+};
+
+window.toggleFleetStats = function() {
+    const card = document.getElementById('fleetSummaryStatsCard');
+    if (!card) return;
+    card.classList.toggle('hidden');
 };
 
 function renderSelectedPilotPopup(pilot) {
@@ -3282,23 +3350,65 @@ function renderSelectedPilotPopup(pilot) {
     const routeStr = pilot.route || pilot.flight_plan?.route || pilot.plan?.route || null;
     const rawAc = pilot.aircraft || pilot.flight_plan?.aircraft || pilot.aircraft?.icao || '';
     const isBlankAc = !rawAc || ['AIRCRAFT', 'UNKNOWN', 'PLANE', '[OBJECT OBJECT]', '****'].includes(String(rawAc).trim().toUpperCase()) || String(rawAc).includes('OBJECT');
-    const phase = (pilot.phase || (gs > 30 ? 'AIRBORNE' : 'TAXIING')).replace(/_/g, ' ').toUpperCase();
+    const phase = resolveFlightPhase(pilot, gs);
     const aircraftType = isBlankAc ? null : classifyAircraftType(rawAc, routeStr);
     const aircraftDisplay = aircraftType && aircraftType.label ? aircraftType.label : (rawAc && !isBlankAc ? `✈️ ${typeof rawAc === 'object' ? (rawAc.icao || '') : rawAc}` : '');
     const airlineInfo = resolveAirlineInfo(pilot.callsign, pilot);
+    const displayName = pilot.pilot_name || pilot.name || pilot.user?.name || pilot.callsign || 'Pilot';
+    const filedCallsign = pilot.flight_plan?.callsign || pilot.plan?.callsign;
+    const tailNumber = pilot.registration || pilot.tail || pilot.tail_number || pilot.aircraft?.registration || pilot.flight_plan?.registration;
+
+    // Check if pilot.callsign is literally the pilot's username
+    const isCallsignUsername = pilot.callsign && displayName && (
+        pilot.callsign.trim().toLowerCase() === displayName.trim().toLowerCase() ||
+        pilot.callsign.replace(/[\s_-]+/g, '').toLowerCase() === displayName.replace(/[\s_-]+/g, '').toLowerCase()
+    );
+
+    // Strict Rule: ONLY callsign, or tail number if no callsign. NEVER username. Otherwise empty.
+    let callsignOrTail = '';
+    if (filedCallsign && filedCallsign !== '---') {
+        callsignOrTail = filedCallsign;
+    } else if (pilot.callsign && !isCallsignUsername && pilot.callsign !== '---') {
+        callsignOrTail = pilot.callsign;
+    } else if (tailNumber && tailNumber !== '---' && tailNumber.toLowerCase() !== displayName.toLowerCase()) {
+        callsignOrTail = tailNumber;
+    } else {
+        callsignOrTail = ''; // LEAVE EMPTY
+    }
+
+    // Check if flight callsign is from another company (e.g. FDX -> FedEx Express, SWA -> Southwest) operated by the VA
+    const vaAbbr = (airlineInfo?.abbr || pilot.airline?.abbr || pilot.airline?.code || '').toUpperCase();
+    const csUpper = String(callsignOrTail || '').toUpperCase().trim();
+    const csPrefix = csUpper.match(/^([A-Z]{3})/)?.[1] || '';
+    const isDifferentCompany = vaAbbr && csPrefix && csPrefix !== vaAbbr;
+    const commercialAirline = (isDifferentCompany && AIRLINE_ICAO_DATABASE[csPrefix]) ? AIRLINE_ICAO_DATABASE[csPrefix] : null;
+
+    let leftCallsignHtml = '';
+    if (callsignOrTail) {
+        leftCallsignHtml = `<span style="color: #f1f5f9; font-family: 'JetBrains Mono', monospace; font-size: 0.80rem; font-weight: 700; letter-spacing: 0.5px;">${callsignOrTail}</span>`;
+        if (commercialAirline) {
+            leftCallsignHtml += ` <span style="color: #94a3b8; font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.74rem;">• ${commercialAirline.name}</span>`;
+        }
+    }
+
+    let rightOperatorHtml = '';
+    if (airlineInfo) {
+        const opPrefix = isDifferentCompany ? 'Op by ' : '';
+        rightOperatorHtml = `<span style="color: #38bdf8; font-weight: 600;">🏢 ${opPrefix}${airlineInfo.badge}</span>`;
+    }
 
     if (effectiveStyle === 'mini') {
         card.innerHTML = `
             <div class="inspector-header">
                 <div class="inspector-pilot-identity">
-                    <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${pilot.pilot_name}">
-                    <div>
-                        <div class="inspector-callsign">${pilot.callsign}</div>
+                    <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${displayName}">
+                    <div style="min-width: 0; overflow: hidden;">
+                        <div class="inspector-callsign" title="${displayName}">${displayName}</div>
                     </div>
                 </div>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                    <button class="report-route-btn" id="btnReportRouteMini" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 12px; transition: all 0.2s;">🚩</button>
-                    <span class="live-phase-pill" id="inspectorPhasePill">${phase}</span>
+                <div class="inspector-header-right">
+                    <button class="toggle-card-style-btn" title="Expand to Full Card" onclick="window.toggleInspectorCardStyle(event)" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 11px; transition: all 0.2s; flex-shrink: 0;">⤢</button>
+                    <button class="report-route-btn" id="btnReportRouteMini" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 12px; transition: all 0.2s; flex-shrink: 0;">🚩</button>
                 </div>
             </div>
             <div class="inspector-flight-plan-box">
@@ -3333,26 +3443,25 @@ function renderSelectedPilotPopup(pilot) {
             <!-- Top Header -->
             <div class="inspector-header">
                 <div class="inspector-pilot-identity">
-                    <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${pilot.pilot_name}">
-                    <div>
-                        <div class="inspector-callsign">${pilot.callsign}</div>
-                        <div class="inspector-pilot-name">👤 ${pilot.pilot_name || 'Pilot'}${airlineInfo ? ` • <span style="color: #c084fc; font-weight: 600;">${airlineInfo.badge}</span>` : ''}${aircraftDisplay ? ` • <span style="color: #38bdf8; font-weight: 500;">${aircraftDisplay}</span>` : ''}</div>
+                    <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${displayName}">
+                    <div style="min-width: 0; overflow: hidden;">
+                        <div class="inspector-callsign" title="${displayName}">${displayName}</div>
+                        ${aircraftDisplay ? `<div class="inspector-pilot-name" style="color: #38bdf8; font-weight: 500;" title="${aircraftDisplay.replace(/<[^>]+>/g, '')}">${aircraftDisplay}</div>` : ''}
                     </div>
                 </div>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                    <button class="report-route-btn" id="btnReportRoute" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 13px; transition: all 0.2s;">🚩</button>
+                <div class="inspector-header-right">
+                    <button class="toggle-card-style-btn" title="Collapse to Mini Card" onclick="window.toggleInspectorCardStyle(event)" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 12px; transition: all 0.2s; flex-shrink: 0;">⤡</button>
+                    <button class="report-route-btn" id="btnReportRoute" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 13px; transition: all 0.2s; flex-shrink: 0;">🚩</button>
                     <span class="live-phase-pill" id="inspectorPhasePill">${phase}</span>
                 </div>
             </div>
 
             <!-- Flight Plan Corridor Box -->
             <div class="inspector-flight-plan-box">
-                ${airlineInfo ? `
-                    <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 4px; margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 0.72rem;">
-                        <span style="color: #94a3b8; font-weight: 500;">OPERATOR</span>
-                        <span style="color: #38bdf8; font-weight: 600;">🏢 ${airlineInfo.badge}</span>
-                    </div>
-                ` : ''}
+                <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 4px; margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 0.72rem;">
+                    <div>${leftCallsignHtml}</div>
+                    ${rightOperatorHtml}
+                </div>
                 ${(dep === '???' || dep === 'ENROUTE' || arr === '???' || arr === 'DIRECT') ? `
                     <div class="inspector-route-header">
                         <span class="origin-arr" style="color: #38bdf8; font-size: 0.95rem;">🛰️ ${dep !== '???' ? dep : 'ENROUTE'}</span>
@@ -3479,6 +3588,7 @@ window.selectVaFlight = function(flightOrId, shouldPan = false) {
         popup.classList.remove('hidden');
     }
 
+    window.currentCardStyle = window.defaultCardStyle || 'full';
     renderSelectedPilotPopup(targetFlight);
 
     const lat = targetFlight.latitude !== undefined ? targetFlight.latitude : (targetFlight.position?.lat !== undefined ? targetFlight.position.lat : (targetFlight.lat !== undefined ? targetFlight.lat : null));
@@ -3611,16 +3721,64 @@ window.focusPersonalGps = function(lat, lng, name) {
     }
 };
 
+function isFlightAirborne(f) {
+    if (!f) return false;
+    const gs = Math.round(f.groundspeed_kts !== undefined ? f.groundspeed_kts : (f.position?.speed_tas_kts || f.speed || 0));
+    const rawPhase = (f.phase || f.flight_phase || '').toUpperCase().replace(/_/g, ' ').trim();
+    
+    // Explicit ground phases
+    const groundKeywords = ['TAXI', 'PARK', 'STANDBY', 'GATE', 'RAMP', 'GROUND', 'BOARD', 'DEBOARD', 'PREFLIGHT', 'PUSHBACK', 'HOLD'];
+    if (groundKeywords.some(kw => rawPhase.includes(kw))) {
+        return gs > 50; // Only airborne if actually moving at high speed
+    }
+
+    // If speed is slow (< 35 kts), pilot is on the ground regardless of airport elevation
+    if (gs < 35) {
+        return false;
+    }
+
+    return true;
+}
+
+function resolveFlightPhase(pilot, gs) {
+    const rawPhase = (pilot.phase || pilot.flight_phase || '').replace(/_/g, ' ').toUpperCase().trim();
+    if (gs < 35) {
+        if (!rawPhase || ['ENROUTE', 'CRUISE', 'LEVEL FLIGHT', 'AIRBORNE', 'UNKNOWN'].includes(rawPhase)) {
+            return gs < 5 ? 'PARKED' : 'TAXIING';
+        }
+    }
+    return rawPhase || (gs > 35 ? 'AIRBORNE' : 'TAXIING');
+}
+
+function updateFleetStatsSummary(flights) {
+    const list = Array.isArray(flights) ? flights : (flights ? [flights] : []);
+    const active = list.length;
+    const airborne = list.filter(f => isFlightAirborne(f)).length;
+    const ground = Math.max(0, active - airborne);
+    const vatsim = list.filter(f => (f.vatsim && f.vatsim.is_online) || (f.network && f.network.toUpperCase() === 'VATSIM')).length;
+
+    const elActive = document.getElementById('statsActivePilots');
+    if (elActive) elActive.textContent = active;
+    const elAirborne = document.getElementById('statsAirbornePilots');
+    if (elAirborne) elAirborne.textContent = airborne;
+    const elGround = document.getElementById('statsGroundPilots');
+    if (elGround) elGround.textContent = ground;
+    const elVatsim = document.getElementById('statsVatsimPilots');
+    if (elVatsim) elVatsim.textContent = vatsim;
+}
+
 function renderFleetMarkersOnMap(fleetFlights, autoFit = false) {
     if (!map || !fleetMarkersLayerGroup) return;
 
     if (!fleetFlights || !Array.isArray(fleetFlights) || fleetFlights.length === 0) {
         fleetMarkersLayerGroup.clearLayers();
         fleetAircraftBuffers.clear();
+        updateFleetStatsSummary([]);
         return;
     }
 
     activeFleetFlights = fleetFlights;
+    updateFleetStatsSummary(fleetFlights);
     const currentFlightIds = new Set();
     const boundsPoints = [];
 

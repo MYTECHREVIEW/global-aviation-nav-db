@@ -8,3 +8,8 @@ data/keys/
 data/keys/*
 .env
 *.env
+STTAPI.txt
+sttapi.txt
+STTAPI.TXT
+API Key.txt
+*.key

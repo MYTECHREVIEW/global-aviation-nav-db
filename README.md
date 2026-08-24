@@ -92,7 +92,7 @@ curl -X POST http://localhost:3510/api/v1/live/multi \
   -d '{
     "targets": [
       { "network": "VATSIM", "id": "1234567" },
-      { "network": "FSHUB", "token": "18bXlTA3OUu6F2ShL0XGuHBtCE1AEWsXef4ISoIs6pPM2XaU6KVgKNuudu6Q" }
+      { "network": "FSHUB", "token": "fshub_sample_token_xyz123" }
     ]
   }'
 ```

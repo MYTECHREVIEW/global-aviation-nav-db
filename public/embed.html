@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="style.css?v=5.0" />
+    <link rel="stylesheet" href="style.css?v=6.0" />
 
     <style>
         body, html {
@@ -45,8 +45,28 @@
         <div id="inspectorContent"></div>
     </div>
 
+    <!-- 📊 Fleet Summary Stats Mini Card (Bottom-Right, Optional via API / &stats=true) -->
+    <div id="fleetSummaryStatsCard" class="fleet-summary-stats-card hidden">
+        <div class="stats-row">
+            <span class="stats-label">PILOTS ONLINE:</span>
+            <span class="stats-value" id="statsActivePilots">0</span>
+        </div>
+        <div class="stats-row">
+            <span class="stats-label">PILOTS AIRBORNE:</span>
+            <span class="stats-value" id="statsAirbornePilots">0</span>
+        </div>
+        <div class="stats-row">
+            <span class="stats-label">PILOTS ON-GROUND:</span>
+            <span class="stats-value" id="statsGroundPilots">0</span>
+        </div>
+        <div class="stats-row">
+            <span class="stats-label">VATSIM ONLINE:</span>
+            <span class="stats-value" id="statsVatsimPilots">0</span>
+        </div>
+    </div>
+
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="embed.js?v=5.0"></script>
+    <script src="embed.js?v=6.0"></script>
 </body>
 </html>

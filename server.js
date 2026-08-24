@@ -19,7 +19,15 @@ const MAPBOX_ACCESS_TOKEN = process.env.MAPBOX_ACCESS_TOKEN || '';
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.html') || filePath.endsWith('.js') || filePath.endsWith('.css')) {
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            res.setHeader('Pragma', 'no-cache');
+            res.setHeader('Expires', '0');
+        }
+    }
+}));
 
 console.log('📦 Loading Aeronautical Database into Memory...');
 const DATA_DIR = path.join(__dirname, 'data');
@@ -533,6 +541,9 @@ app.get('/api/v1/airways/:ident', (req, res) => {
  * POST /api/v1/route/trace
  * Body: { "route": "KMIA DIW ORF JFK KLGA", "departure": "KMIA", "arrival": "KLGA", "altitude_ft": 35000, "speed_kts": 450 }
  */
+const routeTraceMemoryCache = new Map();
+const MAX_ROUTE_TRACE_CACHE = 5000;
+
 app.post('/api/v1/route/trace', async (req, res) => {
     const { route, departure, arrival, altitude_ft } = req.body || {};
     const rawSpeed = req.body?.speed_kts ?? req.body?.airspeed_kts;
@@ -547,6 +558,12 @@ app.post('/api/v1/route/trace', async (req, res) => {
 
     const routeStr = route || `${departure} ${arrival}`;
     const include_labels = req.body?.include_labels ?? req.body?.show_labels ?? true;
+    const cacheKey = `${departure || ''}|${arrival || ''}|${routeStr}|${alt_ft}|${speed_kts}|${include_labels}`;
+
+    if (routeTraceMemoryCache.has(cacheKey)) {
+        return res.json(routeTraceMemoryCache.get(cacheKey));
+    }
+
     const result = await routeParser.parseRouteAsync(
         routeStr,
         departure,
@@ -563,10 +580,18 @@ app.post('/api/v1/route/trace', async (req, res) => {
         staticMapUrl = `https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/geojson(${geojsonFeature})/auto/1000x500@2x?padding=60&access_token=${MAPBOX_ACCESS_TOKEN}`;
     }
 
-    res.json({
+    const payload = {
         ...result,
         static_map_url: staticMapUrl
-    });
+    };
+
+    if (routeTraceMemoryCache.size >= MAX_ROUTE_TRACE_CACHE) {
+        const firstKey = routeTraceMemoryCache.keys().next().value;
+        routeTraceMemoryCache.delete(firstKey);
+    }
+    routeTraceMemoryCache.set(cacheKey, payload);
+
+    res.json(payload);
 });
 
 /**

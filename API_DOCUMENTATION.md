@@ -101,7 +101,7 @@ Concurrently queries, cross-correlates, and tracks any batch array of targets ac
 {
   "targets": [
     { "network": "VATSIM", "id": "1234567" },
-    { "network": "FSHUB", "token": "18bXlTA3OUu6F2ShL0XGuHBtCE1AEWsXef4ISoIs6pPM2XaU6KVgKNuudu6Q" },
+    { "network": "FSHUB", "token": "fshub_sample_token_xyz123" },
     { "network": "FSHUB", "id": "DemoPilot10" },
     { "network": "IVAO", "id": "765432" }
   ]
@@ -110,7 +110,7 @@ Concurrently queries, cross-correlates, and tracks any batch array of targets ac
 
 #### Shortcut GET Format:
 ```http
-GET /api/v1/live/multi?vatsim=1234567,2345678&fshub=DemoPilot10&tokens=18bXlTA3OUu6F2ShL0XGuHBtCE1AEWsXef4ISoIs6pPM2XaU6KVgKNuudu6Q
+GET /api/v1/live/multi?vatsim=1234567,2345678&fshub=DemoPilot10&tokens=fshub_sample_token_xyz123
 ```
 
 #### Response Payload (Sample)
@@ -271,7 +271,7 @@ Embed a pure, responsive 60 FPS live radar map with aircraft motion smoothing, f
 ### Embed HTML Tag
 ```html
 <iframe 
-  src="https://routes.simtechtracker.com/embed.html?popup_style=compact" 
+  src="https://routes.simtechtracker.com/embed.html?popup_style=compact&stats=true" 
   width="100%" 
   height="650px" 
   frameborder="0" 
@@ -280,16 +280,23 @@ Embed a pure, responsive 60 FPS live radar map with aircraft motion smoothing, f
 ```
 
 ### Supported URL Query Parameters
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-| `popup_style` | String | Card size variation: `full`, `compact`, `mini`, or `auto` (default: `auto`) |
-| `fshub_token` | String | FSHub Personal API Token (auto-inspects pilot & Virtual Airline fleet) |
-| `vatsim` | String | Comma-separated list of VATSIM CIDs or Callsigns (e.g. `1234567,WLF`) |
-| `fshub` | String | Comma-separated list of FSHub usernames or IDs |
-| `ivao` | String | Comma-separated list of IVAO VIDs |
-| `hud` | Boolean | Pass `?hud=false` to hide the top-left floating cockpit HUD |
-| `route` | String | Custom route string to force-draw on initial load |
-| `style` | String | Map basemap style: `dark`, `satellite`, or `voyager` |
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `popup_style` / `card_style` | String | `auto` | Inspector card layout variation: `full`, `compact`, `mini`, or `auto` (auto adjusts based on container dimensions). |
+| `stats` / `show_stats` | Boolean | `false` | Pass `?stats=true` or `?stats=1` to display the bottom-right 4-metric Fleet Summary HUD (Pilots Online, Airborne, On-Ground, VATSIM Online). |
+| `fshub_token` | String | *optional* | FSHub Personal API Token (auto-inspects pilot & Virtual Airline fleet). |
+| `vatsim` | String | *optional* | Comma-separated list of VATSIM CIDs or Callsigns (e.g. `1234567,WLF416`). |
+| `fshub` | String | *optional* | Comma-separated list of FSHub usernames or IDs. |
+| `ivao` | String | *optional* | Comma-separated list of IVAO VIDs. |
+| `hud` | Boolean | `true` | Pass `?hud=false` to hide the top-left floating cockpit HUD. |
+| `route` | String | *optional* | Custom route string to force-draw on initial load. |
+| `style` | String | `dark` | Map basemap style: `dark`, `satellite`, or `voyager`. |
+
+### Client-Side JavaScript API
+When embedded in custom web applications or iframes, the radar exposes programmatic controls on `window`:
+- `window.toggleInspectorCardStyle()` — Toggles the active pilot inspector between mini and full views. (Automatically reverts to default format when switching pilots or closing).
+- `window.setFleetStatsVisible(boolean)` — Programmatically shows (`true`) or hides (`false`) the bottom-right fleet summary card.
+- `window.toggleFleetStats()` — Toggles fleet summary card visibility on the fly.
 
 ---
 
@@ -322,7 +329,7 @@ Add or update a waypoint in the persistent database.
 ## 🛫 6. Flight Plan Route Tracing Engine
 
 ### `POST /api/v1/route/trace`
-Traces a flight plan route string with SIDs, Airways, STARs, and international fixes. Returns sequential waypoints, bearings, distances, and GeoJSON.
+High-speed route tracing engine with multi-layer in-memory LRU caching (`<0.2ms` repeated response times) and parallel dynamic online waypoint resolution. Traces flight plan route strings with SIDs, Airways, STARs, and international fixes. Returns sequential waypoints, bearings, distances, and GeoJSON.
 
 #### Request Body
 ```json
