@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="style.css?v=3.1" />
+    <link rel="stylesheet" href="style.css?v=5.0" />
 
     <style>
         body, html {
@@ -34,30 +34,19 @@
             z-index: 1;
             background: #060913;
         }
-
-        /* Right Slide-over Inspector Card for Embed */
-        .fshub-pilot-popup-card {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 360px;
-            max-width: calc(100vw - 32px);
-            z-index: 1100;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.6);
-        }
     </style>
 </head>
 <body>
     <!-- Full-Screen Interactive Map -->
     <div id="embedMap"></div>
 
-    <!-- Right Slide-Over Pilot Inspector Card -->
-    <div id="fshubLivePopup" class="fshub-pilot-popup-card hidden">
+    <!-- Floating Pilot Inspector Card (Exact API Design & Glow) -->
+    <div id="fshubLivePopup" class="fshub-pilot-floating-card hidden">
         <div id="inspectorContent"></div>
     </div>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="embed.js?v=4.0"></script>
+    <script src="embed.js?v=5.0"></script>
 </body>
 </html>
