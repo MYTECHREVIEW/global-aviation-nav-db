@@ -15,6 +15,7 @@ const config = {
     fshub: urlParams.get('fshub') || '',
     ivao: urlParams.get('ivao') || '',
     route: urlParams.get('route') || '',
+    discordWebhook: urlParams.get('discord_webhook') || urlParams.get('webhook') || '',
     pollIntervalMs: parseInt(urlParams.get('interval') || '4000', 10),
     style: urlParams.get('style') || 'dark'
 };
@@ -965,10 +966,14 @@ window.toggleFleetStats = function() {
 
 window.toggleInspectorCardStyle = function(e) {
     if (e) e.stopPropagation();
-    if (currentCardStyle === 'full') {
-        currentCardStyle = (defaultCardStyle === 'compact' || defaultCardStyle === 'mini') ? defaultCardStyle : 'mini';
+    if (currentCardStyle === 'mini') {
+        currentCardStyle = 'compact';
+    } else if (currentCardStyle === 'compact') {
+        currentCardStyle = 'mini';
+    } else if (currentCardStyle === 'full') {
+        currentCardStyle = 'mini';
     } else {
-        currentCardStyle = 'full';
+        currentCardStyle = 'compact';
     }
     if (selectedPilotData) {
         renderSelectedPilotPopup(selectedPilotData);
@@ -1065,8 +1070,8 @@ function renderSelectedPilotPopup(pilot) {
                     </div>
                 </div>
                 <div class="inspector-header-right">
-                    <button class="toggle-card-style-btn" title="Expand to Full Card" onclick="window.toggleInspectorCardStyle(event)" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 11px; transition: all 0.2s; flex-shrink: 0;">⤢</button>
-                    <button class="report-route-btn" id="btnReportRouteMini" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 12px; transition: all 0.2s; flex-shrink: 0;">🚩</button>
+                    <button class="toggle-card-style-btn" title="Expand to Compact Card" onclick="window.toggleInspectorCardStyle(event)" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 11px; transition: all 0.2s; flex-shrink: 0;">⤢</button>
+                    <button class="report-route-btn" id="btnReportRouteMini" title="Report Route to Discord" onclick="window.reportCurrentPilotRoute(this, event)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 12px; transition: all 0.2s; flex-shrink: 0;">🚩</button>
                 </div>
             </div>
             <div class="inspector-flight-plan-box">
@@ -1109,7 +1114,7 @@ function renderSelectedPilotPopup(pilot) {
                 </div>
                 <div class="inspector-header-right">
                     <button class="toggle-card-style-btn" title="Collapse to Mini Card" onclick="window.toggleInspectorCardStyle(event)" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 12px; transition: all 0.2s; flex-shrink: 0;">⤡</button>
-                    <button class="report-route-btn" id="btnReportRoute" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 13px; transition: all 0.2s; flex-shrink: 0;">🚩</button>
+                    <button class="report-route-btn" id="btnReportRoute" title="Report Route to Discord" onclick="window.reportCurrentPilotRoute(this, event)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 13px; transition: all 0.2s; flex-shrink: 0;">🚩</button>
                     <span class="live-phase-pill" id="inspectorPhasePill">${phase}</span>
                 </div>
             </div>
@@ -1223,7 +1228,8 @@ function updateLiveInspectorMetrics(t) {
     if (elPhase) elPhase.textContent = phase;
 }
 
-window.reportCurrentPilotRoute = async function(btnElement) {
+window.reportCurrentPilotRoute = async function(btnElement, evt) {
+    if (evt) evt.stopPropagation();
     const pilot = window.currentSelectedPilot;
     if (!pilot) return;
 
@@ -1238,9 +1244,14 @@ window.reportCurrentPilotRoute = async function(btnElement) {
         const arr = pilot.arrival || pilot.flight_plan?.arrival || '???';
         const routeStr = pilot.route || pilot.flight_plan?.route || `${dep} ➔ ${arr}`;
 
-        const res = await fetch('/api/v1/report/discord', {
+        const headers = { 'Content-Type': 'application/json' };
+        if (config.apiKey) headers['X-API-Key'] = config.apiKey;
+
+        const targetUrl = config.apiKey ? `/api/v1/report/discord?api_key=${encodeURIComponent(config.apiKey)}` : '/api/v1/report/discord';
+
+        const res = await fetch(targetUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers,
             body: JSON.stringify({
                 pilot_name: pilot.pilot_name || pilot.callsign || 'Pilot',
                 callsign: pilot.callsign,
@@ -1250,7 +1261,8 @@ window.reportCurrentPilotRoute = async function(btnElement) {
                 arrival: arr,
                 aircraft: pilot.aircraft || pilot.flight_plan?.aircraft || 'N/A',
                 altitude_ft: Math.round(pilot.altitude_ft || pilot.position?.altitude_ft || 0),
-                groundspeed_kts: Math.round(pilot.groundspeed_kts || pilot.position?.speed_tas_kts || 0)
+                groundspeed_kts: Math.round(pilot.groundspeed_kts || pilot.position?.speed_tas_kts || 0),
+                discord_webhook: config.discordWebhook || undefined
             })
         });
 
@@ -1277,6 +1289,10 @@ window.reportCurrentPilotRoute = async function(btnElement) {
         }
     }
 };
+
+function reportCurrentPilotRoute(btn, e) {
+    return window.reportCurrentPilotRoute(btn, e);
+}
 
 function initDevVariantSwitcher() {
     const isDev = window.location.hostname === 'localhost' || 

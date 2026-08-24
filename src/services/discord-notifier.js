@@ -39,7 +39,7 @@ function saveReportLocally(report) {
  */
 async function sendRouteIssueReport(reportData) {
     const config = loadSttApiConfig();
-    const webhookUrl = config.discordWebhook || process.env.DISCORD_WEBHOOK_URL || null;
+    const webhookUrl = reportData.discord_webhook || reportData.webhook || config.discordWebhook || process.env.DISCORD_WEBHOOK_URL || null;
 
     const submittedDate = new Date();
     const formattedDate = submittedDate.toUTCString();

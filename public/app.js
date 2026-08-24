@@ -3288,10 +3288,14 @@ window.previewDemoFlightCard = function() {
 
 window.toggleInspectorCardStyle = function(e) {
     if (e) e.stopPropagation();
-    if (window.currentCardStyle === 'full') {
-        window.currentCardStyle = (window.defaultCardStyle === 'compact' || window.defaultCardStyle === 'mini') ? window.defaultCardStyle : 'mini';
+    if (window.currentCardStyle === 'mini') {
+        window.currentCardStyle = 'compact';
+    } else if (window.currentCardStyle === 'compact') {
+        window.currentCardStyle = 'mini';
+    } else if (window.currentCardStyle === 'full') {
+        window.currentCardStyle = 'mini';
     } else {
-        window.currentCardStyle = 'full';
+        window.currentCardStyle = 'compact';
     }
     if (window.selectedPilotData) {
         renderSelectedPilotPopup(window.selectedPilotData);
@@ -3407,8 +3411,8 @@ function renderSelectedPilotPopup(pilot) {
                     </div>
                 </div>
                 <div class="inspector-header-right">
-                    <button class="toggle-card-style-btn" title="Expand to Full Card" onclick="window.toggleInspectorCardStyle(event)" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 11px; transition: all 0.2s; flex-shrink: 0;">⤢</button>
-                    <button class="report-route-btn" id="btnReportRouteMini" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 12px; transition: all 0.2s; flex-shrink: 0;">🚩</button>
+                    <button class="toggle-card-style-btn" title="Expand to Compact Card" onclick="window.toggleInspectorCardStyle(event)" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 11px; transition: all 0.2s; flex-shrink: 0;">⤢</button>
+                    <button class="report-route-btn" id="btnReportRouteMini" title="Report Route to Discord" onclick="window.reportCurrentPilotRoute(this, event)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 12px; transition: all 0.2s; flex-shrink: 0;">🚩</button>
                 </div>
             </div>
             <div class="inspector-flight-plan-box">
@@ -3451,7 +3455,7 @@ function renderSelectedPilotPopup(pilot) {
                 </div>
                 <div class="inspector-header-right">
                     <button class="toggle-card-style-btn" title="Collapse to Mini Card" onclick="window.toggleInspectorCardStyle(event)" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 12px; transition: all 0.2s; flex-shrink: 0;">⤡</button>
-                    <button class="report-route-btn" id="btnReportRoute" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 13px; transition: all 0.2s; flex-shrink: 0;">🚩</button>
+                    <button class="report-route-btn" id="btnReportRoute" title="Report Route to Discord" onclick="window.reportCurrentPilotRoute(this, event)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 13px; transition: all 0.2s; flex-shrink: 0;">🚩</button>
                     <span class="live-phase-pill" id="inspectorPhasePill">${phase}</span>
                 </div>
             </div>
@@ -3890,7 +3894,8 @@ function renderFleetMarkersOnMap(fleetFlights, autoFit = false) {
     }
 }
 
-window.reportCurrentPilotRoute = async function(btnElement) {
+window.reportCurrentPilotRoute = async function(btnElement, evt) {
+    if (evt) evt.stopPropagation();
     const pilot = window.selectedPilotData;
     if (!pilot) return;
 
@@ -3944,6 +3949,10 @@ window.reportCurrentPilotRoute = async function(btnElement) {
         }
     }
 };
+
+function reportCurrentPilotRoute(btn, e) {
+    return window.reportCurrentPilotRoute(btn, e);
+}
 
 
 
