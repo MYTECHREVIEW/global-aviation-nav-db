@@ -1786,10 +1786,212 @@ input:checked + .slider:before {
 }
 
 @keyframes aircraftHaloPulse {
-    0% { transform: scale(0.85); opacity: 0.8; }
-    50% { transform: scale(1.2); opacity: 0.25; }
-    100% { transform: scale(0.85); opacity: 0.8; }
+    0% { transform: scale(0.85); opacity: 0.85; }
+    50% { transform: scale(1.25); opacity: 0.2; }
+    100% { transform: scale(0.85); opacity: 0.85; }
 }
+
+/* ==========================================================================
+   📡 PILOT INSPECTOR CARD VARIATIONS (FULL, COMPACT, MINI)
+   ========================================================================== */
+
+/* 1. COMPACT VARIATION (Optimized for Small/Medium Maps & Sidebars) */
+.fshub-pilot-floating-card.style-compact {
+    width: 320px;
+    max-width: calc(100vw - 28px);
+    padding: 12px 14px;
+    gap: 8px;
+    top: 14px;
+    right: 14px;
+    border-radius: 16px;
+    border-width: 1.5px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), 0 0 18px rgba(56, 189, 248, 0.2);
+}
+
+.fshub-pilot-floating-card.style-compact .inspector-header {
+    gap: 8px;
+}
+
+.fshub-pilot-floating-card.style-compact .inspector-avatar {
+    width: 36px;
+    height: 36px;
+    border-width: 2px;
+}
+
+.fshub-pilot-floating-card.style-compact .inspector-callsign {
+    font-size: 1.12rem;
+}
+
+.fshub-pilot-floating-card.style-compact .inspector-pilot-name {
+    font-size: 0.72rem;
+    margin-top: 1px;
+}
+
+.fshub-pilot-floating-card.style-compact .live-phase-pill {
+    padding: 3px 8px;
+    font-size: 0.64rem;
+}
+
+.fshub-pilot-floating-card.style-compact .inspector-flight-plan-box {
+    padding: 8px 10px;
+    gap: 5px;
+    border-radius: 10px;
+}
+
+.fshub-pilot-floating-card.style-compact .inspector-route-header {
+    font-size: 0.95rem;
+}
+
+.fshub-pilot-floating-card.style-compact .inspector-route-string {
+    font-size: 0.66rem;
+    padding: 5px 8px;
+    max-height: 44px;
+    overflow-y: auto;
+}
+
+.fshub-pilot-floating-card.style-compact .inspector-telemetry-grid {
+    padding: 8px 4px;
+    gap: 4px;
+    border-radius: 10px;
+}
+
+.fshub-pilot-floating-card.style-compact .inspector-telem-item span:first-child {
+    font-size: 0.58rem;
+}
+
+.fshub-pilot-floating-card.style-compact .inspector-telem-item span:last-child {
+    font-size: 0.84rem;
+}
+
+.fshub-pilot-floating-card.style-compact .fshub-vatsim-card {
+    padding: 8px 10px;
+    border-radius: 10px;
+    gap: 4px;
+}
+
+.fshub-pilot-floating-card.style-compact .vatsim-brand-badge {
+    font-size: 0.72rem;
+}
+
+.fshub-pilot-floating-card.style-compact .vatsim-status-pill {
+    font-size: 0.6rem;
+    padding: 2px 7px;
+}
+
+/* 2. MINI / HUD VARIATION (Ultra-compact chip) */
+.fshub-pilot-floating-card.style-mini {
+    width: 250px;
+    max-width: calc(100vw - 20px);
+    padding: 10px 12px;
+    gap: 6px;
+    top: 10px;
+    right: 10px;
+    border-radius: 12px;
+    border-width: 1.5px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 14px rgba(56, 189, 248, 0.18);
+}
+
+.fshub-pilot-floating-card.style-mini .inspector-avatar {
+    width: 28px;
+    height: 28px;
+    border-width: 1.5px;
+}
+
+.fshub-pilot-floating-card.style-mini .inspector-callsign {
+    font-size: 0.98rem;
+}
+
+.fshub-pilot-floating-card.style-mini .inspector-pilot-name {
+    display: none;
+}
+
+.fshub-pilot-floating-card.style-mini .live-phase-pill {
+    padding: 2px 6px;
+    font-size: 0.58rem;
+}
+
+.fshub-pilot-floating-card.style-mini .inspector-flight-plan-box {
+    padding: 6px 8px;
+    gap: 3px;
+    border-radius: 8px;
+}
+
+.fshub-pilot-floating-card.style-mini .inspector-route-header {
+    font-size: 0.84rem;
+}
+
+.fshub-pilot-floating-card.style-mini .inspector-route-string,
+.fshub-pilot-floating-card.style-mini .fshub-vatsim-card {
+    display: none !important;
+}
+
+.fshub-pilot-floating-card.style-mini .inspector-telemetry-grid {
+    padding: 6px 3px;
+    gap: 3px;
+    border-radius: 8px;
+}
+
+.fshub-pilot-floating-card.style-mini .inspector-telem-item span:first-child {
+    font-size: 0.52rem;
+}
+
+.fshub-pilot-floating-card.style-mini .inspector-telem-item span:last-child {
+    font-size: 0.76rem;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   🛠️ LOCAL DEVELOPER VARIANT SWITCHER TOOLBAR
+   ══════════════════════════════════════════════════════════════════════════ */
+.dev-variant-switcher {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(8, 14, 28, 0.92);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    backdrop-filter: blur(12px);
+    padding: 4px 8px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    color: #94a3b8;
+}
+
+.dev-variant-switcher span {
+    font-weight: 700;
+    color: #38bdf8;
+    margin-right: 4px;
+}
+
+.dev-variant-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+    padding: 3px 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 600;
+    transition: all 0.15s ease;
+}
+
+.dev-variant-btn:hover {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border-color: rgba(56, 189, 248, 0.3);
+}
+
+.dev-variant-btn.active {
+    background: #0284c7;
+    color: #ffffff;
+    border-color: #38bdf8;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
 
 
 

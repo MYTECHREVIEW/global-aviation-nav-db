@@ -1,0 +1,47 @@
+[
+  {
+    "id": "REP-MT7PPEVO",
+    "pilot": "Doozy60",
+    "callsign": "UAL341",
+    "network": "WLF • WolfAir Aviation",
+    "route": "KORD MYKIE MONNY IANNA FSD MLP KSEA",
+    "departure": "KORD",
+    "arrival": "KSEA",
+    "aircraft": "B739",
+    "altitude_ft": 34568,
+    "groundspeed_kts": 466,
+    "submitted_at": "2026-08-24T20:52:17.172Z",
+    "submitted_at_formatted": "Mon, 24 Aug 2026 20:52:17 GMT",
+    "delivered_to_discord": true
+  },
+  {
+    "id": "REP-MT7PO0SA",
+    "pilot": "Eilqar",
+    "callsign": "WLF1632",
+    "network": "WolfAir Aviation VA",
+    "route": "EDDS ETASA SPESA EDDF",
+    "departure": "EDDS",
+    "arrival": "EDDF",
+    "aircraft": "B738",
+    "altitude_ft": null,
+    "groundspeed_kts": null,
+    "submitted_at": "2026-08-24T20:51:12.249Z",
+    "submitted_at_formatted": "Mon, 24 Aug 2026 20:51:12 GMT",
+    "delivered_to_discord": true
+  },
+  {
+    "id": "REP-MT7PN3CU",
+    "pilot": "Eilqar",
+    "callsign": "WLF1632",
+    "network": "WolfAir Aviation VA",
+    "route": "EDDS ETASA SPESA EDDF",
+    "departure": "EDDS",
+    "arrival": "EDDF",
+    "aircraft": "N/A",
+    "altitude_ft": null,
+    "groundspeed_kts": null,
+    "submitted_at": "2026-08-24T20:50:28.925Z",
+    "submitted_at_formatted": "Mon, 24 Aug 2026 20:50:28 GMT",
+    "delivered_to_discord": false
+  }
+]

@@ -347,7 +347,7 @@ class RouteParser {
         }
     }
 
-    resolvePoint(token, refLat = null, refLon = null, isExplicitAirport = false) {
+    resolvePoint(token, refLat = null, refLon = null, isExplicitAirport = false, nextLat = null, nextLon = null) {
         const clean = sanitizeToken(token);
         if (!clean || isSpeedLevelToken(clean) || isNatTrackToken(clean) || clean === 'DCT' || clean === 'DIRECT') return null;
 
@@ -434,18 +434,27 @@ class RouteParser {
             return null;
         }
 
-        if (allCandidates.length === 1 || refLat === null || refLon === null) {
+        if (allCandidates.length === 1) {
+            return allCandidates[0];
+        }
+
+        // If reference point is missing, fallback to next coordinates
+        const effectiveRefLat = refLat !== null ? refLat : nextLat;
+        const effectiveRefLon = refLon !== null ? refLon : nextLon;
+
+        if (effectiveRefLat === null || effectiveRefLon === null) {
             return allCandidates[0];
         }
 
         let bestCandidate = allCandidates[0];
-        let minDistance = haversineDistanceM(refLat, refLon, bestCandidate.latitude, bestCandidate.longitude);
+        let minScore = Infinity;
 
-        for (let i = 1; i < allCandidates.length; i++) {
-            const cand = allCandidates[i];
-            const dist = haversineDistanceM(refLat, refLon, cand.latitude, cand.longitude);
-            if (dist < minDistance) {
-                minDistance = dist;
+        for (const cand of allCandidates) {
+            const dRef = haversineDistanceM(effectiveRefLat, effectiveRefLon, cand.latitude, cand.longitude);
+            const dNext = (nextLat !== null && nextLon !== null) ? haversineDistanceM(cand.latitude, cand.longitude, nextLat, nextLon) : 0;
+            const score = dRef + dNext;
+            if (score < minScore) {
+                minScore = score;
                 bestCandidate = cand;
             }
         }
@@ -453,40 +462,28 @@ class RouteParser {
         return bestCandidate;
     }
 
-    async resolvePointAsync(token, refLat = null, refLon = null, isExplicitAirport = false, nextLat = null, nextLon = null) {
+    async resolvePointAsync(token, refLat = null, refLon = null, isExplicitAirport = false, nextLat = null, nextLon = null, fraction = 0.5) {
         const clean = sanitizeToken(token);
         if (!clean || isSpeedLevelToken(clean) || isNatTrackToken(clean) || clean === 'DCT' || clean === 'DIRECT') return null;
 
-        const local = this.resolvePoint(token, refLat, refLon, isExplicitAirport);
+        const local = this.resolvePoint(token, refLat, refLon, isExplicitAirport, nextLat, nextLon);
         
-        // If local candidate exists, check if it's unreasonably far from ref coordinates (> 600 NM)
-        if (local && refLat !== null && refLon !== null) {
+        // If local candidate exists, verify proximity before querying external resolvers
+        if (local) {
+            if (refLat === null || refLon === null) return local;
             const distNm = haversineDistanceM(refLat, refLon, local.latitude, local.longitude) / 1852;
-            if (distNm <= 600) {
+            if (distNm <= 1800) {
                 return local;
             }
-            // Local candidate is very distant, try querying dynamic online resolver for a closer regional waypoint
-            const online = await dynamicNavDataService.resolveOnline(clean, refLat, refLon, nextLat, nextLon);
-            if (online) {
-                const onlineDistNm = haversineDistanceM(refLat, refLon, online.latitude, online.longitude) / 1852;
-                if (onlineDistNm < distNm) {
-                    if (!this.waypointsByIdent[clean]) this.waypointsByIdent[clean] = [];
-                    this.waypointsByIdent[clean].push(online);
-                    return online;
-                }
-            }
-            return local;
         }
 
-        if (local) return local;
-
-        const online = await dynamicNavDataService.resolveOnline(clean, refLat, refLon, nextLat, nextLon);
+        const online = await dynamicNavDataService.resolveOnline(clean, refLat, refLon, nextLat, nextLon, fraction);
         if (online) {
             if (!this.waypointsByIdent[clean]) this.waypointsByIdent[clean] = [];
             this.waypointsByIdent[clean].push(online);
             return online;
         }
-        return null;
+        return local || null;
     }
 
     parseRoute(routeStr, depIcao = null, arrIcao = null, cruisingAltFt = 35000, speedKts = 450, options = {}) {
@@ -518,13 +515,15 @@ class RouteParser {
         const firstToken = cleanTokens[0];
         const lastToken = cleanTokens[cleanTokens.length - 1];
 
-        if (depIcao) {
+        const NON_AIRPORT_STATUSES = ['ENROUTE', 'RAMP', '???', 'STANDBY', 'DIRECT'];
+
+        if (depIcao && !NON_AIRPORT_STATUSES.includes(depIcao.toUpperCase())) {
             depPoint = this.resolvePoint(depIcao, null, null, true);
         } else if (firstToken && firstToken.length === 4 && this.airports[firstToken]) {
             depPoint = this.resolvePoint(firstToken, null, null, true);
         }
 
-        if (arrIcao) {
+        if (arrIcao && !NON_AIRPORT_STATUSES.includes(arrIcao.toUpperCase())) {
             arrPoint = this.resolvePoint(arrIcao, null, null, true);
         } else if (lastToken && lastToken.length === 4 && this.airports[lastToken]) {
             arrPoint = this.resolvePoint(lastToken, null, null, true);
@@ -725,7 +724,18 @@ class RouteParser {
                 continue;
             }
 
-            const point = this.resolvePoint(token, currentRefLat, currentRefLon);
+            let nextCandidateLat = arrPoint ? arrPoint.latitude : null;
+            let nextCandidateLon = arrPoint ? arrPoint.longitude : null;
+            for (let j = i + 1; j < cleanTokens.length; j++) {
+                const nextPt = this.resolvePoint(cleanTokens[j], currentRefLat, currentRefLon);
+                if (nextPt) {
+                    nextCandidateLat = nextPt.latitude;
+                    nextCandidateLon = nextPt.longitude;
+                    break;
+                }
+            }
+
+            const point = this.resolvePoint(token, currentRefLat, currentRefLon, false, nextCandidateLat, nextCandidateLon);
             if (point) {
                 resolvedPoints.push(point);
                 currentRefLat = point.latitude;
@@ -894,13 +904,15 @@ class RouteParser {
         const firstToken = cleanTokens[0];
         const lastToken = cleanTokens[cleanTokens.length - 1];
 
-        if (depIcao) {
+        const NON_AIRPORT_STATUSES = ['ENROUTE', 'RAMP', '???', 'STANDBY', 'DIRECT'];
+
+        if (depIcao && !NON_AIRPORT_STATUSES.includes(depIcao.toUpperCase())) {
             depPoint = await this.resolvePointAsync(depIcao, null, null, true);
         } else if (firstToken && firstToken.length === 4 && this.airports[firstToken]) {
             depPoint = await this.resolvePointAsync(firstToken, null, null, true);
         }
 
-        if (arrIcao) {
+        if (arrIcao && !NON_AIRPORT_STATUSES.includes(arrIcao.toUpperCase())) {
             arrPoint = await this.resolvePointAsync(arrIcao, null, null, true);
         } else if (lastToken && lastToken.length === 4 && this.airports[lastToken]) {
             arrPoint = await this.resolvePointAsync(lastToken, null, null, true);
@@ -1088,16 +1100,19 @@ class RouteParser {
             // Look ahead for next coordinate to provide geodesic bounds if needed
             let nextCandidateLat = arrPoint ? arrPoint.latitude : null;
             let nextCandidateLon = arrPoint ? arrPoint.longitude : null;
+            let gapCount = 1;
             for (let j = i + 1; j < cleanTokens.length; j++) {
-                const nextPt = this.resolvePoint(cleanTokens[j]);
+                const nextPt = this.resolvePoint(cleanTokens[j], currentRefLat, currentRefLon);
                 if (nextPt) {
                     nextCandidateLat = nextPt.latitude;
                     nextCandidateLon = nextPt.longitude;
+                    gapCount = (j - i) + 1;
                     break;
                 }
             }
+            const fraction = 1 / gapCount;
 
-            const point = await this.resolvePointAsync(token, currentRefLat, currentRefLon, false, nextCandidateLat, nextCandidateLon);
+            const point = await this.resolvePointAsync(token, currentRefLat, currentRefLon, false, nextCandidateLat, nextCandidateLon, fraction);
             if (point) {
                 resolvedPoints.push(point);
                 currentRefLat = point.latitude;
@@ -1233,6 +1248,130 @@ class RouteParser {
             this.parsedRouteCache.set(cacheKey, result);
         }
         return result;
+    }
+
+    async analyzeAndFixRoute(routeStr, options = {}) {
+        if (!routeStr || typeof routeStr !== 'string') {
+            throw new Error('Route string is required for route analysis.');
+        }
+
+        // 1. Initial baseline parse
+        if (this.parsedRouteCache) this.parsedRouteCache.clear();
+        const initial = await this.parseRouteAsync(routeStr, null, null, 35000, 450, options);
+        const wps = initial.waypoints || [];
+        if (wps.length < 2) {
+            return {
+                ...initial,
+                issues_found: [],
+                fixes_repaired: [],
+                distance_saved_nm: 0,
+                status: 'VALID'
+            };
+        }
+
+        const issuesFound = [];
+        const fixesRepaired = [];
+
+        // 2. Anomaly & Detour Analysis across each intermediate waypoint
+        for (let i = 1; i < wps.length - 1; i++) {
+            const prev = wps[i - 1];
+            const curr = wps[i];
+            const next = wps[i + 1];
+
+            const dDirect = haversineDistanceM(prev.latitude, prev.longitude, next.latitude, next.longitude) / 1852;
+            const dVia = (haversineDistanceM(prev.latitude, prev.longitude, curr.latitude, curr.longitude) +
+                          haversineDistanceM(curr.latitude, curr.longitude, next.latitude, next.longitude)) / 1852;
+            const detourNm = dVia - dDirect;
+
+            // Anomaly condition: Detour > 250 NM or path detour ratio > 2.0
+            const isDetourAnomaly = detourNm > 250 || (dVia > dDirect * 2 && detourNm > 100);
+            const isInterpolated = curr.id && String(curr.id).startsWith('INTERP_');
+
+            if (isDetourAnomaly || isInterpolated) {
+                issuesFound.push({
+                    index: i,
+                    ident: curr.ident,
+                    type: curr.type,
+                    current_lat: curr.latitude,
+                    current_lon: curr.longitude,
+                    detour_nm: Math.round(detourNm),
+                    reason: isDetourAnomaly ? `Excessive corridor detour (${Math.round(detourNm)} NM)` : `Interpolated placeholder fix`
+                });
+
+                // 3. Search for optimal global replacement candidate along prev <-> next line
+                const clean = sanitizeToken(curr.ident);
+                const candidates = [];
+
+                if (this.navaidsByIdent[clean]) candidates.push(...this.navaidsByIdent[clean]);
+                if (this.waypointsByIdent[clean]) candidates.push(...this.waypointsByIdent[clean]);
+                if (GLOBAL_WAYPOINTS_CATALOG[clean]) candidates.push(GLOBAL_WAYPOINTS_CATALOG[clean]);
+
+                let bestCandidate = null;
+                let minCandidateDetour = detourNm;
+
+                for (const cand of candidates) {
+                    const candDVia = (haversineDistanceM(prev.latitude, prev.longitude, cand.latitude, cand.longitude) +
+                                      haversineDistanceM(cand.latitude, cand.longitude, next.latitude, next.longitude)) / 1852;
+                    const candDetour = candDVia - dDirect;
+                    if (candDetour < minCandidateDetour) {
+                        minCandidateDetour = candDetour;
+                        bestCandidate = cand;
+                    }
+                }
+
+                // If no local candidate improves the route, attempt online scraper probe
+                if (!bestCandidate || minCandidateDetour > 200) {
+                    try {
+                        const onlineFix = await dynamicNavDataService.resolveOnline(clean, prev.latitude, prev.longitude, next.latitude, next.longitude);
+                        if (onlineFix) {
+                            const onlineDVia = (haversineDistanceM(prev.latitude, prev.longitude, onlineFix.latitude, onlineFix.longitude) +
+                                                haversineDistanceM(onlineFix.latitude, onlineFix.longitude, next.latitude, next.longitude)) / 1852;
+                            const onlineDetour = onlineDVia - dDirect;
+                            if (onlineDetour < minCandidateDetour) {
+                                minCandidateDetour = onlineDetour;
+                                bestCandidate = onlineFix;
+                            }
+                        }
+                    } catch (e) {}
+                }
+
+                // 4. If a significantly better candidate was discovered, persist to database
+                if (bestCandidate && (detourNm - minCandidateDetour >= 50 || isInterpolated)) {
+                    this.saveCustomWaypoint(clean, {
+                        ident: clean,
+                        name: bestCandidate.name || clean,
+                        type: bestCandidate.type || 'WAYPOINT',
+                        latitude: bestCandidate.latitude,
+                        longitude: bestCandidate.longitude,
+                        country_code: bestCandidate.country_code || null,
+                        elevation_ft: bestCandidate.elevation_ft || null
+                    });
+
+                    fixesRepaired.push({
+                        ident: clean,
+                        name: bestCandidate.name || clean,
+                        country_code: bestCandidate.country_code || null,
+                        previous_coords: { lat: curr.latitude, lon: curr.longitude },
+                        corrected_coords: { lat: bestCandidate.latitude, lon: bestCandidate.longitude },
+                        distance_saved_nm: Math.round(detourNm - minCandidateDetour)
+                    });
+                }
+            }
+        }
+
+        // 5. Re-parse route if any fixes were updated
+        if (this.parsedRouteCache) this.parsedRouteCache.clear();
+        const finalResult = await this.parseRouteAsync(routeStr, null, null, 35000, 450, options);
+        const distanceSaved = Math.max(0, Math.round((initial.total_distance_nm - finalResult.total_distance_nm) * 10) / 10);
+
+        return {
+            ...finalResult,
+            original_distance_nm: initial.total_distance_nm,
+            distance_saved_nm: distanceSaved,
+            issues_found: issuesFound,
+            fixes_repaired: fixesRepaired,
+            status: fixesRepaired.length > 0 ? 'REPAIRED' : (issuesFound.length > 0 ? 'ANOMALIES_DETECTED' : 'OPTIMAL')
+        };
     }
 }
 

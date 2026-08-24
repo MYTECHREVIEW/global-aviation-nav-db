@@ -1,0 +1,8 @@
+# ----------------------------------------------------------------------------
+# SIMTECHTRACKER (STT) & AERONAV API CONFIGURATION
+# ----------------------------------------------------------------------------
+AERONAV_API_KEY=aeronav_live_87b716a75f9f6e976a935219c99268adfe29f4fe
+FSHUB_TOKEN=18bXlTA3OUu6F2ShL0XGuHBtCE1AEWsXef4ISoIs6pPM2XaU6KVgKNuudu6Q
+VATSIM_CID=
+IVAO_TOKEN=
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1541538696329691186/KV15a40LEm4SDnlBGI05vMok-k7Jw04CxrH0C7xRksvE6jm3qJgS96dKCpFYMCzkAZlN

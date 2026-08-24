@@ -134,9 +134,7 @@ async function generateApiKey(name = 'API Client', expiresInDays = null, metadat
         last_used_at: null,
         request_count: 0,
         status: 'active',
-        va_ident: metadata.va_ident || '',
-        fshub_token: metadata.fshub_token || '',
-        vatsim_cid: metadata.vatsim_cid || ''
+        va_ident: metadata.va_ident || ''
     };
 
     inMemoryKeys.push(newKey);

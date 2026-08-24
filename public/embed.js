@@ -47,8 +47,13 @@ const TILE_STYLES = {
 function classifyAircraftType(rawIcao, routeStr = '') {
     if (!rawIcao) return { icao: '', name: '', category: 'NARROWBODY_TWIN', label: '', size: 32, haloSize: 36 };
 
-    const cleanIcao = String(rawIcao).trim().toUpperCase();
-    const rawUpper = `${cleanIcao} ${String(routeStr).toUpperCase()}`;
+    let cleanIcao = typeof rawIcao === 'object' ? (rawIcao.icao || rawIcao.name || rawIcao.type || '') : String(rawIcao);
+    cleanIcao = cleanIcao.trim().toUpperCase();
+    if (!cleanIcao || cleanIcao === '[OBJECT OBJECT]' || cleanIcao.includes('OBJECT') || cleanIcao === 'UNKNOWN' || cleanIcao === 'AIRCRAFT' || cleanIcao === 'PLANE' || cleanIcao === '****') {
+        return { icao: '', name: '', category: 'NARROWBODY_TWIN', label: '', size: 32, haloSize: 36 };
+    }
+
+    const rawUpper = `${cleanIcao} ${String(routeStr || '').toUpperCase()}`;
 
     // 1. Helicopters
     if (
@@ -288,9 +293,11 @@ class AircraftMotionBuffer {
         this.marker = null;
         this.flightData = null;
         this.lastUpdateTime = 0;
+        this.lastSeenTime = Date.now();
     }
 
     pushTelemetry(telemetry) {
+        this.lastSeenTime = Date.now();
         const lat = telemetry.latitude !== undefined ? telemetry.latitude : (telemetry.position?.lat !== undefined ? telemetry.position.lat : null);
         const lon = telemetry.longitude !== undefined ? telemetry.longitude : (telemetry.position?.lng !== undefined ? telemetry.position.lng : (telemetry.position?.lon !== undefined ? telemetry.position.lon : null));
         const hdg = telemetry.heading_deg !== undefined ? telemetry.heading_deg : (telemetry.position?.heading !== undefined ? telemetry.position.heading : 0);
@@ -488,7 +495,43 @@ function startMotionLoop() {
 // 📡 DATA POLLING & MULTI-TARGET FETCHING
 // ═══════════════════════════════════════════════════════════════════════════════
 
+async function loadSttApiConfigFile() {
+    if (config.apiKey && (config.fshubToken || config.vatsim)) return;
+
+    const possiblePaths = ['/STTAPI.txt', '/sttapi.txt', 'STTAPI.txt'];
+    for (const p of possiblePaths) {
+        try {
+            const res = await fetch(p);
+            if (res.ok) {
+                const text = await res.text();
+                const lines = text.split(/\r?\n/);
+                for (const line of lines) {
+                    const clean = line.trim();
+                    if (!clean || clean.startsWith('#') || clean.startsWith('//') || clean.startsWith(';')) continue;
+                    const eq = clean.indexOf('=');
+                    if (eq !== -1) {
+                        const k = clean.substring(0, eq).trim().toUpperCase();
+                        let v = clean.substring(eq + 1).trim();
+                        if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+                            v = v.slice(1, -1);
+                        }
+                        if (!config.apiKey && (k === 'AERONAV_API_KEY' || k === 'API_KEY' || k === 'AERONAV_KEY')) config.apiKey = v;
+                        if (!config.fshubToken && (k === 'FSHUB_TOKEN' || k === 'FSHUB_KEY')) config.fshubToken = v;
+                        if (!config.vatsimCid && (k === 'VATSIM_CID' || k === 'VATSIM_ID')) config.vatsimCid = v;
+                        if (!config.ivao && (k === 'IVAO_TOKEN' || k === 'IVAO_KEY')) config.ivao = v;
+                    }
+                }
+                console.log('📄 [EmbedRadar] Loaded integration credentials from STTAPI.txt');
+                break;
+            }
+        } catch (e) {
+            // ignore 404
+        }
+    }
+}
+
 async function startDataPolling() {
+    await loadSttApiConfigFile();
     await fetchLiveFleet();
     pollTimerId = setInterval(fetchLiveFleet, config.pollIntervalMs);
 }
@@ -507,6 +550,9 @@ async function fetchLiveFleet() {
                 const clean = id.trim();
                 if (clean) payload.targets.push({ network: 'FSHUB', id: clean });
             });
+        }
+        if (config.vatsimCid) {
+            payload.targets.push({ network: 'VATSIM', cid: config.vatsimCid.trim() });
         }
         if (config.vatsim) {
             config.vatsim.split(',').forEach(id => {
@@ -594,11 +640,6 @@ function renderFleetOnMap(flights) {
         }
 
         bounds.push([buf.renderLat, buf.renderLon]);
-
-        // Auto-select first flight if none selected
-        if (!selectedPilotId && idx === 0) {
-            selectPilot(id, f);
-        }
     });
 
     // Auto-focus on active fleet on initial load
@@ -611,11 +652,14 @@ function renderFleetOnMap(flights) {
         initialBoundsFitted = true;
     }
 
-    // Remove inactive flights
+    // Remove inactive flights with 20s anti-flicker grace period
+    const nowTime = Date.now();
     fleetBuffers.forEach((buf, id) => {
         if (!currentFlightIds.has(id)) {
-            if (buf.marker) map.removeLayer(buf.marker);
-            fleetBuffers.delete(id);
+            if (nowTime - buf.lastSeenTime > 20000) {
+                if (buf.marker) map.removeLayer(buf.marker);
+                fleetBuffers.delete(id);
+            }
         }
     });
 }
@@ -726,10 +770,32 @@ async function loadAndTraceRoute(routeStr, dep, arr) {
     }
 }
 
+let currentCardStyle = urlParams.get('popup_style') || urlParams.get('card_style') || urlParams.get('variant') || urlParams.get('popup') || 'auto';
+let selectedPilotData = null;
+
 function renderSelectedPilotPopup(pilot) {
     const card = document.getElementById('fshubLivePopup');
     const content = document.getElementById('inspectorContent');
     if (!card || !content || !pilot) return;
+    selectedPilotData = pilot;
+
+    // Determine effective style (Auto switches to compact for small maps)
+    let effectiveStyle = currentCardStyle;
+    if (effectiveStyle === 'auto' || !effectiveStyle) {
+        const mapEl = document.getElementById('embedMap') || document.body;
+        const w = mapEl.clientWidth || window.innerWidth;
+        const h = mapEl.clientHeight || window.innerHeight;
+        effectiveStyle = (w < 720 || h < 560) ? 'compact' : 'full';
+    }
+
+    card.classList.remove('style-full', 'style-compact', 'style-mini');
+    if (effectiveStyle === 'compact') {
+        card.classList.add('style-compact');
+    } else if (effectiveStyle === 'mini') {
+        card.classList.add('style-mini');
+    } else {
+        card.classList.add('style-full');
+    }
 
     const alt = Math.round(pilot.altitude_ft || pilot.position?.altitude_ft || 0);
     const gs = Math.round(pilot.groundspeed_kts || pilot.position?.speed_tas_kts || 0);
@@ -738,80 +804,152 @@ function renderSelectedPilotPopup(pilot) {
     const arr = pilot.arrival || pilot.flight_plan?.arrival || '???';
     const routeStr = pilot.route || pilot.flight_plan?.route || null;
     const rawAc = pilot.aircraft || pilot.flight_plan?.aircraft || '';
-    const phase = (pilot.phase || (gs > 30 ? 'AIRBORNE' : 'TAXIING')).replace('_', ' ').toUpperCase();
+    const acInfo = classifyAircraftType(rawAc, routeStr);
+    const aircraftDisplay = acInfo && acInfo.label ? acInfo.label : (acInfo && acInfo.icao ? `✈️ ${acInfo.icao}` : '');
+    const phase = (pilot.phase || (gs > 30 ? 'AIRBORNE' : 'TAXIING')).replace(/_/g, ' ').toUpperCase();
     const isVa = pilot.airline && pilot.airline.is_va;
 
-    content.innerHTML = `
-        <!-- Top Header (Clean - No 'X' Close Button) -->
-        <div class="inspector-header">
-            <div class="inspector-pilot-identity">
-                <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${pilot.pilot_name}">
-                <div>
-                    <div class="inspector-callsign">${pilot.callsign}</div>
-                    <div class="inspector-pilot-name">👤 ${pilot.pilot_name || 'Pilot'}${isVa ? ` • <span style="color: #c084fc; font-weight: 600;">${pilot.airline.abbr} • ${pilot.airline.name} VA</span>` : ''}${rawAc ? ` • <span style="color: #38bdf8; font-weight: 500;">✈️ ${rawAc}</span>` : ''}</div>
-                </div>
-            </div>
-            <span class="live-phase-pill" id="inspectorPhasePill">${phase}</span>
-        </div>
+    window.currentSelectedPilot = pilot;
 
-        <!-- Flight Plan Corridor Box -->
-        <div class="inspector-flight-plan-box">
-            ${isVa ? `
-                <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 6px; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 0.74rem;">
-                    <span style="color: #94a3b8; font-weight: 500;">OPERATOR</span>
-                    <span style="color: #38bdf8; font-weight: 600;">🏢 ${pilot.airline.abbr} • ${pilot.airline.name} VA</span>
+    if (effectiveStyle === 'mini') {
+        content.innerHTML = `
+            <div class="inspector-header">
+                <div class="inspector-pilot-identity">
+                    <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${pilot.pilot_name}">
+                    <div>
+                        <div class="inspector-callsign">${pilot.callsign}</div>
+                    </div>
                 </div>
-            ` : ''}
-            <div class="inspector-route-header">
-                <span class="origin-arr">${dep}</span>
-                <span style="color: #38bdf8; font-size: 1.15rem;">➔</span>
-                <span class="origin-arr" style="${arr === 'STANDBY' ? 'color: #94a3b8; font-size: 0.9rem;' : ''}">${arr || 'STANDBY'}</span>
-                <span class="fl-tag" id="inspectorFlTag">FL${Math.round(alt / 100)}</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <button class="report-route-btn" id="btnReportRouteMini" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 12px; transition: all 0.2s;">🚩</button>
+                    <span class="live-phase-pill" id="inspectorPhasePill">${phase}</span>
+                </div>
             </div>
-            ${routeStr ? `
-                <div class="inspector-route-string">
-                    <strong style="color: #38bdf8;">FILED ROUTE:</strong> ${routeStr}
+            <div class="inspector-flight-plan-box">
+                <div class="inspector-route-header">
+                    <span class="origin-arr">${dep === '???' ? 'ENROUTE' : dep}</span>
+                    <span style="color: #38bdf8;">➔</span>
+                    <span class="origin-arr">${arr === '???' ? 'DIRECT' : arr}</span>
+                    <span class="fl-tag" id="inspectorFlTag">FL${Math.round(alt / 100)}</span>
                 </div>
-            ` : `
-                <div style="font-size: 0.72rem; color: #94a3b8; font-style: italic;">
-                    Direct Great-Circle Flight Path (${dep} ➔ ${arr})
+            </div>
+            <div class="inspector-telemetry-grid">
+                <div class="inspector-telem-item">
+                    <span>ALT</span>
+                    <span id="inspectorAlt" style="color: #00ff88;">${alt.toLocaleString()}</span>
                 </div>
-            `}
-        </div>
+                <div class="inspector-telem-item">
+                    <span>SPD</span>
+                    <span id="inspectorSpeed" style="color: #38bdf8;">${gs}kt</span>
+                </div>
+                <div class="inspector-telem-item">
+                    <span>HDG</span>
+                    <span id="inspectorHdg" style="color: #fbbf24;">${String(hdg % 360).padStart(3, '0')}°</span>
+                </div>
+                <div class="inspector-telem-item">
+                    <span>SQK</span>
+                    <span id="inspectorSquawk" style="color: #ffffff;">${pilot.squawk || '1200'}</span>
+                </div>
+            </div>
+        `;
+    } else {
+        content.innerHTML = `
+            <!-- Top Header -->
+            <div class="inspector-header">
+                <div class="inspector-pilot-identity">
+                    <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${pilot.pilot_name}">
+                    <div>
+                        <div class="inspector-callsign">${pilot.callsign}</div>
+                        <div class="inspector-pilot-name">👤 ${pilot.pilot_name || 'Pilot'}${isVa ? ` • <span style="color: #c084fc; font-weight: 600;">${pilot.airline.abbr} • ${pilot.airline.name} VA</span>` : ''}${aircraftDisplay ? ` • <span style="color: #38bdf8; font-weight: 500;">${aircraftDisplay}</span>` : ''}</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <button class="report-route-btn" id="btnReportRoute" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 13px; transition: all 0.2s;">🚩</button>
+                    <span class="live-phase-pill" id="inspectorPhasePill">${phase}</span>
+                </div>
+            </div>
 
-        <!-- Telemetry Matrix with Matched Live Colors -->
-        <div class="inspector-telemetry-grid">
-            <div class="inspector-telem-item">
-                <span>ALTITUDE</span>
-                <span id="inspectorAlt" style="color: #00ff88;">${alt.toLocaleString()} ft</span>
+            <!-- Flight Plan Corridor Box -->
+            <div class="inspector-flight-plan-box">
+                ${isVa ? `
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 4px; margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 0.72rem;">
+                        <span style="color: #94a3b8; font-weight: 500;">OPERATOR</span>
+                        <span style="color: #38bdf8; font-weight: 600;">🏢 ${pilot.airline.abbr} • ${pilot.airline.name} VA</span>
+                    </div>
+                ` : ''}
+                ${(dep === '???' || dep === 'ENROUTE' || arr === '???' || arr === 'DIRECT') ? `
+                    <div class="inspector-route-header">
+                        <span class="origin-arr" style="color: #38bdf8; font-size: 0.95rem;">🛰️ ${dep !== '???' ? dep : 'ENROUTE'}</span>
+                        <span style="color: #38bdf8; font-size: 1.15rem;">➔</span>
+                        <span class="origin-arr" style="color: #00ff88; font-size: 0.95rem;">DIRECT TRACK</span>
+                        <span class="fl-tag" id="inspectorFlTag">FL${Math.round(alt / 100)}</span>
+                    </div>
+                    <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 4px;">
+                        <strong style="color: #38bdf8;">RADAR TRACK:</strong> Live Telemetry Stream • Free Flight / Direct Track
+                    </div>
+                ` : (arr === 'STANDBY' ? `
+                    <div class="inspector-route-header">
+                        <span class="origin-arr">${dep}</span>
+                        <span style="color: #94a3b8; font-size: 1.15rem;">➔</span>
+                        <span class="origin-arr" style="color: #94a3b8; font-size: 0.9rem;">STANDBY</span>
+                        <span class="fl-tag" id="inspectorFlTag">RAMP</span>
+                    </div>
+                    <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 4px;">
+                        <strong style="color: #f59e0b;">STATUS:</strong> Aircraft on Ground • Awaiting Flight Plan
+                    </div>
+                ` : `
+                    <div class="inspector-route-header">
+                        <span class="origin-arr">${dep}</span>
+                        <span style="color: #38bdf8; font-size: 1.15rem;">➔</span>
+                        <span class="origin-arr">${arr}</span>
+                        <span class="fl-tag" id="inspectorFlTag">FL${Math.round(alt / 100)}</span>
+                    </div>
+                    ${routeStr ? `
+                        <div class="inspector-route-string">
+                            <strong style="color: #38bdf8;">FILED ROUTE:</strong> ${routeStr}
+                        </div>
+                    ` : `
+                        <div style="font-size: 0.7rem; color: #94a3b8; font-style: italic;">
+                            Direct Great-Circle Flight Path (${dep} ➔ ${arr})
+                        </div>
+                    `}
+                `)}
             </div>
-            <div class="inspector-telem-item">
-                <span>SPEED</span>
-                <span id="inspectorSpeed" style="color: #38bdf8;">${gs} kts</span>
-            </div>
-            <div class="inspector-telem-item">
-                <span>HEADING</span>
-                <span id="inspectorHdg" style="color: #fbbf24;">${String(hdg % 360).padStart(3, '0')}°</span>
-            </div>
-            <div class="inspector-telem-item">
-                <span>SQUAWK</span>
-                <span id="inspectorSquawk" style="color: #ffffff;">${pilot.squawk || '1200'}</span>
-            </div>
-        </div>
 
-        <!-- VATSIM Network Badge -->
-        <div class="fshub-vatsim-card">
-            <div class="fshub-vatsim-header">
-                <div class="vatsim-brand-badge">
-                    <span>🌐 VATSIM CID:</span>
-                    <strong>${pilot.vatsim?.cid || 'Not Linked'}</strong>
+            <!-- Telemetry Matrix -->
+            <div class="inspector-telemetry-grid">
+                <div class="inspector-telem-item">
+                    <span>ALTITUDE</span>
+                    <span id="inspectorAlt" style="color: #00ff88;">${alt.toLocaleString()} ft</span>
                 </div>
-                <span class="vatsim-status-pill ${pilot.vatsim?.is_online ? 'online' : 'offline'}">
-                    ${pilot.vatsim?.is_online ? '🟢 ONLINE ON VATSIM' : '⚪ VATSIM OFFLINE'}
-                </span>
+                <div class="inspector-telem-item">
+                    <span>SPEED</span>
+                    <span id="inspectorSpeed" style="color: #38bdf8;">${gs} kts</span>
+                </div>
+                <div class="inspector-telem-item">
+                    <span>HEADING</span>
+                    <span id="inspectorHdg" style="color: #fbbf24;">${String(hdg % 360).padStart(3, '0')}°</span>
+                </div>
+                <div class="inspector-telem-item">
+                    <span>SQUAWK</span>
+                    <span id="inspectorSquawk" style="color: #ffffff;">${pilot.squawk || '1200'}</span>
+                </div>
             </div>
-        </div>
-    `;
+
+            <!-- VATSIM Network Badge -->
+            <div class="fshub-vatsim-card">
+                <div class="fshub-vatsim-header">
+                    <div class="vatsim-brand-badge">
+                        <span>🌐 VATSIM:</span>
+                        <strong>${pilot.vatsim?.cid || 'Not Linked'}</strong>
+                    </div>
+                    <span class="vatsim-status-pill ${pilot.vatsim?.is_online ? 'online' : 'offline'}">
+                        ${pilot.vatsim?.is_online ? '🟢 ONLINE' : '⚪ OFFLINE'}
+                    </span>
+                </div>
+            </div>
+        `;
+    }
 
     card.classList.remove('hidden');
 }
@@ -827,10 +965,10 @@ function updateLiveInspectorMetrics(t) {
     const phase = (t.phase || (gs > 30 ? 'CRUISE' : 'TAXIING')).replace('_', ' ').toUpperCase();
 
     const elAlt = document.getElementById('inspectorAlt');
-    if (elAlt) elAlt.textContent = `${alt.toLocaleString()} ft`;
+    if (elAlt) elAlt.textContent = card.classList.contains('style-mini') ? `${alt.toLocaleString()}` : `${alt.toLocaleString()} ft`;
 
     const elSpeed = document.getElementById('inspectorSpeed');
-    if (elSpeed) elSpeed.textContent = `${gs} kts`;
+    if (elSpeed) elSpeed.textContent = card.classList.contains('style-mini') ? `${gs}kt` : `${gs} kts`;
 
     const elHdg = document.getElementById('inspectorHdg');
     if (elHdg) elHdg.textContent = `${String(hdg).padStart(3, '0')}°`;
@@ -840,6 +978,90 @@ function updateLiveInspectorMetrics(t) {
 
     const elPhase = document.getElementById('inspectorPhasePill');
     if (elPhase) elPhase.textContent = phase;
+}
+
+window.reportCurrentPilotRoute = async function(btnElement) {
+    const pilot = window.currentSelectedPilot;
+    if (!pilot) return;
+
+    const btn = btnElement || document.getElementById('btnReportRoute') || document.getElementById('btnReportRouteMini');
+    if (btn) {
+        btn.innerHTML = '⏳';
+        btn.disabled = true;
+    }
+
+    try {
+        const dep = pilot.departure || pilot.flight_plan?.departure || '???';
+        const arr = pilot.arrival || pilot.flight_plan?.arrival || '???';
+        const routeStr = pilot.route || pilot.flight_plan?.route || `${dep} ➔ ${arr}`;
+
+        const res = await fetch('/api/v1/report/discord', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                pilot_name: pilot.pilot_name || pilot.callsign || 'Pilot',
+                callsign: pilot.callsign,
+                network: pilot.airline ? `${pilot.airline.abbr} • ${pilot.airline.name}` : (pilot.network || 'FSHub'),
+                route: routeStr,
+                departure: dep,
+                arrival: arr,
+                aircraft: pilot.aircraft || pilot.flight_plan?.aircraft || 'N/A',
+                altitude_ft: Math.round(pilot.altitude_ft || pilot.position?.altitude_ft || 0),
+                groundspeed_kts: Math.round(pilot.groundspeed_kts || pilot.position?.speed_tas_kts || 0)
+            })
+        });
+
+        const data = await res.json();
+        if (btn) {
+            btn.innerHTML = '✅';
+            btn.style.background = 'rgba(16, 185, 129, 0.25)';
+            btn.style.borderColor = 'rgba(16, 185, 129, 0.5)';
+            btn.title = data.delivered_to_discord ? 'Route report sent to Discord!' : 'Route report logged to database!';
+            setTimeout(() => {
+                btn.innerHTML = '🚩';
+                btn.disabled = false;
+                btn.style.background = 'rgba(239, 68, 68, 0.12)';
+                btn.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+            }, 3500);
+        }
+    } catch (e) {
+        if (btn) {
+            btn.innerHTML = '❌';
+            setTimeout(() => {
+                btn.innerHTML = '🚩';
+                btn.disabled = false;
+            }, 2000);
+        }
+    }
+};
+
+function initDevVariantSwitcher() {
+    const isDev = window.location.hostname === 'localhost' || 
+                  window.location.hostname === '127.0.0.1' || 
+                  urlParams.get('dev') === 'true' || 
+                  urlParams.get('switcher') === 'true';
+    
+    if (!isDev) return;
+
+    const switcher = document.createElement('div');
+    switcher.className = 'dev-variant-switcher';
+    switcher.innerHTML = `
+        <span>🎛️ Card Style:</span>
+        <button class="dev-variant-btn ${currentCardStyle === 'auto' ? 'active' : ''}" onclick="window.setDevCardStyle('auto', this)">Auto</button>
+        <button class="dev-variant-btn ${currentCardStyle === 'full' ? 'active' : ''}" onclick="window.setDevCardStyle('full', this)">Full</button>
+        <button class="dev-variant-btn ${currentCardStyle === 'compact' ? 'active' : ''}" onclick="window.setDevCardStyle('compact', this)">Compact</button>
+        <button class="dev-variant-btn ${currentCardStyle === 'mini' ? 'active' : ''}" onclick="window.setDevCardStyle('mini', this)">Mini</button>
+    `;
+    document.body.appendChild(switcher);
+
+    window.setDevCardStyle = function(style, btn) {
+        currentCardStyle = style;
+        document.querySelectorAll('.dev-variant-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        if (selectedPilotData) {
+            renderSelectedPilotPopup(selectedPilotData);
+        }
+    };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -872,4 +1094,5 @@ function toggleLayerStyle() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initMap();
+    initDevVariantSwitcher();
 });

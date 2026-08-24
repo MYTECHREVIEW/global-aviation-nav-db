@@ -8,8 +8,10 @@ const RouteParser = require('./src/parser/route-parser');
 const { fetchSimbriefOfp } = require('./src/simbrief/simbrief-service');
 const apiKeyManager = require('./src/auth/api-key-manager');
 const liveTrackerService = require('./src/tracking/live-tracker-service');
+const { loadSttApiConfig } = require('./src/config/stt-config');
 
 apiKeyManager.initializeKeys();
+const sttConfig = loadSttApiConfig();
 
 const app = express();
 const PORT = process.env.PORT || 3510;
@@ -62,9 +64,7 @@ app.post('/api/v1/auth/keys', apiKeyManager.requireLocalOrAdmin, async (req, res
     const name = req.body?.name || 'API Client';
     const expires = req.body?.expires_in_days ? parseInt(req.body.expires_in_days, 10) : null;
     const metadata = {
-        va_ident: req.body?.va_ident || '',
-        fshub_token: req.body?.fshub_token || '',
-        vatsim_cid: req.body?.vatsim_cid || ''
+        va_ident: req.body?.va_ident || ''
     };
 
     const newKey = await apiKeyManager.generateApiKey(name, expires, metadata);
@@ -91,8 +91,6 @@ app.get('/api/v1/auth/keys', apiKeyManager.requireLocalOrAdmin, (req, res) => {
         request_count: k.request_count || 0,
         status: k.status,
         va_ident: k.va_ident || '',
-        fshub_token: k.fshub_token || '',
-        vatsim_cid: k.vatsim_cid || '',
         grist_record_id: k.grist_record_id || null
     }));
     res.json({ count: keys.length, storage: 'Grist DB + In-Memory Cache', keys });
@@ -569,6 +567,53 @@ app.post('/api/v1/route/trace', async (req, res) => {
         ...result,
         static_map_url: staticMapUrl
     });
+});
+
+/**
+ * Intelligent Route Analysis & Auto-Fix Engine
+ * POST /api/v1/route/analyze
+ * Body: { "route": "GCRR VASTO NIDEB TIGGI PINEK KORUL KOLEK EBOMO RUSIB SHIRI TOJAQ EGGD", "include_labels": true }
+ */
+app.post('/api/v1/route/analyze', async (req, res) => {
+    const { route, include_labels = true } = req.body || {};
+
+    if (!route || typeof route !== 'string' || !route.trim()) {
+        return res.status(400).json({ error: 'Route string is required for route analysis.' });
+    }
+
+    try {
+        const analysis = await routeParser.analyzeAndFixRoute(route.trim(), { include_labels });
+        res.json({
+            success: true,
+            ...analysis
+        });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+const discordNotifier = require('./src/services/discord-notifier');
+
+/**
+ * Report Route Issue to Discord
+ * POST /api/v1/report/discord
+ * Body: { pilot_name, callsign, route, departure, arrival, network, ... }
+ */
+app.post('/api/v1/report/discord', async (req, res) => {
+    try {
+        const result = await discordNotifier.sendRouteIssueReport(req.body || {});
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/**
+ * Get Stored Route Issue Reports
+ * GET /api/v1/report/list
+ */
+app.get('/api/v1/report/list', (req, res) => {
+    res.json({ reports: discordNotifier.getStoredReports() });
 });
 
 

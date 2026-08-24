@@ -110,7 +110,11 @@ function setupTabs() {
 }
 
 function setupEventListeners() {
-    document.getElementById('traceBtn').addEventListener('click', traceRoute);
+    const traceBtn = document.getElementById('traceBtn');
+    if (traceBtn) traceBtn.addEventListener('click', traceRoute);
+
+    const analyzeBtn = document.getElementById('analyzeRouteBtn');
+    if (analyzeBtn) analyzeBtn.addEventListener('click', analyzeAndFixRoute);
 
     const labelToggle = document.getElementById('toggleWpLabels');
     if (labelToggle) {
@@ -498,38 +502,36 @@ async function fetchSimbrief() {
 }
 
 async function traceRoute() {
-    const dep = document.getElementById('depIcao').value.trim().toUpperCase();
-    const arr = document.getElementById('arrIcao').value.trim().toUpperCase();
-    const route = document.getElementById('routeInput').value.trim();
-    const alt = document.getElementById('altitudeInput').value || 35000;
-    const speed = document.getElementById('speedInput').value || 450;
+    const routeInputEl = document.getElementById('routeInput');
+    const route = (routeInputEl ? routeInputEl.value : '').trim();
 
-    if (!route && (!dep || !arr)) {
-        alert('Please enter a flight plan route string, or both departure and arrival ICAO codes.');
+    if (!route) {
+        alert('Please enter a flight plan route string (e.g. GCRR VASTO NIDEB TIGGI PINEK KORUL KOLEK EBOMO RUSIB SHIRI TOJAQ EGGD).');
         return;
     }
 
     const btn = document.getElementById('traceBtn');
-    btn.innerHTML = '<span>⏳ Computing Trajectory...</span>';
-    btn.disabled = true;
+    if (btn) {
+        btn.innerHTML = '<span>⏳ Tracing...</span>';
+        btn.disabled = true;
+    }
 
     try {
         const response = await fetch('/api/v1/route/trace', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                departure: dep || undefined,
-                arrival: arr || undefined,
-                route: route || undefined,
-                altitude_ft: parseInt(alt, 10),
-                airspeed_kts: parseInt(speed, 10)
+                route: route,
+                include_labels: showWaypointLabels
             })
         });
 
         const data = await response.json();
 
-        btn.innerHTML = '<span>⚡ Trace Flight Path</span>';
-        btn.disabled = false;
+        if (btn) {
+            btn.innerHTML = '<span>⚡ Trace Route</span>';
+            btn.disabled = false;
+        }
 
         if (data.error) {
             alert('Route Error: ' + data.error);
@@ -542,9 +544,113 @@ async function traceRoute() {
         updateTelemetryCard(data);
         updateWaypointLog(data.waypoints);
     } catch (err) {
-        btn.innerHTML = '<span>⚡ Trace Flight Path</span>';
-        btn.disabled = false;
+        if (btn) {
+            btn.innerHTML = '<span>⚡ Trace Route</span>';
+            btn.disabled = false;
+        }
         alert('Failed to contact Route Engine API: ' + err.message);
+    }
+}
+
+async function analyzeAndFixRoute() {
+    const routeInputEl = document.getElementById('routeInput');
+    const route = (routeInputEl ? routeInputEl.value : '').trim();
+    const box = document.getElementById('routeAnalysisBox');
+
+    if (!route) {
+        alert('Please enter a flight plan route string to analyze.');
+        return;
+    }
+
+    const btn = document.getElementById('analyzeRouteBtn');
+    if (btn) {
+        btn.innerHTML = '<span>🔬 Analyzing & Healing...</span>';
+        btn.disabled = true;
+    }
+
+    try {
+        const response = await fetch('/api/v1/route/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                route: route,
+                include_labels: showWaypointLabels
+            })
+        });
+
+        const data = await response.json();
+
+        if (btn) {
+            btn.innerHTML = '<span>🔬 Analyze & Auto-Fix</span>';
+            btn.disabled = false;
+        }
+
+        if (data.error) {
+            if (box) {
+                box.style.display = 'block';
+                box.style.background = 'rgba(239, 68, 68, 0.15)';
+                box.style.borderColor = 'rgba(239, 68, 68, 0.35)';
+                box.innerHTML = `<strong style="color: #ef4444;">❌ Analysis Error:</strong> ${data.error}`;
+            }
+            return;
+        }
+
+        // Render the repaired route immediately on the Leaflet map!
+        renderRouteOnMap(data);
+        const mapBadge = document.getElementById('mapBadge');
+        if (mapBadge) mapBadge.style.display = 'flex';
+        updateTelemetryCard(data);
+        updateWaypointLog(data.waypoints);
+
+        // Display interactive analysis and auto-fix report
+        if (box) {
+            box.style.display = 'block';
+            if (data.fixes_repaired && data.fixes_repaired.length > 0) {
+                box.style.background = 'rgba(16, 185, 129, 0.15)';
+                box.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+                let fixHtml = data.fixes_repaired.map(f => `
+                    <div style="margin-top: 4px; padding: 4px 6px; background: rgba(0,0,0,0.25); border-radius: 4px;">
+                        <strong style="color: #00ff88;">🛠️ ${f.ident}:</strong> ${f.name} ${f.country_code ? `(${f.country_code})` : ''} ➔ Saved to Database
+                        <div style="font-size: 0.7rem; color: #38bdf8;">Saved ${f.distance_saved_nm} NM detour</div>
+                    </div>
+                `).join('');
+
+                box.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                        <strong style="color: #00ff88;">✅ ${data.fixes_repaired.length} Fix${data.fixes_repaired.length > 1 ? 'es' : ''} Repaired & Saved</strong>
+                        <span style="color: #38bdf8; font-weight: 700;">-${data.distance_saved_nm} NM</span>
+                    </div>
+                    <div style="color: #cbd5e1; font-size: 0.72rem; margin-bottom: 6px;">
+                        Total Distance: <strong>${data.total_distance_nm} NM</strong> (reduced from ${data.original_distance_nm} NM)
+                    </div>
+                    ${fixHtml}
+                `;
+            } else if (data.issues_found && data.issues_found.length > 0) {
+                box.style.background = 'rgba(245, 158, 11, 0.15)';
+                box.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+                box.innerHTML = `
+                    <strong style="color: #f59e0b;">⚠️ ${data.issues_found.length} Corridor Anomalies Checked</strong>
+                    <div style="color: #cbd5e1; font-size: 0.72rem; margin-top: 4px;">
+                        ${data.issues_found.map(i => `<div>• <strong>${i.ident}</strong>: ${i.reason}</div>`).join('')}
+                    </div>
+                `;
+            } else {
+                box.style.background = 'rgba(56, 189, 248, 0.15)';
+                box.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+                box.innerHTML = `
+                    <strong style="color: #38bdf8;">🟢 Flight Route Optimal</strong>
+                    <div style="color: #cbd5e1; font-size: 0.72rem; margin-top: 4px;">
+                        All ${data.total_waypoints} waypoints align cleanly along the Great-Circle corridor. Total distance: <strong>${data.total_distance_nm} NM</strong>.
+                    </div>
+                `;
+            }
+        }
+    } catch (err) {
+        if (btn) {
+            btn.innerHTML = '<span>🔬 Analyze & Auto-Fix</span>';
+            btn.disabled = false;
+        }
+        alert('Failed to analyze route: ' + err.message);
     }
 }
 
@@ -1216,13 +1322,11 @@ async function executeLiveTrack(manualClick = false) {
             return;
         }
 
-        if (statusBox) {
-            statusBox.style.display = 'block';
-            statusBox.className = 'simbrief-status success';
-            statusBox.innerHTML = `🎯 <strong>${data.telemetry.callsign}</strong> locked on ${data.network} • FL${Math.round(data.telemetry.altitude_ft / 100)} @ ${data.telemetry.groundspeed_kts} kts`;
-        }
-
         const isFleet = data.telemetry.fleet && Array.isArray(data.telemetry.fleet) && data.telemetry.fleet.length > 0;
+
+        if (statusBox) {
+            statusBox.style.display = 'none';
+        }
 
         if (isFleet) {
             // Keep fleet flights registered
@@ -1931,8 +2035,9 @@ function classifyAircraftType(raw, routeStr = '') {
         };
     }
 
-    const rawUpper = String(raw).toUpperCase().trim();
-    if (!rawUpper || rawUpper === 'AIRCRAFT' || rawUpper === 'UNKNOWN' || rawUpper === 'PLANE') {
+    let cleanRaw = typeof raw === 'object' ? (raw.icao || raw.name || raw.type || '') : String(raw);
+    const rawUpper = cleanRaw.toUpperCase().trim();
+    if (!rawUpper || rawUpper === 'AIRCRAFT' || rawUpper === 'UNKNOWN' || rawUpper === 'PLANE' || rawUpper.includes('OBJECT') || rawUpper === '[OBJECT OBJECT]' || rawUpper === '****') {
         return {
             icao: '',
             name: '',
@@ -3100,9 +3205,66 @@ function clearRouteFromMap() {
     }
 }
 
+window.currentCardStyle = 'full';
+window.selectedPilotData = null;
+
+window.setSidebarCardStyle = function(style) {
+    window.currentCardStyle = style;
+    document.querySelectorAll('.card-variation-card .network-btn').forEach(btn => btn.classList.remove('active'));
+    if (style === 'full') document.getElementById('cardVarFull')?.classList.add('active');
+    else if (style === 'compact') document.getElementById('cardVarCompact')?.classList.add('active');
+    else if (style === 'mini') document.getElementById('cardVarMini')?.classList.add('active');
+
+    // If an aircraft is currently selected or open, re-render immediately
+    if (window.selectedPilotData) {
+        renderSelectedPilotPopup(window.selectedPilotData);
+    } else {
+        previewDemoFlightCard();
+    }
+};
+
+window.previewDemoFlightCard = function() {
+    const demoPilot = {
+        callsign: 'Howling Banshee',
+        pilot_name: 'Howling Banshee',
+        pilot_avatar: '/assets/default-pilot-avatar.png',
+        airline: { is_va: true, abbr: 'WLF', name: 'WolfAir Aviation' },
+        aircraft: 'B738',
+        departure: 'US-4356',
+        arrival: 'KMIA',
+        route: 'US-4356 MATLK Q87 HURTS PROUD2 KMIA',
+        phase: 'LEVEL FLIGHT',
+        altitude_ft: 34002,
+        groundspeed_kts: 436,
+        heading_deg: 243,
+        squawk: '1105',
+        vatsim: { cid: 'Not Linked', is_online: false }
+    };
+    renderSelectedPilotPopup(demoPilot);
+};
+
 function renderSelectedPilotPopup(pilot) {
     const card = document.getElementById('fshubLivePopup');
     if (!card || !pilot) return;
+    window.selectedPilotData = pilot;
+
+    // Determine effective style
+    let effectiveStyle = window.currentCardStyle || 'auto';
+    if (effectiveStyle === 'auto') {
+        const mapEl = document.getElementById('map') || document.body;
+        const w = mapEl.clientWidth || window.innerWidth;
+        const h = mapEl.clientHeight || window.innerHeight;
+        effectiveStyle = (w < 720 || h < 560) ? 'compact' : 'full';
+    }
+
+    card.classList.remove('style-full', 'style-compact', 'style-mini');
+    if (effectiveStyle === 'compact') {
+        card.classList.add('style-compact');
+    } else if (effectiveStyle === 'mini') {
+        card.classList.add('style-mini');
+    } else {
+        card.classList.add('style-full');
+    }
 
     const isNativeVatsim = (pilot.network && pilot.network.toUpperCase() === 'VATSIM') || (!pilot.network && !!pilot.cid);
     const isVat = isNativeVatsim || (pilot.vatsim && pilot.vatsim.is_online);
@@ -3119,114 +3281,159 @@ function renderSelectedPilotPopup(pilot) {
     const arr = pilot.arrival || pilot.flight_plan?.arrival || pilot.plan?.arrival || '???';
     const routeStr = pilot.route || pilot.flight_plan?.route || pilot.plan?.route || null;
     const rawAc = pilot.aircraft || pilot.flight_plan?.aircraft || pilot.aircraft?.icao || '';
-    const isBlankAc = !rawAc || ['AIRCRAFT', 'UNKNOWN', 'PLANE'].includes(String(rawAc).trim().toUpperCase());
-    const lat = pilot.position?.lat !== undefined ? pilot.position.lat : pilot.latitude;
-    const lon = pilot.position?.lng !== undefined ? pilot.position.lng : pilot.longitude;
-    const phase = (pilot.phase || (gs > 30 ? 'AIRBORNE' : 'TAXIING')).replace('_', ' ').toUpperCase();
+    const isBlankAc = !rawAc || ['AIRCRAFT', 'UNKNOWN', 'PLANE', '[OBJECT OBJECT]', '****'].includes(String(rawAc).trim().toUpperCase()) || String(rawAc).includes('OBJECT');
+    const phase = (pilot.phase || (gs > 30 ? 'AIRBORNE' : 'TAXIING')).replace(/_/g, ' ').toUpperCase();
     const aircraftType = isBlankAc ? null : classifyAircraftType(rawAc, routeStr);
-    const aircraftDisplay = aircraftType && aircraftType.label ? aircraftType.label : (rawAc && !isBlankAc ? `✈️ ${rawAc}` : '');
+    const aircraftDisplay = aircraftType && aircraftType.label ? aircraftType.label : (rawAc && !isBlankAc ? `✈️ ${typeof rawAc === 'object' ? (rawAc.icao || '') : rawAc}` : '');
     const airlineInfo = resolveAirlineInfo(pilot.callsign, pilot);
 
-    card.innerHTML = `
-        <!-- Top Header -->
-        <div class="inspector-header">
-            <div class="inspector-pilot-identity">
-                <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${pilot.pilot_name}">
-                <div>
-                    <div class="inspector-callsign">${pilot.callsign}</div>
-                    <div class="inspector-pilot-name">👤 ${pilot.pilot_name || 'Pilot'}${airlineInfo ? ` • <span style="color: #c084fc; font-weight: 600;">${airlineInfo.badge}</span>` : ''}${aircraftDisplay ? ` • <span style="color: #38bdf8; font-weight: 500;">${aircraftDisplay}</span>` : ''}</div>
+    if (effectiveStyle === 'mini') {
+        card.innerHTML = `
+            <div class="inspector-header">
+                <div class="inspector-pilot-identity">
+                    <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${pilot.pilot_name}">
+                    <div>
+                        <div class="inspector-callsign">${pilot.callsign}</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <button class="report-route-btn" id="btnReportRouteMini" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 12px; transition: all 0.2s;">🚩</button>
+                    <span class="live-phase-pill" id="inspectorPhasePill">${phase}</span>
                 </div>
             </div>
-            <span class="live-phase-pill" id="inspectorPhasePill">${phase}</span>
-        </div>
+            <div class="inspector-flight-plan-box">
+                <div class="inspector-route-header">
+                    <span class="origin-arr">${dep === '???' ? 'ENROUTE' : dep}</span>
+                    <span style="color: #38bdf8;">➔</span>
+                    <span class="origin-arr">${arr === '???' ? 'DIRECT' : arr}</span>
+                    <span class="fl-tag" id="inspectorFlTag">FL${Math.round(alt / 100)}</span>
+                </div>
+            </div>
+            <div class="inspector-telemetry-grid">
+                <div class="inspector-telem-item">
+                    <span>ALT</span>
+                    <span id="inspectorAlt" style="color: #00ff88;">${Math.round(alt).toLocaleString()}</span>
+                </div>
+                <div class="inspector-telem-item">
+                    <span>SPD</span>
+                    <span id="inspectorSpeed" style="color: #38bdf8;">${Math.round(gs)}kt</span>
+                </div>
+                <div class="inspector-telem-item">
+                    <span>HDG</span>
+                    <span id="inspectorHdg" style="color: #fbbf24;">${String(Math.round(hdg) % 360).padStart(3, '0')}°</span>
+                </div>
+                <div class="inspector-telem-item">
+                    <span>SQK</span>
+                    <span id="inspectorSquawk" style="color: #ffffff;">${pilot.position?.squawk || pilot.squawk || '1200'}</span>
+                </div>
+            </div>
+        `;
+    } else {
+        card.innerHTML = `
+            <!-- Top Header -->
+            <div class="inspector-header">
+                <div class="inspector-pilot-identity">
+                    <img src="${pilot.pilot_avatar || '/assets/default-pilot-avatar.png'}" onerror="this.src='/assets/default-pilot-avatar.png'" class="inspector-avatar" alt="${pilot.pilot_name}">
+                    <div>
+                        <div class="inspector-callsign">${pilot.callsign}</div>
+                        <div class="inspector-pilot-name">👤 ${pilot.pilot_name || 'Pilot'}${airlineInfo ? ` • <span style="color: #c084fc; font-weight: 600;">${airlineInfo.badge}</span>` : ''}${aircraftDisplay ? ` • <span style="color: #38bdf8; font-weight: 500;">${aircraftDisplay}</span>` : ''}</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <button class="report-route-btn" id="btnReportRoute" title="Report Route to Discord" onclick="reportCurrentPilotRoute(this)" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; font-size: 13px; transition: all 0.2s;">🚩</button>
+                    <span class="live-phase-pill" id="inspectorPhasePill">${phase}</span>
+                </div>
+            </div>
 
-        <!-- Flight Plan Corridor Box -->
-        <div class="inspector-flight-plan-box">
-            ${airlineInfo ? `
-                <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 6px; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 0.74rem;">
-                    <span style="color: #94a3b8; font-weight: 500;">OPERATOR</span>
-                    <span style="color: #38bdf8; font-weight: 600;">🏢 ${airlineInfo.badge}</span>
-                </div>
-            ` : ''}
-            <div class="inspector-route-header">
-                <span class="origin-arr">${dep}</span>
-                <span style="color: #38bdf8; font-size: 1.15rem;">➔</span>
-                <span class="origin-arr" style="${arr === 'STANDBY' ? 'color: #94a3b8; font-size: 0.9rem;' : ''}">${arr || 'STANDBY'}</span>
-                <span class="fl-tag" id="inspectorFlTag">FL${Math.round(alt / 100)}</span>
-            </div>
-            ${routeStr ? `
-                <div class="inspector-route-string">
-                    <strong style="color: #38bdf8;">FILED ROUTE:</strong> ${routeStr}
-                </div>
-            ` : (dep !== '???' && arr !== '???' && arr !== 'STANDBY' ? `
-                <div style="font-size: 0.72rem; color: #94a3b8; font-style: italic;">
-                    Direct Great-Circle Flight Path (${dep} ➔ ${arr})
-                </div>
-            ` : (dep !== '???' ? `
-                <div style="font-size: 0.72rem; color: #cbd5e1;">
-                    <strong style="color: #00ff88;">📍 CURRENT AIRPORT:</strong> ${dep} ${pilot.departure_name ? `(${pilot.departure_name})` : ''}
-                    <div style="font-size: 0.68rem; color: #94a3b8; margin-top: 2px;">Aircraft on Ramp / Standby • Awaiting IFR Clearance</div>
-                </div>
-            ` : `
-                <div style="font-size: 0.72rem; color: #94a3b8; font-style: italic;">
-                    No Filed Flight Plan • Aircraft on Ramp / Standby
-                </div>
-            `))}
-        </div>
-
-        <!-- Telemetry Matrix -->
-        <div class="inspector-telemetry-grid">
-            <div class="inspector-telem-item">
-                <span>ALTITUDE</span>
-                <span id="inspectorAlt" style="color: #00ff88;">${Math.round(alt).toLocaleString()} ft</span>
-            </div>
-            <div class="inspector-telem-item">
-                <span>SPEED</span>
-                <span id="inspectorSpeed" style="color: #38bdf8;">${Math.round(gs)} kts</span>
-            </div>
-            <div class="inspector-telem-item">
-                <span>HEADING</span>
-                <span id="inspectorHdg" style="color: #fbbf24;">${String(Math.round(hdg) % 360).padStart(3, '0')}°</span>
-            </div>
-            <div class="inspector-telem-item">
-                <span>SQUAWK</span>
-                <span id="inspectorSquawk" style="color: #ffffff;">${pilot.position?.squawk || pilot.squawk || pilot.transponder || '1200'}</span>
-            </div>
-        </div>
-
-        <!-- VATSIM Network & ID Status -->
-        <div class="fshub-vatsim-card">
-            <div class="fshub-vatsim-header">
-                <div class="vatsim-brand-badge">
-                    <span>🌐 VATSIM CID:</span>
-                    <strong>${vatCid || (isNativeVatsim ? 'Active Connection' : 'Not Linked')}</strong>
-                </div>
-                <span class="vatsim-status-pill ${isVat ? 'online' : 'offline'}">
-                    ${isVat ? '🟢 ONLINE ON VATSIM' : (vatCid ? '⚪ VATSIM OFFLINE' : '⚪ NO CID')}
-                </span>
-            </div>
-            ${isVat ? `
-                <div class="vatsim-details-row">
-                    <span><strong>VATSIM CS:</strong> ${vatCallsign}</span>
-                    <span><strong>Squawk:</strong> ${vatSquawk}</span>
-                </div>
-                ${vatAlt ? `
-                    <div class="vatsim-details-row" style="margin-top: 4px;">
-                        <span><strong>Radar Alt:</strong> ${Math.round(vatAlt).toLocaleString()} ft</span>
-                        <span><strong>GS:</strong> ${vatGs || '--'} kts</span>
+            <!-- Flight Plan Corridor Box -->
+            <div class="inspector-flight-plan-box">
+                ${airlineInfo ? `
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 4px; margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 0.72rem;">
+                        <span style="color: #94a3b8; font-weight: 500;">OPERATOR</span>
+                        <span style="color: #38bdf8; font-weight: 600;">🏢 ${airlineInfo.badge}</span>
                     </div>
                 ` : ''}
-            ` : (vatCid ? `
-                <div style="font-size: 0.68rem; color: #94a3b8;">
-                    Pilot CID <strong>${vatCid}</strong> verified via FSHub handles. Standby for live VATSIM ATC connection.
+                ${(dep === '???' || dep === 'ENROUTE' || arr === '???' || arr === 'DIRECT') ? `
+                    <div class="inspector-route-header">
+                        <span class="origin-arr" style="color: #38bdf8; font-size: 0.95rem;">🛰️ ${dep !== '???' ? dep : 'ENROUTE'}</span>
+                        <span style="color: #38bdf8; font-size: 1.15rem;">➔</span>
+                        <span class="origin-arr" style="color: #00ff88; font-size: 0.95rem;">DIRECT TRACK</span>
+                        <span class="fl-tag" id="inspectorFlTag">FL${Math.round(alt / 100)}</span>
+                    </div>
+                    <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 4px;">
+                        <strong style="color: #38bdf8;">RADAR TRACK:</strong> Live Telemetry Stream • Free Flight / Direct Track
+                    </div>
+                ` : (arr === 'STANDBY' ? `
+                    <div class="inspector-route-header">
+                        <span class="origin-arr">${dep}</span>
+                        <span style="color: #94a3b8; font-size: 1.15rem;">➔</span>
+                        <span class="origin-arr" style="color: #94a3b8; font-size: 0.9rem;">STANDBY</span>
+                        <span class="fl-tag" id="inspectorFlTag">RAMP</span>
+                    </div>
+                    <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 4px;">
+                        <strong style="color: #f59e0b;">STATUS:</strong> Aircraft on Ground • Awaiting Flight Plan
+                    </div>
+                ` : `
+                    <div class="inspector-route-header">
+                        <span class="origin-arr">${dep}</span>
+                        <span style="color: #38bdf8; font-size: 1.15rem;">➔</span>
+                        <span class="origin-arr">${arr}</span>
+                        <span class="fl-tag" id="inspectorFlTag">FL${Math.round(alt / 100)}</span>
+                    </div>
+                    ${routeStr ? `
+                        <div class="inspector-route-string">
+                            <strong style="color: #38bdf8;">FILED ROUTE:</strong> ${routeStr}
+                        </div>
+                    ` : `
+                        <div style="font-size: 0.7rem; color: #94a3b8; font-style: italic;">
+                            Direct Great-Circle Flight Path (${dep} ➔ ${arr})
+                        </div>
+                    `}
+                `)}
+            </div>
+
+            <!-- Telemetry Matrix -->
+            <div class="inspector-telemetry-grid">
+                <div class="inspector-telem-item">
+                    <span>ALTITUDE</span>
+                    <span id="inspectorAlt" style="color: #00ff88;">${Math.round(alt).toLocaleString()} ft</span>
                 </div>
-            ` : `
-                <div style="font-size: 0.68rem; color: #64748b;">
-                    Add your VATSIM CID to FSHub handles for live radar cross-correlation.
+                <div class="inspector-telem-item">
+                    <span>SPEED</span>
+                    <span id="inspectorSpeed" style="color: #38bdf8;">${Math.round(gs)} kts</span>
                 </div>
-            `)}
-        </div>
-    `;
+                <div class="inspector-telem-item">
+                    <span>HEADING</span>
+                    <span id="inspectorHdg" style="color: #fbbf24;">${String(Math.round(hdg) % 360).padStart(3, '0')}°</span>
+                </div>
+                <div class="inspector-telem-item">
+                    <span>SQUAWK</span>
+                    <span id="inspectorSquawk" style="color: #ffffff;">${pilot.position?.squawk || pilot.squawk || pilot.transponder || '1200'}</span>
+                </div>
+            </div>
+
+            <!-- VATSIM Network & ID Status -->
+            <div class="fshub-vatsim-card">
+                <div class="fshub-vatsim-header">
+                    <div class="vatsim-brand-badge">
+                        <span>🌐 VATSIM CID:</span>
+                        <strong>${vatCid || (isNativeVatsim ? 'Active Connection' : 'Not Linked')}</strong>
+                    </div>
+                    <span class="vatsim-status-pill ${isVat ? 'online' : 'offline'}">
+                        ${isVat ? '🟢 ONLINE ON VATSIM' : (vatCid ? '⚪ VATSIM OFFLINE' : '⚪ NO CID')}
+                    </span>
+                </div>
+                ${isVat ? `
+                    <div class="vatsim-details-row">
+                        <span><strong>VATSIM CS:</strong> ${vatCallsign}</span>
+                        <span><strong>Squawk:</strong> ${vatSquawk}</span>
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+
+    card.classList.remove('hidden');
 }
 
 window.selectVaFlight = function(flightOrId, shouldPan = false) {
@@ -3504,11 +3711,16 @@ function renderFleetMarkersOnMap(fleetFlights, autoFit = false) {
         }
     });
 
-    // Remove fleet aircraft no longer present
+    // Remove fleet aircraft no longer present with 20s anti-flicker grace period
+    const nowTime = Date.now();
     for (const [id, buf] of fleetAircraftBuffers.entries()) {
         if (!currentFlightIds.has(id)) {
-            if (buf.marker) fleetMarkersLayerGroup.removeLayer(buf.marker);
-            fleetAircraftBuffers.delete(id);
+            if (nowTime - (buf.lastSeenTime || 0) > 20000) {
+                if (buf.marker) fleetMarkersLayerGroup.removeLayer(buf.marker);
+                fleetAircraftBuffers.delete(id);
+            }
+        } else {
+            buf.lastSeenTime = nowTime;
         }
     }
 
@@ -3519,6 +3731,61 @@ function renderFleetMarkersOnMap(fleetFlights, autoFit = false) {
         map.fitBounds(L.latLngBounds(boundsPoints), { padding: [60, 60], maxZoom: 7 });
     }
 }
+
+window.reportCurrentPilotRoute = async function(btnElement) {
+    const pilot = window.selectedPilotData;
+    if (!pilot) return;
+
+    const btn = btnElement || document.getElementById('btnReportRoute') || document.getElementById('btnReportRouteMini');
+    if (btn) {
+        btn.innerHTML = '⏳';
+        btn.disabled = true;
+    }
+
+    try {
+        const dep = pilot.departure || pilot.flight_plan?.departure || '???';
+        const arr = pilot.arrival || pilot.flight_plan?.arrival || '???';
+        const routeStr = pilot.route || pilot.flight_plan?.route || `${dep} ➔ ${arr}`;
+
+        const res = await fetch('/api/v1/report/discord', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                pilot_name: pilot.pilot_name || pilot.callsign || 'Pilot',
+                callsign: pilot.callsign,
+                network: pilot.airline ? `${pilot.airline.abbr} • ${pilot.airline.name}` : (pilot.network || 'FSHub'),
+                route: routeStr,
+                departure: dep,
+                arrival: arr,
+                aircraft: pilot.aircraft || pilot.flight_plan?.aircraft || 'N/A',
+                altitude_ft: Math.round(pilot.altitude_ft || pilot.position?.altitude_ft || 0),
+                groundspeed_kts: Math.round(pilot.groundspeed_kts || pilot.position?.speed_tas_kts || 0)
+            })
+        });
+
+        const data = await res.json();
+        if (btn) {
+            btn.innerHTML = '✅';
+            btn.style.background = 'rgba(16, 185, 129, 0.25)';
+            btn.style.borderColor = 'rgba(16, 185, 129, 0.5)';
+            btn.title = data.delivered_to_discord ? 'Route report sent to Discord!' : 'Route report logged to database!';
+            setTimeout(() => {
+                btn.innerHTML = '🚩';
+                btn.disabled = false;
+                btn.style.background = 'rgba(239, 68, 68, 0.12)';
+                btn.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+            }, 3500);
+        }
+    } catch (e) {
+        if (btn) {
+            btn.innerHTML = '❌';
+            setTimeout(() => {
+                btn.innerHTML = '🚩';
+                btn.disabled = false;
+            }, 2000);
+        }
+    }
+};
 
 
 

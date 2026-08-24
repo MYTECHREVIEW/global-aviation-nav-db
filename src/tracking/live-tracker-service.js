@@ -71,6 +71,7 @@ function findNearestAirport(lat, lon, maxDistanceNm = 25) {
     // Fast bounding box check (+/- 0.6 deg is ~36 NM)
     for (const [icao, a] of Object.entries(db)) {
         if (!a.latitude || !a.longitude) continue;
+        if (icao.includes('-') || icao.length > 4 || !/^[A-Z0-9]{3,4}$/.test(icao)) continue;
         if (Math.abs(a.latitude - lat) > 0.6 || Math.abs(a.longitude - lon) > 0.6) continue;
 
         const distNm = haversineDistanceM(lat, lon, a.latitude, a.longitude) / 1852;
@@ -91,6 +92,7 @@ function findNearestAirport(lat, lon, maxDistanceNm = 25) {
     if (!best) {
         for (const [icao, a] of Object.entries(db)) {
             if (!a.latitude || !a.longitude) continue;
+            if (icao.includes('-') || icao.length > 4 || !/^[A-Z0-9]{3,4}$/.test(icao)) continue;
             const distNm = haversineDistanceM(lat, lon, a.latitude, a.longitude) / 1852;
             if (distNm < minDistance && distNm <= 50) {
                 minDistance = distNm;
@@ -285,6 +287,123 @@ async function fetchIvaoPilot(identifier) {
     };
 }
 
+function extractAircraftString(ac) {
+    if (!ac) return null;
+    if (typeof ac === 'string') {
+        const s = ac.trim();
+        if (!s || s === '[object Object]' || s.includes('object Object') || s.includes('OBJECT') || s === 'Unknown' || s === '****') return null;
+        return s;
+    }
+    if (typeof ac === 'object') {
+        const icao = ac.icao || ac.name || ac.type || ac.model || ac.registration || null;
+        if (typeof icao === 'string') {
+            const s = icao.trim();
+            if (s && s !== '[object Object]' && !s.includes('object Object') && !s.includes('OBJECT') && s !== 'Unknown' && s !== '****') return s;
+        }
+    }
+    return null;
+}
+
+/**
+ * Enriches FSHub movement flight data with active VATSIM flight plan, ATC callsign,
+ * route string, squawk code, cruising altitude, and aircraft ICAO type.
+ */
+function enrichFlightPlanData(f, vPilot) {
+    let depIcao = f.plan?.departure || f.departure?.icao || f.departure || null;
+    let arrIcao = f.plan?.arrival || f.arrival?.icao || f.arrival || null;
+    let routeStr = f.plan?.route || f.route || null;
+    let aircraftType = extractAircraftString(f.aircraft) || extractAircraftString(f.plan?.aircraft) || null;
+    let callsign = f.plan?.callsign || f.plan?.flight_no || (typeof f.aircraft === 'object' ? f.aircraft?.registration : null) || null;
+    let squawk = f.position?.squawk || null;
+    let cruiseLvl = f.plan?.cruise_lvl || null;
+
+    if (cruiseLvl && cruiseLvl < 1000) cruiseLvl = cruiseLvl * 100;
+
+    // 1. Cross-correlate with VATSIM flight plan and ATC details if online
+    if (vPilot) {
+        if (vPilot.flight_plan) {
+            const vpFp = vPilot.flight_plan;
+            if (!depIcao || depIcao === 'STANDBY' || (!routeStr && vpFp.departure)) {
+                depIcao = vpFp.departure || depIcao;
+            }
+            if (!arrIcao || arrIcao === 'STANDBY' || (!routeStr && vpFp.arrival)) {
+                arrIcao = vpFp.arrival || arrIcao;
+            }
+            if (!routeStr && vpFp.route) {
+                routeStr = vpFp.route;
+            }
+            const vpAc = extractAircraftString(vpFp.aircraft_short) || extractAircraftString(vpFp.aircraft);
+            if (!aircraftType && vpAc) {
+                aircraftType = vpAc;
+            }
+            if (!cruiseLvl && vpFp.altitude) {
+                const rawAlt = parseInt(String(vpFp.altitude).replace(/\D/g, ''), 10);
+                if (!isNaN(rawAlt)) cruiseLvl = rawAlt < 1000 ? rawAlt * 100 : rawAlt;
+            }
+        }
+        if ((!callsign || callsign === f.pilot?.name || callsign === 'VA-PILOT' || callsign === 'FSHUB-PILOT') && vPilot.callsign) {
+            callsign = vPilot.callsign;
+        }
+        if (!squawk && vPilot.transponder) {
+            squawk = vPilot.transponder;
+        }
+    }
+
+    // 2. Default callsign fallback if still missing
+    if (!callsign) {
+        callsign = f.pilot?.name || 'VA-PILOT';
+    }
+
+    // 3. Fallback departure/arrival and nearest airport if still null
+    let depName = null;
+    let nearestApt = null;
+    const pLat = f.position?.lat !== undefined ? f.position.lat : (f.latitude || 0);
+    const pLng = f.position?.lng !== undefined ? f.position.lng : (f.longitude || 0);
+    const altFt = f.position?.altitude_ft || f.position?.alt_asl || f.altitude_ft || 0;
+    const gsKts = f.position?.speed_tas_kts !== undefined ? f.position.speed_tas_kts : (f.groundspeed_kts || 0);
+
+    if (pLat !== 0 || pLng !== 0) {
+        nearestApt = findNearestAirport(pLat, pLng);
+        if (!depIcao && nearestApt) {
+            depIcao = nearestApt.icao;
+            depName = nearestApt.name;
+        }
+    }
+
+    // 4. Professional fallback for VFR / Free Flight / Standby
+    if (!depIcao || depIcao === '???') {
+        if (f.pilot?.locale) {
+            depIcao = f.pilot.locale;
+        } else if (f.pilot?.base) {
+            depIcao = f.pilot.base;
+        } else if (altFt > 1000 || gsKts > 40) {
+            depIcao = 'ENROUTE';
+        } else {
+            depIcao = 'RAMP';
+        }
+    }
+
+    if (!arrIcao || arrIcao === '???') {
+        if (altFt > 1000 || gsKts > 40) {
+            arrIcao = 'DIRECT';
+        } else {
+            arrIcao = 'STANDBY';
+        }
+    }
+
+    return {
+        depIcao,
+        arrIcao,
+        depName,
+        nearestApt,
+        routeStr,
+        aircraftType: aircraftType || 'Unknown',
+        callsign,
+        squawk,
+        cruiseLvl
+    };
+}
+
 /**
  * 3. FSHub Live Pilot Fetcher
  * Supports FSHub Personal API Tokens, Numeric Pilot IDs, Callsigns/Flight Numbers, and Pilot Usernames.
@@ -406,43 +525,31 @@ async function fetchFshubPilot(identifier, apiKey = null) {
                     vcid = vPilot.cid;
                 }
 
-                let depIcao = f.plan?.departure || f.departure?.icao || null;
-                let arrIcao = f.plan?.arrival || f.arrival?.icao || null;
-                let depName = null;
-                let nearestApt = null;
-
+                const enriched = enrichFlightPlanData(f, vPilot);
                 const pLat = f.position?.lat || 0;
                 const pLng = f.position?.lng || 0;
-                if (pLat !== 0 || pLng !== 0) {
-                    nearestApt = findNearestAirport(pLat, pLng);
-                    if (!depIcao && nearestApt) {
-                        depIcao = nearestApt.icao;
-                        depName = nearestApt.name;
-                    }
-                }
-                if (!arrIcao && (!f.plan?.route) && (f.phase === 'awaiting_departure' || f.phase === 'boarding' || f.phase === 'taxiing' || gsKts === 0)) {
-                    arrIcao = 'STANDBY';
-                }
 
                 fleetFlights.push({
                     id: f.id,
                     network: 'FSHub',
                     user_id: f.pilot?.id || null,
+                    pilot_id: f.pilot?.id || null,
                     pilot_name: f.pilot?.name || 'VA Pilot',
                     pilot_avatar: f.pilot?.avatar_url || null,
-                    callsign: f.plan?.callsign || f.plan?.flight_no || f.aircraft?.registration || f.pilot?.name || 'VA-PILOT',
+                    callsign: enriched.callsign,
                     airline: f.airline || (va ? { id: va.id, name: va.name, abbr: va.abbr } : null),
-                    aircraft: f.aircraft?.icao || f.aircraft?.name || f.plan?.aircraft || null,
-                    departure: depIcao,
-                    departure_name: depName,
-                    arrival: arrIcao,
-                    nearest_airport: nearestApt,
+                    aircraft: enriched.aircraftType,
+                    departure: enriched.depIcao,
+                    departure_name: enriched.depName,
+                    arrival: enriched.arrIcao,
+                    nearest_airport: enriched.nearestApt,
+                    route: enriched.routeStr,
                     latitude: pLat,
                     longitude: pLng,
                     altitude_ft: altFt,
                     groundspeed_kts: gsKts,
                     heading_deg: hdgDeg,
-                    squawk: f.position?.squawk || null,
+                    squawk: enriched.squawk,
                     phase: f.phase || 'ENROUTE',
                     last_updated: f.last_seen || f.last_moved || new Date().toISOString(),
                     vatsim: {
@@ -454,11 +561,11 @@ async function fetchFshubPilot(identifier, apiKey = null) {
                         groundspeed_kts: vPilot?.groundspeed || null
                     },
                     flight_plan: {
-                        departure: depIcao,
-                        arrival: arrIcao,
-                        aircraft: f.aircraft?.icao || f.aircraft?.name || f.plan?.aircraft || null,
-                        route: f.plan?.route || null,
-                        cruising_altitude: cruiseLvl,
+                        departure: enriched.depIcao,
+                        arrival: enriched.arrIcao,
+                        aircraft: enriched.aircraftType,
+                        route: enriched.routeStr,
+                        cruising_altitude: enriched.cruiseLvl,
                         cruise_tas: gsKts > 0 ? gsKts : 450
                     }
                 });
@@ -487,28 +594,50 @@ async function fetchFshubPilot(identifier, apiKey = null) {
         let cruiseLvl = flight.plan?.cruise_lvl || null;
         if (cruiseLvl && cruiseLvl < 1000) cruiseLvl = cruiseLvl * 100;
 
+        let pId = flight.pilot?.id;
+        let vcid = null;
+        if (pId && pilotProfileCache[pId]) {
+            vcid = pilotProfileCache[pId].handles?.vatsim;
+        }
+        let vPilot = null;
+        if (vatData?.pilots) {
+            if (vcid) vPilot = vatData.pilots.find(p => String(p.cid) === String(vcid));
+            if (!vPilot && flight.plan?.callsign) vPilot = vatData.pilots.find(p => p.callsign?.toUpperCase() === flight.plan.callsign.toUpperCase());
+        }
+        if (vPilot && !vcid) vcid = vPilot.cid;
+
+        const enriched = enrichFlightPlanData(flight, vPilot);
+
         return {
             network: 'FSHub',
             identifier: cleanId,
             user_id: flight.pilot?.id || cleanId,
-            callsign: flight.plan?.callsign || flight.plan?.flight_no || flight.aircraft?.registration || flight.pilot?.name || 'FSHUB-PILOT',
+            callsign: enriched.callsign,
             pilot_name: flight.pilot?.name || targetPilotName || `Pilot ${cleanId}`,
             airline: flight.airline || (airlines.length > 0 ? { id: airlines[0].id, name: airlines[0].name, abbr: airlines[0].abbr } : null),
-            aircraft: flight.aircraft?.icao || flight.aircraft?.name || flight.plan?.aircraft || null,
+            aircraft: enriched.aircraftType,
             latitude: flight.position?.lat || 0,
             longitude: flight.position?.lng || 0,
             altitude_ft: altFt,
             groundspeed_kts: gsKts,
             heading_deg: hdgDeg,
             vertical_speed_fpm: 0,
-            squawk: flight.position?.squawk || null,
+            squawk: enriched.squawk,
             last_updated: flight.last_seen || flight.last_moved || new Date().toISOString(),
+            vatsim: {
+                cid: vcid || null,
+                is_online: !!vPilot,
+                callsign: vPilot?.callsign || null,
+                squawk: vPilot?.transponder || null,
+                altitude_ft: vPilot?.altitude || null,
+                groundspeed_kts: vPilot?.groundspeed || null
+            },
             flight_plan: {
-                departure: flight.plan?.departure || flight.departure?.icao || null,
-                arrival: flight.plan?.arrival || flight.arrival?.icao || null,
-                aircraft: flight.aircraft?.icao || flight.aircraft?.name || flight.plan?.aircraft || null,
-                route: flight.plan?.route || null,
-                cruising_altitude: cruiseLvl,
+                departure: enriched.depIcao,
+                arrival: enriched.arrIcao,
+                aircraft: enriched.aircraftType,
+                route: enriched.routeStr,
+                cruising_altitude: enriched.cruiseLvl,
                 cruise_tas: gsKts > 0 ? gsKts : 450
             },
             fleet: fleetFlights,
@@ -516,12 +645,17 @@ async function fetchFshubPilot(identifier, apiKey = null) {
         };
     }
 
-    // If personal flight not found, but we have active fleet flights, use the first fleet flight as primary while attaching all fleet
+    // If personal flight not found, but we have active fleet flights, return clean fleet overview
     if (fleetFlights.length > 0) {
-        const primary = fleetFlights[0];
+        const vaName = airlines[0]?.name || 'WolfAir Aviation';
+        const vaAbbr = airlines[0]?.abbr || 'WLF';
         return {
-            ...primary,
+            network: 'FSHub',
             identifier: cleanId,
+            user_id: userProfile?.id || cleanId,
+            callsign: `${vaAbbr} Fleet`,
+            pilot_name: userProfile?.name || `${vaName} Fleet`,
+            airline: airlines[0] || { id: 5169, name: vaName, abbr: vaAbbr },
             fleet: fleetFlights,
             is_fleet: true
         };
@@ -818,26 +952,9 @@ async function inspectFshubToken(token, explicitVaId = null) {
                 }
             }
 
-            let cruiseLvl = f.plan?.cruise_lvl || null;
-            if (cruiseLvl && cruiseLvl < 1000) cruiseLvl = cruiseLvl * 100;
-
-            let depIcao = f.plan?.departure || f.departure?.icao || null;
-            let arrIcao = f.plan?.arrival || f.arrival?.icao || null;
-            let depName = null;
-            let nearestApt = null;
-
+            const enriched = enrichFlightPlanData(f, vPilot);
             const pLat = f.position?.lat || 0;
             const pLng = f.position?.lng || 0;
-            if (pLat !== 0 || pLng !== 0) {
-                nearestApt = findNearestAirport(pLat, pLng);
-                if (!depIcao && nearestApt) {
-                    depIcao = nearestApt.icao;
-                    depName = nearestApt.name;
-                }
-            }
-            if (!arrIcao && (!f.plan?.route) && (f.phase === 'awaiting_departure' || f.phase === 'boarding' || f.phase === 'taxiing' || f.position?.speed_tas_kts === 0)) {
-                arrIcao = 'STANDBY';
-            }
 
             detailedActiveFlights.push({
                 id: f.id,
@@ -845,21 +962,21 @@ async function inspectFshubToken(token, explicitVaId = null) {
                 pilot_id: f.pilot?.id,
                 pilot_name: f.pilot?.name || 'FSHub Pilot',
                 pilot_avatar: f.pilot?.avatar_url || null,
-                callsign: f.plan?.callsign || f.plan?.flight_no || f.aircraft?.registration || (f.pilot?.name ? `${f.pilot.name}` : 'VA-PILOT'),
-                aircraft: f.aircraft?.icao || f.aircraft?.name || 'Unknown',
-                departure: depIcao,
-                departure_name: depName,
-                arrival: arrIcao,
-                nearest_airport: nearestApt,
-                route: f.plan?.route || null,
-                cruise_lvl: cruiseLvl,
+                callsign: enriched.callsign,
+                aircraft: enriched.aircraftType,
+                departure: enriched.depIcao,
+                departure_name: enriched.depName,
+                arrival: enriched.arrIcao,
+                nearest_airport: enriched.nearestApt,
+                route: enriched.routeStr,
+                cruise_lvl: enriched.cruiseLvl,
                 position: {
                     lat: pLat,
                     lng: pLng,
                     altitude_ft: f.position?.altitude_ft || f.position?.alt_asl || 0,
                     heading: f.position?.heading || 0,
                     speed_tas_kts: f.position?.speed_tas_kts || 0,
-                    squawk: f.position?.squawk || null
+                    squawk: enriched.squawk
                 },
                 eta_minutes: f.eta_minutes || null,
                 progress: f.progress || 0,
@@ -872,11 +989,11 @@ async function inspectFshubToken(token, explicitVaId = null) {
                     groundspeed_kts: vPilot?.groundspeed || null
                 },
                 flight_plan: {
-                    departure: depIcao,
-                    arrival: arrIcao,
-                    aircraft: f.aircraft?.icao || null,
-                    route: f.plan?.route || null,
-                    cruising_altitude: cruiseLvl
+                    departure: enriched.depIcao,
+                    arrival: enriched.arrIcao,
+                    aircraft: enriched.aircraftType,
+                    route: enriched.routeStr,
+                    cruising_altitude: enriched.cruiseLvl
                 }
             });
         }
@@ -1060,10 +1177,10 @@ async function trackMultiTargets(targetsInput) {
                                         squawk: String(f.position?.squawk || '1200'),
                                         phase: f.phase || 'ENROUTE',
                                         vatsim: {
-                                            cid: f.vatsim_cid || null,
-                                            is_online: !!(f.vatsim_live && f.vatsim_live.is_online),
-                                            callsign: f.vatsim_live?.callsign || null,
-                                            squawk: f.vatsim_live?.squawk || null
+                                            cid: f.vatsim?.cid || f.vatsim_cid || null,
+                                            is_online: !!(f.vatsim && f.vatsim.is_online),
+                                            callsign: f.vatsim?.callsign || null,
+                                            squawk: f.vatsim?.squawk || null
                                         }
                                     });
                                 }

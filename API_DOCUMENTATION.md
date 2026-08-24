@@ -1,6 +1,6 @@
 # 📡 AeroNav Global REST API Documentation
 
-Comprehensive reference for the **AeroNav Global Navigation Database, Multi-Network Live Tracking Engine, Clean Embed Radar SDK, and Flight Plan Route Tracing REST API**.
+Comprehensive reference for the **AeroNav Global Navigation Database, Multi-Network Live Tracking Engine, Clean Embed Radar SDK, Route Analysis & Auto-Fix Engine, and Discord Route Issue Reporting REST API**.
 
 **Base URL**: `http://localhost:3510` (or `http://<truenas-ip>:3510`)
 
@@ -23,8 +23,9 @@ services:
       - PORT=3510
       - NODE_ENV=production
       - MAPBOX_ACCESS_TOKEN=
+      - DISCORD_WEBHOOK_URL=
     volumes:
-      # Persistent directory volume for API keys and custom waypoints
+      # Persistent directory volumes for custom waypoints, API keys, and reports
       - aeronav_keys:/app/data/keys
       - aeronav_data:/app/data
     healthcheck:
@@ -49,7 +50,31 @@ docker run -d \
   -e PORT=3510 \
   -e NODE_ENV=production \
   -v aeronav_api_keys:/app/data/keys \
+  -v aeronav_custom_data:/app/data \
   ghcr.io/mytechreview/global-aviation-nav-db:latest
+```
+
+---
+
+## 📄 Integration Keys Configuration (`STTAPI.txt`)
+
+You can supply third-party API credentials, tokens, and webhooks in a simple plain-text configuration file named `STTAPI.txt` in the root application directory:
+
+```ini
+# 1. AeroNav API Key
+AERONAV_API_KEY=aeronav_live_YOUR_KEY_HERE
+
+# 2. FSHub Personal API Token (Used for personal telemetry & Virtual Airline fleet tracking)
+FSHUB_TOKEN=YOUR_FSHUB_API_TOKEN_HERE
+
+# 3. VATSIM Numeric Pilot CID
+VATSIM_CID=YOUR_VATSIM_CID_HERE
+
+# 4. IVAO Pilot VID / Token
+IVAO_TOKEN=YOUR_IVAO_TOKEN_HERE
+
+# 5. Discord Webhook URL (For instant 🚩 Route Issue Report notifications)
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
 ```
 
 ---
@@ -66,7 +91,7 @@ X-API-Key: aeronav_live_YOUR_API_KEY
 
 ## 🌐 1. Multi-Network Live Target Array API (VATSIM, FSHub, IVAO)
 
-Concurrently queries, cross-correlates, and tracks any batch array of targets across VATSIM CIDs, FSHub tokens/users/Virtual Airlines, and IVAO VIDs in a single request.
+Concurrently queries, cross-correlates, and tracks any batch array of targets across VATSIM CIDs, FSHub tokens/users/Virtual Airlines, and IVAO VIDs in a single request with sub-50ms in-memory response times.
 
 ### `POST /api/v1/live/multi`
 **Request Headers:** `Content-Type: application/json`
@@ -76,7 +101,7 @@ Concurrently queries, cross-correlates, and tracks any batch array of targets ac
 {
   "targets": [
     { "network": "VATSIM", "id": "1234567" },
-    { "network": "FSHUB", "token": "fshub_live_sample_token_abc123xyz456" },
+    { "network": "FSHUB", "token": "18bXlTA3OUu6F2ShL0XGuHBtCE1AEWsXef4ISoIs6pPM2XaU6KVgKNuudu6Q" },
     { "network": "FSHUB", "id": "DemoPilot10" },
     { "network": "IVAO", "id": "765432" }
   ]
@@ -85,7 +110,7 @@ Concurrently queries, cross-correlates, and tracks any batch array of targets ac
 
 #### Shortcut GET Format:
 ```http
-GET /api/v1/live/multi?vatsim=1234567,2345678&fshub=DemoPilot10&tokens=fshub_live_sample_token_abc123xyz456
+GET /api/v1/live/multi?vatsim=1234567,2345678&fshub=DemoPilot10&tokens=18bXlTA3OUu6F2ShL0XGuHBtCE1AEWsXef4ISoIs6pPM2XaU6KVgKNuudu6Q
 ```
 
 #### Response Payload (Sample)
@@ -96,60 +121,43 @@ GET /api/v1/live/multi?vatsim=1234567,2345678&fshub=DemoPilot10&tokens=fshub_liv
   "total_flights": 2,
   "flights": [
     {
-      "id": "vatsim_1234567",
-      "source": "VATSIM",
-      "network": "VATSIM",
-      "callsign": "AAL100",
-      "pilot_id": 1234567,
-      "pilot_name": "Demo Pilot (VATSIM)",
-      "pilot_avatar": "/assets/default-pilot-avatar.png",
-      "airline": { "name": "American Airlines", "icao": "AAL", "iata": "AA" },
-      "aircraft": "B789",
-      "departure": "EGLL",
-      "arrival": "KJFK",
-      "route": "EGLL WOBUN WELIN CPT KENET DIKAS EVRIN CILAN MALOT 54N020W 54N030W 53N040W 50N050W COLOR ALLEX TOPPS ENE PARCH3 KJFK",
-      "latitude": 51.4700,
-      "longitude": -0.4543,
-      "altitude_ft": 36000,
-      "groundspeed_kts": 490,
-      "heading_deg": 275,
-      "squawk": "3421",
-      "phase": "ENROUTE",
-      "vatsim": {
-        "cid": 1234567,
-        "is_online": true,
-        "callsign": "AAL100",
-        "squawk": "3421"
-      }
-    },
-    {
-      "id": "fshub_va_N889VA",
-      "source": "FSHUB_VA",
+      "id": "89881d473e023d1abbcc857d1beaf8c9",
       "network": "FSHub",
-      "callsign": "N889VA",
-      "pilot_id": 99999,
-      "pilot_name": "SkyCaptain_Demo",
-      "pilot_avatar": "/assets/default-pilot-avatar.png",
+      "pilot_id": 27427,
+      "pilot_name": "Eilqar",
+      "pilot_avatar": "https://g.fshubcdn.com/avatars/u_27427_80.png",
+      "callsign": "WLF1632",
       "airline": {
-        "id": 101,
-        "name": "Global Virtual Airways",
-        "abbr": "GVA",
+        "id": 5169,
+        "name": "WolfAir Aviation",
+        "abbr": "WLF",
         "is_va": true
       },
-      "aircraft": "C680",
-      "departure": "KMIA",
-      "arrival": "KLGA",
-      "route": "KMIA DEFUN AR16 DIW Q87 TAALN Q87 HURTS PROUD2 KLGA",
-      "latitude": 28.5383,
-      "longitude": -81.3792,
-      "altitude_ft": 41000,
-      "groundspeed_kts": 460,
-      "heading_deg": 18,
-      "squawk": "1200",
-      "phase": "CRUISE",
-      "vatsim": {
-        "cid": null,
-        "is_online": false
+      "aircraft": "B738",
+      "departure": "EDDS",
+      "arrival": "EDDF",
+      "nearest_airport": {
+        "icao": "EDDS",
+        "iata": "STR",
+        "name": "Stuttgart Airport",
+        "city": "Stuttgart",
+        "elevation_ft": 1276,
+        "distance_nm": 1.1
+      },
+      "route": "EDDS ETASA SPESA EDDF",
+      "latitude": 48.68893,
+      "longitude": 9.194298,
+      "altitude_ft": 1314,
+      "groundspeed_kts": 1,
+      "heading_deg": 339,
+      "squawk": "1000",
+      "phase": "taxiing_to_runway",
+      "flight_plan": {
+        "departure": "EDDS",
+        "arrival": "EDDF",
+        "aircraft": "B738",
+        "route": "EDDS ETASA SPESA EDDF",
+        "cruising_altitude": 22000
       }
     }
   ]
@@ -158,16 +166,114 @@ GET /api/v1/live/multi?vatsim=1234567,2345678&fshub=DemoPilot10&tokens=fshub_liv
 
 ---
 
-## 🛩️ 2. Standalone Clean Embed Radar SDK
+## 🔬 2. Intelligent Route Analysis & Auto-Fix Engine
 
-Embed a pure, responsive 60 FPS live radar map with aircraft motion smoothing, flight route corridors, and slide-over pilot inspector card without any management sidebars or controls.
+Analyzes flight plan route strings for Great-Circle corridor detours, duplicate international idents, 180° backtracks, or missing/interpolated fixes. Automatically selects the optimal global candidate or probes regional databases, **persists the corrected coordinates directly to `data/custom-global-waypoints.json`**, and recalculates the repaired flight trajectory.
+
+### `POST /api/v1/route/analyze`
+**Request Headers:** `Content-Type: application/json`
+
+#### Request Body
+```json
+{
+  "route": "GCRR VASTO NIDEB TIGGI PINEK KORUL KOLEK EBOMO RUSIB SHIRI TOJAQ EGGD",
+  "include_labels": true
+}
+```
+
+#### Response Payload
+```json
+{
+  "success": true,
+  "status": "REPAIRED",
+  "departure": { "icao": "GCRR", "name": "Lanzarote Airport", "lat": 28.945, "lon": -13.605 },
+  "arrival": { "icao": "EGGD", "name": "Bristol Airport", "lat": 51.382, "lon": -2.719 },
+  "total_waypoints": 12,
+  "total_distance_nm": 1442.3,
+  "original_distance_nm": 4682.1,
+  "distance_saved_nm": 3239.8,
+  "estimated_time_enroute_formatted": "3h 12m",
+  "fixes_repaired": [
+    {
+      "ident": "TNT",
+      "name": "Trent VOR-DME",
+      "country_code": "GB",
+      "previous_coords": { "lat": 15.65, "lon": -86.98 },
+      "corrected_coords": { "lat": 53.0583, "lon": -1.4183 },
+      "distance_saved_nm": 3239.8
+    }
+  ],
+  "issues_found": [],
+  "waypoints": [ ... ],
+  "route_coordinates": [ ... ],
+  "geojson": { ... }
+}
+```
+
+---
+
+## 🚩 3. Discord Route Issue Reporting API
+
+Allows pilots or managers to flag any flight plan route or waypoint issue with a single click. Formats and delivers rich Discord Webhook embeds while storing reports in `data/route-reports.json`.
+
+### `POST /api/v1/report/discord`
+**Request Headers:** `Content-Type: application/json`
+
+#### Request Body
+```json
+{
+  "pilot_name": "Eilqar",
+  "callsign": "WLF1632",
+  "network": "WolfAir Aviation VA",
+  "route": "EDDS ETASA SPESA EDDF",
+  "departure": "EDDS",
+  "arrival": "EDDF",
+  "aircraft": "B738",
+  "altitude_ft": 22000,
+  "groundspeed_kts": 420
+}
+```
+
+#### Response Payload
+```json
+{
+  "success": true,
+  "delivered_to_discord": true,
+  "message": "Discord notification dispatched successfully!",
+  "report": {
+    "id": "REP-MT7PO0SA",
+    "pilot": "Eilqar",
+    "callsign": "WLF1632",
+    "network": "WolfAir Aviation VA",
+    "route": "EDDS ETASA SPESA EDDF",
+    "departure": "EDDS",
+    "arrival": "EDDF",
+    "aircraft": "B738",
+    "submitted_at": "2026-08-24T20:51:12.249Z",
+    "submitted_at_formatted": "Mon, 24 Aug 2026 20:51:12 GMT",
+    "delivered_to_discord": true
+  }
+}
+```
+
+### `GET /api/v1/report/list`
+Retrieves all historical route issue reports submitted by pilots.
+```http
+GET /api/v1/report/list
+```
+
+---
+
+## 🛩️ 4. Standalone Clean Embed Radar SDK & Visual Pipeline
+
+Embed a pure, responsive 60 FPS live radar map with aircraft motion smoothing, flight route corridors, and slide-over pilot inspector card without any management sidebars.
 
 ### Embed HTML Tag
 ```html
 <iframe 
-  src="http://localhost:3510/embed.html?fshub_token=YOUR_FSHUB_TOKEN&vatsim=1234567" 
+  src="https://routes.simtechtracker.com/embed.html?popup_style=compact" 
   width="100%" 
-  height="700px" 
+  height="650px" 
   frameborder="0" 
   style="border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
 </iframe>
@@ -176,16 +282,18 @@ Embed a pure, responsive 60 FPS live radar map with aircraft motion smoothing, f
 ### Supported URL Query Parameters
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
+| `popup_style` | String | Card size variation: `full`, `compact`, `mini`, or `auto` (default: `auto`) |
 | `fshub_token` | String | FSHub Personal API Token (auto-inspects pilot & Virtual Airline fleet) |
-| `vatsim` | String | Comma-separated list of VATSIM CIDs or Callsigns (e.g. `1234567,AAL100`) |
+| `vatsim` | String | Comma-separated list of VATSIM CIDs or Callsigns (e.g. `1234567,WLF`) |
 | `fshub` | String | Comma-separated list of FSHub usernames or IDs |
 | `ivao` | String | Comma-separated list of IVAO VIDs |
 | `hud` | Boolean | Pass `?hud=false` to hide the top-left floating cockpit HUD |
 | `route` | String | Custom route string to force-draw on initial load |
+| `style` | String | Map basemap style: `dark`, `satellite`, or `voyager` |
 
 ---
 
-## 💾 3. Custom Global Waypoints Management API
+## 💾 5. Custom Global Waypoints Database API
 
 Manage the persistent curated navigation fix database stored at `data/custom-global-waypoints.json`.
 
@@ -193,25 +301,6 @@ Manage the persistent curated navigation fix database stored at `data/custom-glo
 List all custom and curated global waypoints.
 ```http
 GET /api/v1/waypoints/custom
-```
-**Response:**
-```json
-{
-  "success": true,
-  "total_custom_waypoints": 81,
-  "database_file": "data/custom-global-waypoints.json",
-  "waypoints": {
-    "OKSAW": {
-      "ident": "OKSAW",
-      "name": "OKSAW",
-      "type": "WAYPOINT",
-      "latitude": 52.05,
-      "longitude": -2.1,
-      "country_code": "GB",
-      "region": "Europe"
-    }
-  }
-}
 ```
 
 ### `POST /api/v1/waypoints/custom`
@@ -230,7 +319,7 @@ Add or update a waypoint in the persistent database.
 
 ---
 
-## 🛫 4. Flight Plan Route Tracing Engine
+## 🛫 6. Flight Plan Route Tracing Engine
 
 ### `POST /api/v1/route/trace`
 Traces a flight plan route string with SIDs, Airways, STARs, and international fixes. Returns sequential waypoints, bearings, distances, and GeoJSON.
@@ -238,63 +327,14 @@ Traces a flight plan route string with SIDs, Airways, STARs, and international f
 #### Request Body
 ```json
 {
-  "departure": "KEYW",
-  "arrival": "KLGA",
-  "route": "KEYW/09 N0460F380 BUFTT1 MATLK Q87 ZERBO/N0461F370 Q87 TAALN/N0457F390 Q87 HURTS PROUD2 KLGA/04",
-  "altitude_ft": 38000,
-  "airspeed_kts": 460,
+  "route": "GCRR VASTO NIDEB TIGGI PINEK KORUL KOLEK EBOMO RUSIB SHIRI TOJAQ EGGD",
   "include_labels": true
 }
 ```
 
-#### Response Payload (Sample)
-```json
-{
-  "departure": { "icao": "KEYW", "name": "Key West Intl", "runway": "09", "lat": 24.555, "lon": -81.759 },
-  "arrival": { "icao": "KLGA", "name": "LaGuardia", "runway": "04", "lat": 40.777, "lon": -73.872 },
-  "total_waypoints": 47,
-  "total_distance_nm": 1105.3,
-  "total_distance_km": 2047.0,
-  "estimated_time_enroute_formatted": "2h 24m",
-  "include_labels": true,
-  "waypoints": [
-    {
-      "sequence": 1,
-      "ident": "KEYW",
-      "type": "AIRPORT",
-      "latitude": 24.555,
-      "longitude": -81.759,
-      "segment_distance_nm": 0,
-      "cumulative_distance_nm": 0
-    }
-  ],
-  "route_coordinates": [[-81.759, 24.555], [-81.597, 24.632]],
-  "geojson": { ... }
-}
-```
-
 ---
 
-## 📡 5. Single Pilot Live Tracking (VATSIM / FSHub / IVAO)
-
-### `POST /api/v1/live/track`
-Directly tracks a single flight with real-time SimBrief OFP correlation.
-```json
-{
-  "network": "VATSIM",
-  "identifier": "AAL100",
-  "simbrief_username": "demo_simbrief_user"
-}
-```
-
-### Direct Network Lookups
-- `GET /api/v1/live/vatsim/:identifier` — Query VATSIM pilot by CID or Callsign.
-- `GET /api/v1/live/fshub/:identifier` — Query FSHub pilot by User ID or Token.
-- `GET /api/v1/live/ivao/:identifier` — Query IVAO pilot by VID or Callsign.
-
----
-
-## 🔍 6. Navigation Search & Airport NavAids
+## 🔍 7. Navigation Search & Airport NavAids
 
 - `GET /api/v1/waypoints/search?q={query}` — Search airports, VORs, NDBs, and fixes worldwide.
 - `GET /api/v1/waypoints/:ident` — Fetch coordinates and details by fix ident.
@@ -304,7 +344,7 @@ Directly tracks a single flight with real-time SimBrief OFP correlation.
 
 ---
 
-## ⚡ 7. SimBrief Integration
+## ⚡ 8. SimBrief Integration
 
 - `GET /api/v1/simbrief/fetch?username={username}` — Fetches latest active flight plan (OFP).
 - `POST /api/v1/simbrief/trace` — Fetches and instantly traces flight plan into waypoints & GeoJSON.

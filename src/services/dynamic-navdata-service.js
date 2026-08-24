@@ -120,7 +120,7 @@ class DynamicNavDataService {
         return fix;
     }
 
-    async resolveOnline(ident, prevLat = null, prevLon = null, nextLat = null, nextLon = null) {
+    async resolveOnline(ident, prevLat = null, prevLon = null, nextLat = null, nextLon = null, fraction = 0.5) {
         if (!ident) return null;
         const clean = ident.trim().toUpperCase();
 
@@ -235,12 +235,13 @@ class DynamicNavDataService {
 
         // 4. Geodesic Interpolation Fallback (If waypoint is between two known route coordinates)
         if (prevLat !== null && prevLon !== null && nextLat !== null && nextLon !== null) {
-            const midLat = (prevLat + nextLat) / 2;
+            const safeFraction = Math.max(0.05, Math.min(0.95, fraction || 0.5));
+            const midLat = prevLat + (nextLat - prevLat) * safeFraction;
             let pLon = prevLon;
             let nLon = nextLon;
             while (nLon - pLon > 180) nLon -= 360;
             while (nLon - pLon < -180) nLon += 360;
-            const midLon = (pLon + nLon) / 2;
+            const midLon = pLon + (nLon - pLon) * safeFraction;
 
             const interpolated = {
                 id: `INTERP_${clean}`,
@@ -252,7 +253,7 @@ class DynamicNavDataService {
                 source: 'GEODESIC_INTERPOLATION'
             };
             this.saveFix(interpolated);
-            console.log(`[DynamicNavData] Geodesic interpolated missing fix: ${clean} (${midLat.toFixed(4)}, ${midLon.toFixed(4)})`);
+            console.log(`[DynamicNavData] Geodesic interpolated missing fix: ${clean} (${midLat.toFixed(4)}, ${midLon.toFixed(4)}) [fraction: ${safeFraction.toFixed(2)}]`);
             return interpolated;
         }
 

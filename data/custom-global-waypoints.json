@@ -739,5 +739,104 @@
     "longitude": 4.795833,
     "country_code": "NL",
     "region": "Europe"
+  },
+  "KUNAV": {
+    "ident": "KUNAV",
+    "name": "KUNAV",
+    "type": "WAYPOINT",
+    "latitude": 49.482083,
+    "longitude": 1.035555,
+    "country_code": "FR",
+    "region": "Europe"
+  },
+  "VASTO": {
+    "ident": "VASTO",
+    "name": "VASTO",
+    "type": "WAYPOINT",
+    "latitude": 30.509445,
+    "longitude": -13.572778,
+    "country_code": "ES",
+    "region": "Canary Islands / Atlantic"
+  },
+  "NIDEB": {
+    "ident": "NIDEB",
+    "name": "NIDEB",
+    "type": "WAYPOINT",
+    "latitude": 34.5,
+    "longitude": -11.5,
+    "country_code": "PT",
+    "region": "Atlantic"
+  },
+  "TIGGI": {
+    "ident": "TIGGI",
+    "name": "TIGGI",
+    "type": "WAYPOINT",
+    "latitude": 38,
+    "longitude": -9.8,
+    "country_code": "PT",
+    "region": "Portugal / Atlantic"
+  },
+  "PINEK": {
+    "ident": "PINEK",
+    "name": "PINEK",
+    "type": "WAYPOINT",
+    "latitude": 41.5,
+    "longitude": -8.2,
+    "country_code": "ES",
+    "region": "Galicia / Atlantic"
+  },
+  "KORUL": {
+    "ident": "KORUL",
+    "name": "KORUL",
+    "type": "WAYPOINT",
+    "latitude": 44.835278,
+    "longitude": -6.919722,
+    "country_code": "ES",
+    "region": "Bay of Biscay"
+  },
+  "KOLEK": {
+    "ident": "KOLEK",
+    "name": "KOLEK",
+    "type": "WAYPOINT",
+    "latitude": 46.612778,
+    "longitude": -5.408056,
+    "country_code": "FR",
+    "region": "Bay of Biscay"
+  },
+  "EBOMO": {
+    "ident": "EBOMO",
+    "name": "EBOMO",
+    "type": "WAYPOINT",
+    "latitude": 47.8,
+    "longitude": -4.6,
+    "country_code": "FR",
+    "region": "Bay of Biscay"
+  },
+  "RUSIB": {
+    "ident": "RUSIB",
+    "name": "RUSIB",
+    "type": "WAYPOINT",
+    "latitude": 48.976944,
+    "longitude": -3.808611,
+    "country_code": "FR",
+    "region": "Brittany"
+  },
+  "SHIRI": {
+    "ident": "SHIRI",
+    "name": "SHIRI",
+    "type": "WAYPOINT",
+    "latitude": 49.8,
+    "longitude": -3.4,
+    "country_code": "GB",
+    "region": "English Channel"
+  },
+  "TOJAQ": {
+    "ident": "TOJAQ",
+    "name": "TOJAQ",
+    "type": "WAYPOINT",
+    "latitude": 50.6,
+    "longitude": -3.1,
+    "country_code": "GB",
+    "region": "UK Arrival"
   }
 }

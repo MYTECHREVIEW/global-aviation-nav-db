@@ -1,0 +1,23 @@
+# ----------------------------------------------------------------------------
+# SIMTECHTRACKER (STT) & AERONAV API CONFIGURATION TEMPLATE
+# ----------------------------------------------------------------------------
+# Copy this file as 'STTAPI.txt' in your application root or website directory.
+# The application will read these keys to query live telemetry from
+# AeroNav, FSHub, VATSIM, and IVAO without storing credentials in any database.
+# ----------------------------------------------------------------------------
+
+# 1. AeroNav Global Navigation API Key
+AERONAV_API_KEY=YOUR_AERONAV_API_KEY_HERE
+
+# 2. FSHub Personal API Token (Optional: used to query personal & VA flights)
+FSHUB_TOKEN=YOUR_FSHUB_API_TOKEN_HERE
+
+# 3. VATSIM Pilot Certificate ID (Numeric CID, e.g. 1234567)
+VATSIM_CID=YOUR_VATSIM_NUMERIC_CID_HERE
+
+# 4. IVAO Token / Pilot VID (Optional: e.g. 123456)
+IVAO_TOKEN=YOUR_IVAO_TOKEN_HERE
+
+# 5. Discord Webhook URL (Optional: receives instant route issue reports from pilot cards)
+DISCORD_WEBHOOK_URL=YOUR_DISCORD_WEBHOOK_URL_HERE
+

@@ -1,12 +1,14 @@
 # ✈️ AeroNav Global: Aeronautical Navigation Database & Route Engine
 
-A high-performance global navigation database, multi-network live tracking engine, and flight plan route parser. Contains **85,901 Airports**, **11,008 NavAids (VOR/NDB)**, **70,052 Waypoints & Fixes**, **2,139 Standard Instrument Departures (SIDs)**, **1,871 Standard Terminal Arrivals (STARs)**, and **1,466 Jet/Victor/RNAV Airways** parsed from FAA ARINC 424 CIFP and global aeronautical datasets.
+A high-performance global navigation database, multi-network live tracking engine, intelligent route debugger & auto-fix engine, and flight plan route parser. Contains **85,901 Airports**, **11,008 NavAids (VOR/NDB)**, **70,052 Waypoints & Fixes**, **2,139 Standard Instrument Departures (SIDs)**, **1,871 Standard Terminal Arrivals (STARs)**, and **1,466 Jet/Victor/RNAV Airways** parsed from FAA ARINC 424 CIFP and global aeronautical datasets.
 
 ---
 
 ## 🚀 Features
 
 - **Multi-Network Live Target Array Tracking**: Concurrently track any batch of **VATSIM CIDs**, **FSHub API tokens & Virtual Airline fleets**, and **IVAO VIDs** in a single API call with sub-50ms in-memory response times.
+- **Intelligent Route Debugger & Auto-Fix Engine (`POST /api/v1/route/analyze`)**: Analyzes single route strings for corridor detours, duplicate international idents, 180° backtracks, and automatically selects/probes optimal coordinates, saving them permanently to `custom-global-waypoints.json`.
+- **Discord Route Issue Reporting (`POST /api/v1/report/discord`)**: One-click 🚩 report button on pilot cards that dispatches rich Discord Webhook embeds with pilot, callsign, network, corridor, and formatted route strings.
 - **Standalone Clean Embed Radar SDK (`/embed.html`)**: Embed a full-screen, 60 FPS live radar view with route corridors and slide-over pilot inspector without sidebars or management controls.
 - **Persistent Global Custom Waypoints Database**: Curated catalog of global fixes across North America, Europe, the North Atlantic, the Middle East, Asia, and South America with dynamic runtime additions.
 - **Runway & Transition-Aware Procedures**: Multi-branch procedure solver that matches filed departure/arrival runways and enroute transitions.
@@ -42,8 +44,9 @@ services:
       - PORT=3510
       - NODE_ENV=production
       - MAPBOX_ACCESS_TOKEN=
+      - DISCORD_WEBHOOK_URL=
     volumes:
-      # Persistent directory volume for API keys and custom waypoints
+      # Persistent directory volumes for API keys, custom waypoints, and reports
       - aeronav_keys:/app/data/keys
       - aeronav_data:/app/data
     healthcheck:
@@ -73,6 +76,7 @@ docker run -d \
   -e PORT=3510 \
   -e NODE_ENV=production \
   -v aeronav_api_keys:/app/data/keys \
+  -v aeronav_custom_data:/app/data \
   ghcr.io/mytechreview/global-aviation-nav-db:latest
 ```
 
@@ -88,12 +92,35 @@ curl -X POST http://localhost:3510/api/v1/live/multi \
   -d '{
     "targets": [
       { "network": "VATSIM", "id": "1234567" },
-      { "network": "FSHUB", "token": "fshub_live_sample_token_abc123" }
+      { "network": "FSHUB", "token": "18bXlTA3OUu6F2ShL0XGuHBtCE1AEWsXef4ISoIs6pPM2XaU6KVgKNuudu6Q" }
     ]
   }'
 ```
 
-### 2. Standalone Radar Embed (`/embed.html`)
+### 2. Intelligent Route Analysis & Auto-Fix Engine
+```bash
+curl -X POST http://localhost:3510/api/v1/route/analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "route": "GCRR VASTO NIDEB TIGGI PINEK KORUL KOLEK EBOMO RUSIB SHIRI TOJAQ EGGD"
+  }'
+```
+
+### 3. Discord Route Issue Reporting
+```bash
+curl -X POST http://localhost:3510/api/v1/report/discord \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pilot_name": "Eilqar",
+    "callsign": "WLF1632",
+    "network": "WolfAir Aviation VA",
+    "departure": "EDDS",
+    "arrival": "EDDF",
+    "route": "EDDS ETASA SPESA EDDF"
+  }'
+```
+
+### 4. Standalone Radar Embed (`/embed.html`)
 ```html
 <iframe 
   src="http://localhost:3510/embed.html?fshub_token=YOUR_FSHUB_TOKEN&vatsim=1234567" 
@@ -103,36 +130,13 @@ curl -X POST http://localhost:3510/api/v1/live/multi \
 </iframe>
 ```
 
-### 3. Trace a Flight Plan Route
+### 5. Trace a Flight Plan Route
 ```bash
 curl -X POST http://localhost:3510/api/v1/route/trace \
   -H "Content-Type: application/json" \
   -d '{
-    "departure": "KEYW",
-    "arrival": "KLGA",
-    "route": "KEYW/09 N0460F380 BUFTT1 MATLK Q87 HURTS PROUD2 KLGA/04",
-    "altitude_ft": 38000,
-    "airspeed_kts": 460,
+    "route": "GCRR VASTO NIDEB TIGGI PINEK KORUL KOLEK EBOMO RUSIB SHIRI TOJAQ EGGD",
     "include_labels": true
-  }'
-```
-
-### 4. Custom Waypoints Database Management
-```bash
-# List all custom waypoints
-curl http://localhost:3510/api/v1/waypoints/custom
-
-# Add / Update a waypoint
-curl -X POST http://localhost:3510/api/v1/waypoints/custom \
-  -H "Content-Type: application/json" \
-  -d '{
-    "ident": "OKSAW",
-    "name": "OKSAW (UK Airway Q60)",
-    "type": "WAYPOINT",
-    "latitude": 52.050000,
-    "longitude": -2.100000,
-    "country_code": "GB",
-    "region": "Europe"
   }'
 ```
 

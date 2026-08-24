@@ -65,9 +65,7 @@ async function fetchApiKeysFromGrist() {
             expires_at: f.expires_at || null,
             last_used_at: f.last_used_at || null,
             request_count: Number(f.request_count) || 0,
-            va_ident: f.va_ident || '',
-            fshub_token: f.fshub_token || '',
-            vatsim_cid: f.vatsim_cid || ''
+            va_ident: f.va_ident || ''
         };
     });
 }
@@ -92,9 +90,7 @@ async function saveApiKeyToGrist(keyObj) {
                     expires_at: keyObj.expires_at || '',
                     last_used_at: keyObj.last_used_at || '',
                     request_count: keyObj.request_count || 0,
-                    va_ident: keyObj.va_ident || '',
-                    fshub_token: keyObj.fshub_token || '',
-                    vatsim_cid: keyObj.vatsim_cid || ''
+                    va_ident: keyObj.va_ident || ''
                 }
             }
         ]
