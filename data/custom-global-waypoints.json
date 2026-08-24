@@ -730,5 +730,14 @@
     "longitude": 139.781667,
     "country_code": "JP",
     "region": "Asia"
+  },
+  "VICOT": {
+    "ident": "VICOT",
+    "name": "VICOT",
+    "type": "WAYPOINT",
+    "latitude": 51.644444,
+    "longitude": 4.795833,
+    "country_code": "NL",
+    "region": "Europe"
   }
 }
