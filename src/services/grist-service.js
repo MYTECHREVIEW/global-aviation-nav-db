@@ -10,14 +10,17 @@ const GRIST_API_URL = process.env.GRIST_API_URL || 'https://grist.rolandonieves.
 const GRIST_DOC_ID = process.env.GRIST_DOC_ID || 'kfUiBsQ14x6i';
 const GRIST_API_KEY = process.env.GRIST_API_KEY || '3c64f358e8ff1db27b2c39c12311e9f949406d6d';
 
+const CF_ACCESS_CLIENT_ID = process.env.CF_ACCESS_CLIENT_ID || '159c2ddb0b8e5cdfab93f42444469597.access';
+const CF_ACCESS_CLIENT_SECRET = process.env.CF_ACCESS_CLIENT_SECRET || '43c04ba43ee2341ceb10572327ce87cff59ed50444c8c01ab943ae3b04d336b8';
+
 function getGristHeaders() {
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.GRIST_API_KEY || GRIST_API_KEY}`
     };
 
-    const cfClientId = process.env.CF_ACCESS_CLIENT_ID;
-    const cfClientSecret = process.env.CF_ACCESS_CLIENT_SECRET;
+    const cfClientId = process.env.CF_ACCESS_CLIENT_ID || CF_ACCESS_CLIENT_ID;
+    const cfClientSecret = process.env.CF_ACCESS_CLIENT_SECRET || CF_ACCESS_CLIENT_SECRET;
 
     if (cfClientId && cfClientSecret) {
         headers['CF-Access-Client-Id'] = cfClientId;
