@@ -962,8 +962,11 @@ async function loadApiKeys() {
         tbody.innerHTML = data.keys.map(k => `
             <tr>
                 <td>
-                    <div style="font-weight: 700; color: #f8fafc;">${k.name || 'Unnamed Client'}</div>
-                    <div style="font-size: 0.7rem; color: #64748b;">${k.created_at ? new Date(k.created_at).toLocaleDateString() : ''} ${k.expires_at ? `• Exp: ${new Date(k.expires_at).toLocaleDateString()}` : '• Permanent'}</div>
+                    <div style="font-weight: 700; color: #f8fafc; display: flex; align-items: center; gap: 4px;">
+                        <span>${k.name || 'Unnamed Client'}</span>
+                        ${k.va_ident ? `<span style="background: rgba(192, 132, 252, 0.15); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.35); font-size: 0.62rem; padding: 1px 5px; border-radius: 4px; font-weight: 700;">${k.va_ident}</span>` : ''}
+                    </div>
+                    <div style="font-size: 0.7rem; color: #64748b;">${k.created_at ? new Date(k.created_at).toLocaleDateString() : ''} ${k.expires_at ? `• Exp: ${new Date(k.expires_at).toLocaleDateString()}` : '• Permanent'}${k.grist_record_id ? ` • Grist #${k.grist_record_id}` : ''}</div>
                 </td>
                 <td>
                     <div style="display: flex; align-items: center; gap: 6px;">

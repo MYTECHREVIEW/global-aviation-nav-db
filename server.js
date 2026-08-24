@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -49,29 +50,27 @@ function haversineNm(lat1, lon1, lat2, lon2) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// REST API ENDPOINTS
+// API KEY MANAGEMENT ENDPOINTS (GRIST BACKED)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /**
- * Health check
- */
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// API KEY MANAGEMENT ENDPOINTS
-// ═══════════════════════════════════════════════════════════════════════════════
-
-/**
- * Generate a new API Key
+ * Generate a new API Key (stored in Grist database)
  * POST /api/v1/auth/keys
- * Body: { "name": "Flight Tracker Client", "expires_in_days": 365 }
+ * Body: { "name": "Flight Tracker Client", "expires_in_days": 365, "va_ident": "WLF" }
  */
-app.post('/api/v1/auth/keys', apiKeyManager.requireLocalOrAdmin, (req, res) => {
+app.post('/api/v1/auth/keys', apiKeyManager.requireLocalOrAdmin, async (req, res) => {
     const name = req.body?.name || 'API Client';
     const expires = req.body?.expires_in_days ? parseInt(req.body.expires_in_days, 10) : null;
-    const newKey = apiKeyManager.generateApiKey(name, expires);
+    const metadata = {
+        va_ident: req.body?.va_ident || '',
+        fshub_token: req.body?.fshub_token || '',
+        vatsim_cid: req.body?.vatsim_cid || ''
+    };
+
+    const newKey = await apiKeyManager.generateApiKey(name, expires, metadata);
     res.status(201).json({
         success: true,
-        message: 'API Key generated successfully. Store this key securely.',
+        message: 'API Key generated successfully and saved to Grist Database.',
         api_key: newKey
     });
 });
@@ -84,24 +83,41 @@ app.get('/api/v1/auth/keys', apiKeyManager.requireLocalOrAdmin, (req, res) => {
     const keys = apiKeyManager.loadKeys().map(k => ({
         id: k.id,
         name: k.name,
-        key: k.key, // Full key for dev environment
+        key: k.key,
         masked_key: k.key ? k.key.substring(0, 16) + '...' + k.key.slice(-4) : '',
         created_at: k.created_at,
         expires_at: k.expires_at,
         last_used_at: k.last_used_at,
         request_count: k.request_count || 0,
-        status: k.status
+        status: k.status,
+        va_ident: k.va_ident || '',
+        fshub_token: k.fshub_token || '',
+        vatsim_cid: k.vatsim_cid || '',
+        grist_record_id: k.grist_record_id || null
     }));
-    res.json({ count: keys.length, keys });
+    res.json({ count: keys.length, storage: 'Grist DB + In-Memory Cache', keys });
+});
+
+/**
+ * Manually trigger Grist database sync
+ * POST /api/v1/auth/keys/sync
+ */
+app.post('/api/v1/auth/keys/sync', apiKeyManager.requireLocalOrAdmin, async (req, res) => {
+    await apiKeyManager.syncKeysFromGrist();
+    res.json({
+        success: true,
+        message: 'API keys synced from Grist database.',
+        count: apiKeyManager.loadKeys().length
+    });
 });
 
 /**
  * Revoke an API Key
  * DELETE /api/v1/auth/keys/:id
  */
-app.delete('/api/v1/auth/keys/:id', apiKeyManager.requireLocalOrAdmin, (req, res) => {
+app.delete('/api/v1/auth/keys/:id', apiKeyManager.requireLocalOrAdmin, async (req, res) => {
     const id = req.params.id;
-    const success = apiKeyManager.revokeApiKey(id);
+    const success = await apiKeyManager.revokeApiKey(id);
     if (!success) {
         return res.status(404).json({ error: 'API Key not found.' });
     }
