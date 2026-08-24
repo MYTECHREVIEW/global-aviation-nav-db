@@ -815,5 +815,83 @@
     "frequency_mhz": null,
     "source": "GEODESIC_INTERPOLATION",
     "updated_at": "2026-08-24T03:55:29.102Z"
+  },
+  "BERGI": {
+    "id": "ONLINE_BERGI",
+    "ident": "BERGI",
+    "name": "BERGI",
+    "type": "WAYPOINT",
+    "latitude": 52.74875,
+    "longitude": 4.358931,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-08-24T05:34:17.568Z"
+  },
+  "PENIL": {
+    "id": "ONLINE_PENIL",
+    "ident": "PENIL",
+    "name": "PENIL",
+    "type": "WAYPOINT",
+    "latitude": 53.615833,
+    "longitude": -3.663611,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-08-24T05:34:18.818Z"
+  },
+  "BAGSO": {
+    "id": "ONLINE_BAGSO",
+    "ident": "BAGSO",
+    "name": "BAGSO",
+    "type": "WAYPOINT",
+    "latitude": 53.68,
+    "longitude": -5.5,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-08-24T05:34:20.192Z"
+  },
+  "NEBIN": {
+    "id": "ONLINE_NEBIN",
+    "ident": "NEBIN",
+    "name": "NEBIN",
+    "type": "WAYPOINT",
+    "latitude": 53.5,
+    "longitude": -15,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-08-24T05:34:21.237Z"
+  },
+  "NICSO": {
+    "id": "ONLINE_NICSO",
+    "ident": "NICSO",
+    "name": "NICSO",
+    "type": "WAYPOINT",
+    "latitude": 47.5,
+    "longitude": -52,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-08-24T05:34:22.094Z"
+  },
+  "KINER": {
+    "id": "ONLINE_KINER",
+    "ident": "KINER",
+    "name": "KINER",
+    "type": "WAYPOINT",
+    "latitude": 36.574231,
+    "longitude": -68.287447,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-08-24T05:34:23.195Z"
   }
 }
