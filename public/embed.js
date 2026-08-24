@@ -9,6 +9,7 @@
 
 const urlParams = new URLSearchParams(window.location.search);
 const config = {
+    apiKey: urlParams.get('api_key') || urlParams.get('key') || '',
     vatsim: urlParams.get('vatsim') || '',
     fshubToken: urlParams.get('fshub_token') || urlParams.get('token') || '',
     fshub: urlParams.get('fshub') || '',
@@ -278,9 +279,12 @@ async function fetchLiveFleet() {
             return;
         }
 
-        const res = await fetch('/api/v1/live/multi', {
+        const headers = { 'Content-Type': 'application/json' };
+        if (config.apiKey) headers['X-API-Key'] = config.apiKey;
+
+        const res = await fetch(config.apiKey ? `/api/v1/live/multi?api_key=${encodeURIComponent(config.apiKey)}` : '/api/v1/live/multi', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers,
             body: JSON.stringify(payload)
         });
 
