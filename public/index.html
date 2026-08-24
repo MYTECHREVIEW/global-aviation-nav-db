@@ -91,7 +91,7 @@
                     </div>
 
                     <div class="label-toggle-row" style="margin-top: 8px; margin-bottom: 8px;">
-                        <span class="label-toggle-title" style="font-size: 0.74rem;">🔄 Auto-Refresh Radar (15s)</span>
+                        <span class="label-toggle-title" style="font-size: 0.74rem;">🔄 Auto-Refresh Radar (3s)</span>
                         <label class="switch">
                             <input type="checkbox" id="toggleAutoRadar" checked />
                             <span class="slider"></span>
@@ -276,6 +276,9 @@
             <div class="map-overlay-badge" id="mapBadge">
                 <span class="badge-dot"></span> Interactive Great-Circle Flight Path Active
             </div>
+
+            <!-- 📡 Right-Side Floating Pilot Inspector Card (Only displayed on pilot click) -->
+            <div id="fshubLivePopup" class="fshub-pilot-floating-card hidden"></div>
         </main>
     </div>
 

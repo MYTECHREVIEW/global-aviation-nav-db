@@ -1,17 +1,17 @@
 # ✈️ AeroNav Global: Aeronautical Navigation Database & Route Engine
 
-A high-performance global navigation database and flight plan route parser engine. Contains **85,901 Airports**, **11,008 NavAids (VOR/NDB)**, **70,052 Waypoints & Fixes**, **2,139 Standard Instrument Departures (SIDs)**, **1,871 Standard Terminal Arrivals (STARs)**, and **1,466 Jet/Victor/RNAV Airways** parsed from FAA ARINC 424 CIFP and global aeronautical datasets.
+A high-performance global navigation database, multi-network live tracking engine, and flight plan route parser. Contains **85,901 Airports**, **11,008 NavAids (VOR/NDB)**, **70,052 Waypoints & Fixes**, **2,139 Standard Instrument Departures (SIDs)**, **1,871 Standard Terminal Arrivals (STARs)**, and **1,466 Jet/Victor/RNAV Airways** parsed from FAA ARINC 424 CIFP and global aeronautical datasets.
 
 ---
 
 ## 🚀 Features
 
-- **Multi-Network Live Flight Tracking**: Live aircraft tracking for **VATSIM**, **IVAO**, and **FSHub** with moving rotating plane markers, magnetic heading, live altitude/speed, and real-time cross-track deviation (XTD) math.
-- **Global Aeronautical Database**: Accurate GPS coordinates, elevations, frequencies, magnetic variations, and terminal airport associations.
-- **Runway & Transition-Aware Procedures**: Multi-branch procedure solver that matches filed departure/arrival runways and enroute transition fixes while automatically excluding mutually exclusive branches.
-- **Airway Sequence Expansion**: Automatically expands airway segments (e.g. `Q87`, `J79`, `V1`) into ordered waypoint chains.
+- **Multi-Network Live Target Array Tracking**: Concurrently track any batch of **VATSIM CIDs**, **FSHub API tokens & Virtual Airline fleets**, and **IVAO VIDs** in a single API call with sub-50ms in-memory response times.
+- **Standalone Clean Embed Radar SDK (`/embed.html`)**: Embed a full-screen, 60 FPS live radar view with route corridors and slide-over pilot inspector without sidebars or management controls.
+- **Persistent Global Custom Waypoints Database**: Curated catalog of global fixes across North America, Europe, the North Atlantic, the Middle East, Asia, and South America with dynamic runtime additions.
+- **Runway & Transition-Aware Procedures**: Multi-branch procedure solver that matches filed departure/arrival runways and enroute transitions.
+- **Airway Sequence Expansion**: Automatically expands airway segments (e.g. `Q87`, `J79`, `V1`, `UT38`, `L610`) into ordered waypoint chains.
 - **SimBrief Auto-Import**: One-click flight plan fetching and instant route tracing by SimBrief Username or Pilot ID.
-- **Waypoint Labels & Visibility Toggling**: Optional ident label rendering on maps and charts for enhanced readability.
 - **Geodesic Trajectory Engine**: Computes great-circle distances, leg bearings, estimated enroute times, and GeoJSON lines.
 - **Built-in API Key Authentication**: Secure token-based access with usage tracking, request counting, and key revocation.
 - **Docker & Portainer Ready**: Public multi-arch Docker container hosted on GitHub Container Registry (`ghcr.io`) for instant deployment in TrueNAS, Portainer, or Dockage.
@@ -43,8 +43,9 @@ services:
       - NODE_ENV=production
       - MAPBOX_ACCESS_TOKEN=
     volumes:
-      # Persistent directory volume for API keys
+      # Persistent directory volume for API keys and custom waypoints
       - aeronav_keys:/app/data/keys
+      - aeronav_data:/app/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3510/health"]
       interval: 30s
@@ -54,6 +55,8 @@ services:
 volumes:
   aeronav_keys:
     name: aeronav_api_keys
+  aeronav_data:
+    name: aeronav_custom_data
 ```
 
 4. Click **Deploy the stack**.
@@ -75,102 +78,62 @@ docker run -d \
 
 ---
 
-### Option 3: Local Build & Docker Compose
+## 📡 API Endpoints Overview
 
+### 1. Multi-Network Live Target Array API
 ```bash
-git clone https://github.com/MYTECHREVIEW/global-aviation-nav-db.git
-cd global-aviation-nav-db
-
-# Run with docker compose
-docker compose up -d
-```
-
----
-
-## 📡 API Usage & Code Examples
-
-### Base URL: `http://localhost:3510` (or your TrueNAS IP:3510)
-
-### 1. Health Check
-```bash
-curl http://localhost:3510/health
-```
-
-### 2. Generate an API Key
-```bash
-curl -X POST http://localhost:3510/api/v1/auth/keys \
+# Query any combination of VATSIM, FSHub tokens, and IVAO IDs
+curl -X POST http://localhost:3510/api/v1/live/multi \
   -H "Content-Type: application/json" \
-  -d '{"name": "Production App Client", "expires_in_days": 365}'
+  -d '{
+    "targets": [
+      { "network": "VATSIM", "id": "1134998" },
+      { "network": "FSHUB", "token": "18bXlTA3OUu6F2ShL0XGuHBtCE1AEWsXef4ISoIs6pPM2XaU6KVgKNuudu6Q" }
+    ]
+  }'
+```
+
+### 2. Standalone Radar Embed (`/embed.html`)
+```html
+<iframe 
+  src="http://localhost:3510/embed.html?fshub_token=YOUR_TOKEN&vatsim=1134998" 
+  width="100%" 
+  height="650px" 
+  frameborder="0">
+</iframe>
 ```
 
 ### 3. Trace a Flight Plan Route
 ```bash
 curl -X POST http://localhost:3510/api/v1/route/trace \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: aeronav_live_YOUR_API_KEY" \
   -d '{
     "departure": "KEYW",
     "arrival": "KLGA",
-    "route": "KEYW/09 N0460F380 BUFTT1 MATLK Q87 ZERBO/N0461F370 Q87 TAALN/N0457F390 Q87 HURTS PROUD2 KLGA/04",
+    "route": "KEYW/09 N0460F380 BUFTT1 MATLK Q87 HURTS PROUD2 KLGA/04",
     "altitude_ft": 38000,
     "airspeed_kts": 460,
     "include_labels": true
   }'
 ```
 
-### 4. Fetch & Trace SimBrief OFP in One Call
+### 4. Custom Waypoints Database Management
 ```bash
-curl -X POST http://localhost:3510/api/v1/simbrief/trace \
+# List all custom waypoints
+curl http://localhost:3510/api/v1/waypoints/custom
+
+# Add / Update a waypoint
+curl -X POST http://localhost:3510/api/v1/waypoints/custom \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: aeronav_live_YOUR_API_KEY" \
-  -d '{"username": "my_simbrief_user"}'
+  -d '{
+    "ident": "OKSAW",
+    "name": "OKSAW (UK Airway Q60)",
+    "type": "WAYPOINT",
+    "latitude": 52.050000,
+    "longitude": -2.100000,
+    "country_code": "GB",
+    "region": "Europe"
+  }'
 ```
 
----
-
-## 💻 Language SDK Examples
-
-### Python (`requests`)
-```python
-import requests
-
-url = "http://localhost:3510/api/v1/route/trace"
-headers = {
-    "Content-Type": "application/json",
-    "X-API-Key": "aeronav_live_YOUR_KEY"
-}
-payload = {
-    "departure": "KEYW",
-    "arrival": "KLGA",
-    "route": "KEYW/09 BUFTT1 MATLK Q87 HURTS PROUD2 KLGA/04"
-}
-
-response = requests.post(url, json=payload, headers=headers)
-data = response.json()
-
-print(f"Route: {data['departure']['icao']}/{data['departure']['runway']} -> {data['arrival']['icao']}/{data['arrival']['runway']}")
-print(f"Total Distance: {data['total_distance_nm']} NM | Est. Time: {data['estimated_time_enroute_formatted']}")
-
-for wp in data['waypoints']:
-    via = f"({wp['via_procedure'] or wp['via_airway']})" if wp.get('via_procedure') or wp.get('via_airway') else ""
-    print(f" - {wp['sequence']:02d}. {wp['ident']:<7} [{wp['type']:<18}] {via:<25} +{wp['segment_distance_nm']:>5} NM -> {wp['cumulative_distance_nm']:>6} NM")
-```
-
-### JavaScript / Node.js
-```javascript
-const res = await fetch('http://localhost:3510/api/v1/route/trace', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'X-API-Key': 'aeronav_live_YOUR_KEY'
-  },
-  body: JSON.stringify({
-    departure: 'KEYW',
-    arrival: 'KLGA',
-    route: 'KEYW/09 BUFTT1 MATLK Q87 HURTS PROUD2 KLGA/04'
-  })
-});
-
-const data = await res.json();
-console.log('Waypoints:', data.waypoints);
-```
+For complete API schema definitions, parameters, and payloads, refer to [`API_DOCUMENTATION.md`](./API_DOCUMENTATION.md).

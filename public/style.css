@@ -1278,3 +1278,518 @@ input:checked + .slider:before {
     border-radius: 3px;
     transition: width 0.6s ease;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   📡 RIGHT-SIDE MAP POPUP: FSHUB & VATSIM LIVE HUB
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.fshub-panel-toggle-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(168, 85, 247, 0.5);
+    color: #f8fafc;
+    padding: 9px 16px;
+    border-radius: 30px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(168, 85, 247, 0.25);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fshub-panel-toggle-btn:hover {
+    background: rgba(168, 85, 247, 0.2);
+    border-color: #c084fc;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(168, 85, 247, 0.4);
+}
+
+.fshub-panel-toggle-btn .pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #a855f7;
+    box-shadow: 0 0 8px #a855f7;
+    animation: fshubPulse 1.8s infinite;
+}
+
+@keyframes fshubPulse {
+    0% { transform: scale(0.9); opacity: 0.8; }
+    50% { transform: scale(1.4); opacity: 1; filter: drop-shadow(0 0 4px #c084fc); }
+    100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+/* ==========================================================================
+   📡 FLOATING PILOT INSPECTOR CARD (MATCHING EXACT DESIGN)
+   ========================================================================== */
+.fshub-pilot-floating-card {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 420px;
+    max-width: calc(100vw - 48px);
+    background: #0d1527;
+    background: linear-gradient(165deg, rgba(13, 21, 39, 0.96) 0%, rgba(8, 14, 28, 0.98) 100%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 2px solid #38bdf8;
+    border-radius: 20px;
+    z-index: 1010;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.22);
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+    animation: popInCard 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes popInCard {
+    0% { transform: translateY(-8px) scale(0.96); opacity: 0; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.fshub-pilot-floating-card.hidden {
+    transform: translateY(-8px) scale(0.96);
+    opacity: 0;
+    pointer-events: none;
+    display: none !important;
+}
+
+/* Header Row */
+.inspector-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.inspector-pilot-identity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.inspector-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2.5px solid #38bdf8;
+    object-fit: cover;
+    background: #1e293b;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+}
+
+.inspector-callsign {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #38bdf8;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+}
+
+.inspector-pilot-name {
+    font-size: 0.82rem;
+    color: #cbd5e1;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.live-phase-pill {
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    color: #38bdf8;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* Flight Plan Corridor Box */
+.inspector-flight-plan-box {
+    background: #090e1c;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.inspector-route-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem;
+    font-weight: 900;
+}
+
+.inspector-route-header .origin-arr {
+    color: #00ff88;
+}
+
+.inspector-route-header .fl-tag {
+    color: #fbbf24;
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.inspector-route-string {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: #cbd5e1;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px 10px;
+    border-radius: 6px;
+    word-break: break-word;
+    border-left: 2.5px solid #38bdf8;
+    line-height: 1.45;
+}
+
+/* Telemetry Grid */
+.inspector-telemetry-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    background: #090e1c;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 12px 8px;
+    text-align: center;
+}
+
+.inspector-telem-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.inspector-telem-item span:first-child {
+    font-size: 0.64rem;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.inspector-telem-item span:last-child {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    color: #ffffff;
+    font-weight: 800;
+}
+
+#inspectorAlt, .inspector-telem-val-alt {
+    color: #00ff88 !important;
+}
+
+#inspectorSpeed, .inspector-telem-val-speed {
+    color: #38bdf8 !important;
+}
+
+#inspectorHdg, .inspector-telem-val-hdg {
+    color: #fbbf24 !important;
+}
+
+#inspectorSquawk, .inspector-telem-val-squawk {
+    color: #ffffff !important;
+}
+
+/* VATSIM Card */
+.fshub-vatsim-card {
+    background: #090e1c;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fshub-vatsim-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.vatsim-brand-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: #38bdf8;
+    font-weight: 800;
+}
+
+.vatsim-status-pill {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.66rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.vatsim-status-pill.online {
+    background: rgba(0, 255, 136, 0.15);
+    color: #00ff88;
+    border: 1px solid rgba(0, 255, 136, 0.4);
+}
+
+.vatsim-status-pill.offline {
+    background: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.vatsim-details-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: #e2e8f0;
+}
+
+/* Action Buttons */
+.inspector-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2px;
+}
+
+.btn-inspector-action {
+    flex: 1;
+    padding: 9px 14px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btn-inspector-center {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border: 1.5px solid rgba(56, 189, 248, 0.4);
+}
+
+.btn-inspector-center:hover {
+    background: rgba(56, 189, 248, 0.3);
+    border-color: #38bdf8;
+    transform: translateY(-1px);
+}
+
+.btn-inspector-deselect {
+    background: rgba(244, 63, 94, 0.12);
+    color: #f43f5e;
+    border: 1.5px solid rgba(244, 63, 94, 0.35);
+}
+
+.btn-inspector-deselect:hover {
+    background: rgba(244, 63, 94, 0.25);
+    border-color: #f43f5e;
+    transform: translateY(-1px);
+}
+
+/* VA Fleet List */
+.va-airline-header-card {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.va-name-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #f8fafc;
+}
+
+.va-icao-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(168, 85, 247, 0.3);
+    color: #c084fc;
+}
+
+.va-stats-pill-group {
+    display: flex;
+    gap: 6px;
+    font-size: 0.7rem;
+    margin-top: 4px;
+    color: #94a3b8;
+}
+
+.va-active-pilots-title {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+
+/* Individual Pilot Item Card */
+.va-pilot-item-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.va-pilot-item-card:hover {
+    background: rgba(168, 85, 247, 0.15);
+    border-color: rgba(168, 85, 247, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.va-pilot-item-card.active {
+    background: rgba(168, 85, 247, 0.25);
+    border-color: #a855f7;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+}
+
+.va-pilot-row-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.va-pilot-identity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.va-pilot-mini-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #334155;
+}
+
+.va-pilot-callsign {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.84rem;
+    font-weight: 800;
+    color: #00ff88;
+}
+
+.va-pilot-name-txt {
+    font-size: 0.72rem;
+    color: #94a3b8;
+}
+
+.va-pilot-route-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.va-pilot-telemetry-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: #94a3b8;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 4px;
+}
+
+/* ==========================================================================
+   ✈️ CLEAN RADAR AIRCRAFT CALLSIGN TOOLTIP
+   ========================================================================== */
+.plane-leaflet-tooltip {
+    background: rgba(10, 16, 32, 0.95) !important;
+    border: 1.5px solid #38bdf8 !important;
+    color: #ffffff !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 0.76rem !important;
+    font-weight: 700 !important;
+    border-radius: 8px !important;
+    padding: 5px 10px !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7), 0 0 15px rgba(56, 189, 248, 0.3) !important;
+    white-space: nowrap !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+}
+
+.plane-leaflet-tooltip strong {
+    color: #38bdf8 !important;
+    font-size: 0.82rem !important;
+}
+
+.plane-leaflet-tooltip::before {
+    border-top-color: #38bdf8 !important;
+}
+
+/* ==========================================================================
+   ✈️ REAL-TIME SMOOTH AIRCRAFT MOTION & HARDWARE ACCELERATION
+   ========================================================================== */
+.aircraft-div-icon {
+    background: transparent !important;
+    border: none !important;
+    will-change: transform;
+    pointer-events: auto;
+}
+
+.aircraft-icon-svg-wrapper {
+    will-change: transform;
+    transition: transform 0.12s linear;
+}
+
+.aircraft-marker-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.aircraft-halo {
+    position: absolute;
+    border-radius: 50%;
+    border: 1.5px solid;
+    animation: aircraftHaloPulse 2s infinite ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes aircraftHaloPulse {
+    0% { transform: scale(0.85); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 0.25; }
+    100% { transform: scale(0.85); opacity: 0.8; }
+}
+
+
+

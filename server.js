@@ -323,6 +323,51 @@ app.get('/api/v1/waypoints/search', (req, res) => {
 });
 
 /**
+ * List all Curated Custom Global Waypoints
+ * GET /api/v1/waypoints/custom
+ */
+app.get('/api/v1/waypoints/custom', (req, res) => {
+    const list = routeParser.customWaypoints || {};
+    res.json({
+        success: true,
+        total_custom_waypoints: Object.keys(list).length,
+        database_file: 'data/custom-global-waypoints.json',
+        waypoints: list
+    });
+});
+
+/**
+ * Add or Update a Curated Custom Global Waypoint
+ * POST /api/v1/waypoints/custom
+ */
+app.post('/api/v1/waypoints/custom', (req, res) => {
+    try {
+        const { ident, name, type, latitude, longitude, country_code, region, elevation_ft, frequency_mhz } = req.body || {};
+        if (!ident || typeof latitude !== 'number' || typeof longitude !== 'number') {
+            return res.status(400).json({ error: 'Fields "ident", "latitude" (number), and "longitude" (number) are required.' });
+        }
+        const saved = routeParser.saveCustomWaypoint({
+            ident,
+            name,
+            type,
+            latitude,
+            longitude,
+            country_code,
+            region,
+            elevation_ft,
+            frequency_mhz
+        });
+        res.json({
+            success: true,
+            message: `Custom waypoint "${saved.ident}" saved to persistent database.`,
+            waypoint: saved
+        });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+/**
  * Get Waypoint or NavAid by Identifier
  * GET /api/v1/waypoints/:ident?near_lat=&near_lon=
  */
@@ -474,8 +519,11 @@ app.get('/api/v1/airways/:ident', (req, res) => {
  * POST /api/v1/route/trace
  * Body: { "route": "KMIA DIW ORF JFK KLGA", "departure": "KMIA", "arrival": "KLGA", "altitude_ft": 35000, "speed_kts": 450 }
  */
-app.post('/api/v1/route/trace', (req, res) => {
-    const { route, departure, arrival, altitude_ft, speed_kts } = req.body || {};
+app.post('/api/v1/route/trace', async (req, res) => {
+    const { route, departure, arrival, altitude_ft } = req.body || {};
+    const rawSpeed = req.body?.speed_kts ?? req.body?.airspeed_kts;
+    const speed_kts = parseInt(rawSpeed, 10) > 50 ? parseInt(rawSpeed, 10) : 450;
+    const alt_ft = parseInt(altitude_ft, 10) > 1000 ? parseInt(altitude_ft, 10) : 35000;
 
     if (!route && (!departure || !arrival)) {
         return res.status(400).json({
@@ -485,12 +533,12 @@ app.post('/api/v1/route/trace', (req, res) => {
 
     const routeStr = route || `${departure} ${arrival}`;
     const include_labels = req.body?.include_labels ?? req.body?.show_labels ?? true;
-    const result = routeParser.parseRoute(
+    const result = await routeParser.parseRouteAsync(
         routeStr,
         departure,
         arrival,
-        altitude_ft ? parseInt(altitude_ft, 10) : 35000,
-        speed_kts ? parseInt(speed_kts, 10) : 450,
+        alt_ft,
+        speed_kts,
         { include_labels }
     );
 
@@ -545,7 +593,7 @@ app.post('/api/v1/simbrief/trace', async (req, res) => {
         const arrStr = ofp.arrival_runway ? `${ofp.arrival_icao}/${ofp.arrival_runway}` : ofp.arrival_icao;
         const fullRouteStr = `${depStr} ${ofp.route} ${arrStr}`;
 
-        const result = routeParser.parseRoute(
+        const result = await routeParser.parseRouteAsync(
             fullRouteStr,
             ofp.departure_icao,
             ofp.arrival_icao,
@@ -623,6 +671,51 @@ app.get('/api/v1/live/fshub/:identifier', async (req, res) => {
 });
 
 /**
+ * Inspect FSHub Token (Personal Pilot & Virtual Airlines + VATSIM cross-correlation)
+ * POST /api/v1/fshub/inspect
+ * Body: { "token": "..." } or Query ?token=...
+ */
+app.all('/api/v1/fshub/inspect', async (req, res) => {
+    const token = req.body?.token || req.query?.token || process.env.FSHUB_API_KEY || process.env.FSHUB_KEY;
+    const vaId = req.body?.va_id || req.query?.va_id || process.env.WOLFAIR_VA_ID;
+
+    if (!token) {
+        return res.status(400).json({ error: 'Missing FSHub Personal or VA Token (provide in body or ?token=...)' });
+    }
+
+    try {
+        const result = await liveTrackerService.inspectFshubToken(token, vaId);
+        res.json(result);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+/**
+ * Multi-Network Target Array Live Tracking API
+ * Concurrently tracks any combination of VATSIM CIDs/callsigns, FSHub tokens/user IDs/VAs, and IVAO IDs
+ * POST /api/v1/live/multi
+ * Body: {
+ *   "targets": [
+ *     { "network": "VATSIM", "id": "1011180" },
+ *     { "network": "FSHUB", "token": "..." },
+ *     { "network": "FSHUB", "id": "NeightWolf49" }
+ *   ]
+ * }
+ * or GET /api/v1/live/multi?vatsim=1011180&fshub=5169,NeightWolf49&tokens=...
+ */
+app.all('/api/v1/live/multi', async (req, res) => {
+    try {
+        const payload = req.method === 'POST' ? req.body : req.query;
+        const result = await liveTrackerService.trackMultiTargets(payload || {});
+        res.json(result);
+    } catch (e) {
+        console.error('[API] /api/v1/live/multi error:', e);
+        res.status(500).json({ error: e.message });
+    }
+});
+
+/**
  * Unified Live Tracking & SimBrief Route Correlation
  * POST /api/v1/live/track
  * Body: { "network": "VATSIM", "identifier": "AAL123", "simbrief_username": "my_user" }
@@ -682,11 +775,11 @@ app.post('/api/v1/live/track', async (req, res) => {
             routeStr = `${depIcao || ''} ${telemetry.flight_plan.route} ${arrIcao || ''}`.trim();
         }
 
-        // 3. Trace route if available
+        // 3. Trace route if available with autonomous dynamic fix resolution
         let routeResult = null;
         if (routeStr) {
             try {
-                routeResult = routeParser.parseRoute(
+                routeResult = await routeParser.parseRouteAsync(
                     routeStr,
                     depIcao,
                     arrIcao,

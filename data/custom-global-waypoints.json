@@ -1,0 +1,734 @@
+{
+  "RATKA": {
+    "ident": "RATKA",
+    "name": "RATKA",
+    "type": "WAYPOINT",
+    "latitude": 49.5,
+    "longitude": -8,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "ATSUR": {
+    "ident": "ATSUR",
+    "name": "ATSUR",
+    "type": "WAYPOINT",
+    "latitude": 50,
+    "longitude": -14,
+    "country_code": "IE",
+    "region": "Oceanic"
+  },
+  "BEDRA": {
+    "ident": "BEDRA",
+    "name": "BEDRA",
+    "type": "WAYPOINT",
+    "latitude": 50,
+    "longitude": -15,
+    "country_code": "IE",
+    "region": "Oceanic"
+  },
+  "DOGAL": {
+    "ident": "DOGAL",
+    "name": "DOGAL",
+    "type": "WAYPOINT",
+    "latitude": 55,
+    "longitude": -15,
+    "country_code": "IE",
+    "region": "Oceanic"
+  },
+  "MALOT": {
+    "ident": "MALOT",
+    "name": "MALOT",
+    "type": "WAYPOINT",
+    "latitude": 53,
+    "longitude": -15,
+    "country_code": "IE",
+    "region": "Oceanic"
+  },
+  "LIMRI": {
+    "ident": "LIMRI",
+    "name": "LIMRI",
+    "type": "WAYPOINT",
+    "latitude": 52,
+    "longitude": -15,
+    "country_code": "IE",
+    "region": "Oceanic"
+  },
+  "DINIM": {
+    "ident": "DINIM",
+    "name": "DINIM",
+    "type": "WAYPOINT",
+    "latitude": 51,
+    "longitude": -15,
+    "country_code": "IE",
+    "region": "Oceanic"
+  },
+  "SUNOT": {
+    "ident": "SUNOT",
+    "name": "SUNOT",
+    "type": "WAYPOINT",
+    "latitude": 53,
+    "longitude": -50,
+    "country_code": "CA",
+    "region": "Oceanic"
+  },
+  "HEB": {
+    "ident": "HEB",
+    "name": "Hebron NDB",
+    "type": "NDB",
+    "latitude": 58.2,
+    "longitude": -62.6,
+    "country_code": "CA",
+    "region": "Canada"
+  },
+  "VIXUN": {
+    "ident": "VIXUN",
+    "name": "VIXUN",
+    "type": "WAYPOINT",
+    "latitude": 54,
+    "longitude": -40,
+    "country_code": "NAT",
+    "region": "Oceanic"
+  },
+  "JOOPY": {
+    "ident": "JOOPY",
+    "name": "JOOPY",
+    "type": "WAYPOINT",
+    "latitude": 48.5,
+    "longitude": -52,
+    "country_code": "CA",
+    "region": "Oceanic"
+  },
+  "BRADD": {
+    "ident": "BRADD",
+    "name": "BRADD",
+    "type": "WAYPOINT",
+    "latitude": 43.15,
+    "longitude": -67,
+    "country_code": "NAT",
+    "region": "Oceanic"
+  },
+  "ELSIR": {
+    "ident": "ELSIR",
+    "name": "ELSIR",
+    "type": "WAYPOINT",
+    "latitude": 49.5,
+    "longitude": -52,
+    "country_code": "CA",
+    "region": "Oceanic"
+  },
+  "TUSKY": {
+    "ident": "TUSKY",
+    "name": "TUSKY",
+    "type": "WAYPOINT",
+    "latitude": 43.565,
+    "longitude": -67,
+    "country_code": "US",
+    "region": "North America"
+  },
+  "KOPUL": {
+    "ident": "KOPUL",
+    "name": "KOPUL",
+    "type": "WAYPOINT",
+    "latitude": 51.542222,
+    "longitude": 1.137222,
+    "country_code": "GB",
+    "region": "Europe"
+  },
+  "OKSAW": {
+    "ident": "OKSAW",
+    "name": "OKSAW",
+    "type": "WAYPOINT",
+    "latitude": 52.05,
+    "longitude": -2.1,
+    "country_code": "GB",
+    "region": "Europe"
+  },
+  "TEWXI": {
+    "ident": "TEWXI",
+    "name": "TEWXI",
+    "type": "WAYPOINT",
+    "latitude": 52.483333,
+    "longitude": -4.833333,
+    "country_code": "GB",
+    "region": "Europe"
+  },
+  "VATRY": {
+    "ident": "VATRY",
+    "name": "VATRY",
+    "type": "WAYPOINT",
+    "latitude": 52.554444,
+    "longitude": -5.5,
+    "country_code": "GB",
+    "region": "Europe"
+  },
+  "SUTEX": {
+    "ident": "SUTEX",
+    "name": "SUTEX",
+    "type": "WAYPOINT",
+    "latitude": 52.824361,
+    "longitude": -6.930361,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "ANEKI": {
+    "ident": "ANEKI",
+    "name": "ANEKI",
+    "type": "WAYPOINT",
+    "latitude": 49.317272,
+    "longitude": 8.480428,
+    "country_code": "DE",
+    "region": "Europe"
+  },
+  "PABLA": {
+    "ident": "PABLA",
+    "name": "PABLA",
+    "type": "WAYPOINT",
+    "latitude": 48.788586,
+    "longitude": 8.351969,
+    "country_code": "DE",
+    "region": "Europe"
+  },
+  "RIGVI": {
+    "ident": "RIGVI",
+    "name": "RIGVI",
+    "type": "WAYPOINT",
+    "latitude": 48.132589,
+    "longitude": 7.503564,
+    "country_code": "FR",
+    "region": "Europe"
+  },
+  "DENUT": {
+    "ident": "DENUT",
+    "name": "DENUT",
+    "type": "WAYPOINT",
+    "latitude": 51.236111,
+    "longitude": 3.6575,
+    "country_code": "BE",
+    "region": "Europe"
+  },
+  "LENDO": {
+    "ident": "LENDO",
+    "name": "LENDO",
+    "type": "WAYPOINT",
+    "latitude": 50.625267,
+    "longitude": 6.278553,
+    "country_code": "DE",
+    "region": "Europe"
+  },
+  "ADKUV": {
+    "ident": "ADKUV",
+    "name": "ADKUV",
+    "type": "WAYPOINT",
+    "latitude": 50.506808,
+    "longitude": 6.817408,
+    "country_code": "DE",
+    "region": "Europe"
+  },
+  "BOMBI": {
+    "ident": "BOMBI",
+    "name": "BOMBI",
+    "type": "WAYPOINT",
+    "latitude": 50.056793,
+    "longitude": 8.800399,
+    "country_code": "DE",
+    "region": "Europe"
+  },
+  "INBED": {
+    "ident": "INBED",
+    "name": "INBED",
+    "type": "WAYPOINT",
+    "latitude": 49.387581,
+    "longitude": 10.941744,
+    "country_code": "DE",
+    "region": "Europe"
+  },
+  "RENKA": {
+    "ident": "RENKA",
+    "name": "RENKA",
+    "type": "WAYPOINT",
+    "latitude": 48.584842,
+    "longitude": 13.505225,
+    "country_code": "DE",
+    "region": "Europe"
+  },
+  "PEROL": {
+    "ident": "PEROL",
+    "name": "PEROL",
+    "type": "WAYPOINT",
+    "latitude": 48.076026,
+    "longitude": 15.129485,
+    "country_code": "AT",
+    "region": "Europe"
+  },
+  "ARSIN": {
+    "ident": "ARSIN",
+    "name": "ARSIN",
+    "type": "WAYPOINT",
+    "latitude": 47.567211,
+    "longitude": 16.753744,
+    "country_code": "AT",
+    "region": "Europe"
+  },
+  "GAMSA": {
+    "ident": "GAMSA",
+    "name": "GAMSA",
+    "type": "WAYPOINT",
+    "latitude": 47.168056,
+    "longitude": 9.878889,
+    "country_code": "AT",
+    "region": "Europe"
+  },
+  "UMVEG": {
+    "ident": "UMVEG",
+    "name": "UMVEG",
+    "type": "WAYPOINT",
+    "latitude": 46.541944,
+    "longitude": 11.530556,
+    "country_code": "IT",
+    "region": "Europe"
+  },
+  "TUDBU": {
+    "ident": "TUDBU",
+    "name": "TUDBU",
+    "type": "WAYPOINT",
+    "latitude": 43.550909,
+    "longitude": 25.522318,
+    "country_code": "BG",
+    "region": "Europe"
+  },
+  "ETUBA": {
+    "ident": "ETUBA",
+    "name": "ETUBA",
+    "type": "WAYPOINT",
+    "latitude": 44.608333,
+    "longitude": 21.652778,
+    "country_code": "RO",
+    "region": "Europe"
+  },
+  "NAVOD": {
+    "ident": "NAVOD",
+    "name": "NAVOD",
+    "type": "WAYPOINT",
+    "latitude": 45.968056,
+    "longitude": 20.088889,
+    "country_code": "RS",
+    "region": "Europe"
+  },
+  "MAVIR": {
+    "ident": "MAVIR",
+    "name": "MAVIR",
+    "type": "WAYPOINT",
+    "latitude": 46.398333,
+    "longitude": 19.825278,
+    "country_code": "HU",
+    "region": "Europe"
+  },
+  "TEBLI": {
+    "ident": "TEBLI",
+    "name": "TEBLI",
+    "type": "WAYPOINT",
+    "latitude": 45.201389,
+    "longitude": 16.675833,
+    "country_code": "HR",
+    "region": "Europe"
+  },
+  "IRDIV": {
+    "ident": "IRDIV",
+    "name": "IRDIV",
+    "type": "WAYPOINT",
+    "latitude": 44.978611,
+    "longitude": 17.291667,
+    "country_code": "BA",
+    "region": "Europe"
+  },
+  "DOBOT": {
+    "ident": "DOBOT",
+    "name": "DOBOT",
+    "type": "WAYPOINT",
+    "latitude": 44.773889,
+    "longitude": 17.9025,
+    "country_code": "BA",
+    "region": "Europe"
+  },
+  "SOSEK": {
+    "ident": "SOSEK",
+    "name": "SOSEK",
+    "type": "WAYPOINT",
+    "latitude": 43.834444,
+    "longitude": 20.341111,
+    "country_code": "RS",
+    "region": "Europe"
+  },
+  "NISVA": {
+    "ident": "NISVA",
+    "name": "NISVA",
+    "type": "WAYPOINT",
+    "latitude": 42.972778,
+    "longitude": 22.7975,
+    "country_code": "RS",
+    "region": "Europe"
+  },
+  "RODIP": {
+    "ident": "RODIP",
+    "name": "RODIP",
+    "type": "WAYPOINT",
+    "latitude": 41.970556,
+    "longitude": 24.341667,
+    "country_code": "BG",
+    "region": "Europe"
+  },
+  "BELGI": {
+    "ident": "BELGI",
+    "name": "BELGI",
+    "type": "WAYPOINT",
+    "latitude": 40.5,
+    "longitude": 25.883333,
+    "country_code": "GR",
+    "region": "Europe"
+  },
+  "VESAR": {
+    "ident": "VESAR",
+    "name": "VESAR",
+    "type": "WAYPOINT",
+    "latitude": 35.915556,
+    "longitude": 34.016111,
+    "country_code": "CY",
+    "region": "Middle East"
+  },
+  "BALMA": {
+    "ident": "BALMA",
+    "name": "BALMA",
+    "type": "WAYPOINT",
+    "latitude": 34.483333,
+    "longitude": 35.05,
+    "country_code": "LB",
+    "region": "Middle East"
+  },
+  "CAK": {
+    "ident": "CAK",
+    "name": "CAK VOR-DME",
+    "type": "VOR-DME",
+    "latitude": 34.298999,
+    "longitude": 35.699699,
+    "country_code": "LB",
+    "region": "Middle East"
+  },
+  "LATEB": {
+    "ident": "LATEB",
+    "name": "LATEB",
+    "type": "WAYPOINT",
+    "latitude": 34.031667,
+    "longitude": 36.401,
+    "country_code": "SY",
+    "region": "Middle East"
+  },
+  "ZELAF": {
+    "ident": "ZELAF",
+    "name": "ZELAF",
+    "type": "WAYPOINT",
+    "latitude": 32.95,
+    "longitude": 38,
+    "country_code": "JO",
+    "region": "Middle East"
+  },
+  "RASLI": {
+    "ident": "RASLI",
+    "name": "RASLI",
+    "type": "WAYPOINT",
+    "latitude": 31.906667,
+    "longitude": 38.613333,
+    "country_code": "SA",
+    "region": "Middle East"
+  },
+  "TRF": {
+    "ident": "TRF",
+    "name": "Turaif VOR-DME",
+    "type": "VOR-DME",
+    "latitude": 31.6933,
+    "longitude": 38.734699,
+    "country_code": "SA",
+    "region": "Middle East"
+  },
+  "NEVOL": {
+    "ident": "NEVOL",
+    "name": "NEVOL",
+    "type": "WAYPOINT",
+    "latitude": 30.412778,
+    "longitude": 39.644722,
+    "country_code": "SA",
+    "region": "Middle East"
+  },
+  "DASVA": {
+    "ident": "DASVA",
+    "name": "DASVA",
+    "type": "WAYPOINT",
+    "latitude": 27.426872,
+    "longitude": 47.14698,
+    "country_code": "SA",
+    "region": "Middle East"
+  },
+  "TOSNA": {
+    "ident": "TOSNA",
+    "name": "TOSNA",
+    "type": "WAYPOINT",
+    "latitude": 25.27,
+    "longitude": 52.687778,
+    "country_code": "QA",
+    "region": "Middle East"
+  },
+  "UMEVU": {
+    "ident": "UMEVU",
+    "name": "UMEVU",
+    "type": "WAYPOINT",
+    "latitude": 24.855483,
+    "longitude": 53.668508,
+    "country_code": "AE",
+    "region": "Middle East"
+  },
+  "UKILI": {
+    "ident": "UKILI",
+    "name": "UKILI",
+    "type": "WAYPOINT",
+    "latitude": 24.648224,
+    "longitude": 54.158873,
+    "country_code": "AE",
+    "region": "Middle East"
+  },
+  "PARKA": {
+    "ident": "PARKA",
+    "name": "PARKA",
+    "type": "WAYPOINT",
+    "latitude": 39,
+    "longitude": -5.149722,
+    "country_code": "ES",
+    "region": "Europe"
+  },
+  "OBOGA": {
+    "ident": "OBOGA",
+    "name": "OBOGA",
+    "type": "WAYPOINT",
+    "latitude": 33.926004,
+    "longitude": -7.003829,
+    "country_code": "MA",
+    "region": "North Africa"
+  },
+  "VALBA": {
+    "ident": "VALBA",
+    "name": "VALBA",
+    "type": "WAYPOINT",
+    "latitude": 35.086602,
+    "longitude": -6.487849,
+    "country_code": "MA",
+    "region": "North Africa"
+  },
+  "TOLSI": {
+    "ident": "TOLSI",
+    "name": "TOLSI",
+    "type": "WAYPOINT",
+    "latitude": 34.600556,
+    "longitude": -7.015,
+    "country_code": "MA",
+    "region": "North Africa"
+  },
+  "KORIS": {
+    "ident": "KORIS",
+    "name": "KORIS",
+    "type": "WAYPOINT",
+    "latitude": 35.833332,
+    "longitude": -6.239167,
+    "country_code": "MA",
+    "region": "North Africa"
+  },
+  "SOTUK": {
+    "ident": "SOTUK",
+    "name": "SOTUK",
+    "type": "WAYPOINT",
+    "latitude": 39.193611,
+    "longitude": -4.746389,
+    "country_code": "ES",
+    "region": "Europe"
+  },
+  "PUTUL": {
+    "ident": "PUTUL",
+    "name": "PUTUL",
+    "type": "WAYPOINT",
+    "latitude": 19.98,
+    "longitude": -78.296944,
+    "country_code": "CU",
+    "region": "Caribbean"
+  },
+  "SUDSA": {
+    "ident": "SUDSA",
+    "name": "SUDSA",
+    "type": "WAYPOINT",
+    "latitude": 14,
+    "longitude": -76.933333,
+    "country_code": "CO",
+    "region": "South America"
+  },
+  "AKPEK": {
+    "ident": "AKPEK",
+    "name": "AKPEK",
+    "type": "WAYPOINT",
+    "latitude": 7.9875,
+    "longitude": -75.816389,
+    "country_code": "CO",
+    "region": "South America"
+  },
+  "ISVAT": {
+    "ident": "ISVAT",
+    "name": "ISVAT",
+    "type": "WAYPOINT",
+    "latitude": 5.694722,
+    "longitude": -75.125,
+    "country_code": "CO",
+    "region": "South America"
+  },
+  "KILER": {
+    "ident": "KILER",
+    "name": "KILER",
+    "type": "WAYPOINT",
+    "latitude": 12.5,
+    "longitude": -76,
+    "country_code": "CO",
+    "region": "South America"
+  },
+  "BOBKA": {
+    "ident": "BOBKA",
+    "name": "BOBKA",
+    "type": "WAYPOINT",
+    "latitude": 11.2,
+    "longitude": -75.6,
+    "country_code": "CO",
+    "region": "South America"
+  },
+  "TOMEK": {
+    "ident": "TOMEK",
+    "name": "TOMEK",
+    "type": "WAYPOINT",
+    "latitude": 9.8,
+    "longitude": -75.4,
+    "country_code": "CO",
+    "region": "South America"
+  },
+  "VAPES": {
+    "ident": "VAPES",
+    "name": "VAPES",
+    "type": "WAYPOINT",
+    "latitude": 21,
+    "longitude": -78.5,
+    "country_code": "CU",
+    "region": "Caribbean"
+  },
+  "MAXIM": {
+    "ident": "MAXIM",
+    "name": "MAXIM",
+    "type": "WAYPOINT",
+    "latitude": 22.5,
+    "longitude": -79.5,
+    "country_code": "CU",
+    "region": "Caribbean"
+  },
+  "ALAXE": {
+    "ident": "ALAXE",
+    "name": "ALAXE",
+    "type": "WAYPOINT",
+    "latitude": 6.5,
+    "longitude": -74.8,
+    "country_code": "CO",
+    "region": "South America"
+  },
+  "AMBER": {
+    "ident": "AMBER",
+    "name": "AMBER",
+    "type": "WAYPOINT",
+    "latitude": 5.2,
+    "longitude": -74.4,
+    "country_code": "CO",
+    "region": "South America"
+  },
+  "MUGIL": {
+    "ident": "MUGIL",
+    "name": "MUGIL",
+    "type": "WAYPOINT",
+    "latitude": 16,
+    "longitude": -77.5,
+    "country_code": "JM",
+    "region": "Caribbean"
+  },
+  "AGASI": {
+    "ident": "AGASI",
+    "name": "AGASI",
+    "type": "WAYPOINT",
+    "latitude": 15,
+    "longitude": -77.2,
+    "country_code": "JM",
+    "region": "Caribbean"
+  },
+  "APANO": {
+    "ident": "APANO",
+    "name": "APANO",
+    "type": "WAYPOINT",
+    "latitude": 35.5,
+    "longitude": 131,
+    "country_code": "JP",
+    "region": "Asia"
+  },
+  "MIHO": {
+    "ident": "MIHO",
+    "name": "Miho TACAN",
+    "type": "TACAN",
+    "latitude": 35.493889,
+    "longitude": 133.238611,
+    "country_code": "JP",
+    "region": "Asia"
+  },
+  "KASMI": {
+    "ident": "KASMI",
+    "name": "KASMI",
+    "type": "WAYPOINT",
+    "latitude": 35.633333,
+    "longitude": 134.616667,
+    "country_code": "JP",
+    "region": "Asia"
+  },
+  "KOMAT": {
+    "ident": "KOMAT",
+    "name": "Komatsu TACAN",
+    "type": "TACAN",
+    "latitude": 36.394722,
+    "longitude": 136.406944,
+    "country_code": "JP",
+    "region": "Asia"
+  },
+  "GTC": {
+    "ident": "GTC",
+    "name": "Daigo VORTAC",
+    "type": "VOR-DME",
+    "frequency_mhz": "115.30",
+    "latitude": 36.744367,
+    "longitude": 140.34985,
+    "country_code": "JP",
+    "region": "Asia"
+  },
+  "NRE": {
+    "ident": "NRE",
+    "name": "Narita VORTAC",
+    "type": "VOR-DME",
+    "frequency_mhz": "117.90",
+    "latitude": 35.781667,
+    "longitude": 140.386111,
+    "country_code": "JP",
+    "region": "Asia"
+  },
+  "HND": {
+    "ident": "HND",
+    "name": "Haneda VOR-DME",
+    "type": "VOR-DME",
+    "frequency_mhz": "112.20",
+    "latitude": 35.553333,
+    "longitude": 139.781667,
+    "country_code": "JP",
+    "region": "Asia"
+  }
+}
