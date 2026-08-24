@@ -697,12 +697,12 @@ app.all('/api/v1/fshub/inspect', async (req, res) => {
  * POST /api/v1/live/multi
  * Body: {
  *   "targets": [
- *     { "network": "VATSIM", "id": "1011180" },
- *     { "network": "FSHUB", "token": "..." },
- *     { "network": "FSHUB", "id": "NeightWolf49" }
+ *     { "network": "VATSIM", "id": "1234567" },
+ *     { "network": "FSHUB", "token": "fshub_token_sample" },
+ *     { "network": "FSHUB", "id": "DemoPilot10" }
  *   ]
  * }
- * or GET /api/v1/live/multi?vatsim=1011180&fshub=5169,NeightWolf49&tokens=...
+ * or GET /api/v1/live/multi?vatsim=1234567&fshub=DemoPilot10&tokens=...
  */
 app.all('/api/v1/live/multi', async (req, res) => {
     try {

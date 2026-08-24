@@ -218,9 +218,9 @@ volumes:
                     <pre class="code-pre" style="margin-top: 6px;"><code>// Request Body
 {
   "targets": [
-    { "network": "VATSIM", "id": "1011180" },
-    { "network": "FSHUB", "token": "18bXlTA3OUu6F2ShL0XGuHBtCE1AEWsXef4ISoIs6pPM2XaU6KVgKNuudu6Q" },
-    { "network": "FSHUB", "id": "NeightWolf49" }
+    { "network": "VATSIM", "id": "1234567" },
+    { "network": "FSHUB", "token": "fshub_live_sample_token_abc123" },
+    { "network": "FSHUB", "id": "DemoPilot10" }
   ]
 }
 
@@ -230,23 +230,23 @@ volumes:
   "total_flights": 2,
   "flights": [
     {
-      "id": "fshub_va_N121HJ",
+      "id": "fshub_va_N889VA",
       "network": "FSHub",
-      "callsign": "N121HJ",
-      "pilot_name": "gorillaglue4",
-      "airline": { "name": "WolfAir Aviation", "abbr": "WLF", "is_va": true },
-      "aircraft": "HDJT",
-      "departure": "GMMX",
-      "arrival": "LEMD",
-      "route": "GMMX OBOGA VALBA TOLSI KORIS VJF HIJ PARKA SOTUK LEMD",
-      "latitude": 40.7018,
-      "longitude": -3.5758,
-      "altitude_ft": 5444,
-      "groundspeed_kts": 126,
-      "heading_deg": 185,
-      "squawk": "2117",
-      "phase": "ON APPROACH",
-      "vatsim": { "cid": "1011180", "is_online": false }
+      "callsign": "N889VA",
+      "pilot_name": "SkyCaptain_Demo",
+      "airline": { "name": "Global Virtual Airways", "abbr": "GVA", "is_va": true },
+      "aircraft": "C680",
+      "departure": "KMIA",
+      "arrival": "KLGA",
+      "route": "KMIA DEFUN AR16 DIW Q87 TAALN Q87 HURTS PROUD2 KLGA",
+      "latitude": 28.5383,
+      "longitude": -81.3792,
+      "altitude_ft": 41000,
+      "groundspeed_kts": 460,
+      "heading_deg": 18,
+      "squawk": "1200",
+      "phase": "CRUISE",
+      "vatsim": { "cid": null, "is_online": false }
     }
   ]
 }</code></pre>
@@ -259,7 +259,7 @@ volumes:
                 <p class="help-text">Embed a standalone, clean 60FPS telemetry radar map with live route corridors and slide-over pilot inspector without any sidebars or management controls:</p>
                 <pre class="code-pre"><code>&lt;!-- Clean Responsive Map Embed --&gt;
 &lt;iframe 
-  src="http://localhost:3510/embed.html?fshub_token=YOUR_TOKEN&vatsim=1011180" 
+  src="http://localhost:3510/embed.html?fshub_token=YOUR_FSHUB_TOKEN&vatsim=1234567" 
   width="100%" 
   height="650px" 
   frameborder="0" 

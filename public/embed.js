@@ -273,10 +273,9 @@ async function fetchLiveFleet() {
             });
         }
 
-        // If no targets given, inspect default or demo
+        // If no targets provided, do not poll
         if (payload.targets.length === 0) {
-            const defaultToken = '18bXlTA3OUu6F2ShL0XGuHBtCE1AEWsXef4ISoIs6pPM2XaU6KVgKNuudu6Q';
-            payload.targets.push({ network: 'FSHUB', token: defaultToken });
+            return;
         }
 
         const res = await fetch('/api/v1/live/multi', {

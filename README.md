@@ -87,8 +87,8 @@ curl -X POST http://localhost:3510/api/v1/live/multi \
   -H "Content-Type: application/json" \
   -d '{
     "targets": [
-      { "network": "VATSIM", "id": "1134998" },
-      { "network": "FSHUB", "token": "18bXlTA3OUu6F2ShL0XGuHBtCE1AEWsXef4ISoIs6pPM2XaU6KVgKNuudu6Q" }
+      { "network": "VATSIM", "id": "1234567" },
+      { "network": "FSHUB", "token": "fshub_live_sample_token_abc123" }
     ]
   }'
 ```
@@ -96,7 +96,7 @@ curl -X POST http://localhost:3510/api/v1/live/multi \
 ### 2. Standalone Radar Embed (`/embed.html`)
 ```html
 <iframe 
-  src="http://localhost:3510/embed.html?fshub_token=YOUR_TOKEN&vatsim=1134998" 
+  src="http://localhost:3510/embed.html?fshub_token=YOUR_FSHUB_TOKEN&vatsim=1234567" 
   width="100%" 
   height="650px" 
   frameborder="0">

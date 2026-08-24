@@ -75,17 +75,17 @@ Concurrently queries, cross-correlates, and tracks any batch array of targets ac
 ```json
 {
   "targets": [
-    { "network": "VATSIM", "id": "1134998" },
-    { "network": "FSHUB", "token": "18bXlTA3OUu6F2ShL0XGuHBtCE1AEWsXef4ISoIs6pPM2XaU6KVgKNuudu6Q" },
-    { "network": "FSHUB", "id": "NeightWolf49" },
-    { "network": "IVAO", "id": "123456" }
+    { "network": "VATSIM", "id": "1234567" },
+    { "network": "FSHUB", "token": "fshub_live_sample_token_abc123xyz456" },
+    { "network": "FSHUB", "id": "DemoPilot10" },
+    { "network": "IVAO", "id": "765432" }
   ]
 }
 ```
 
 #### Shortcut GET Format:
 ```http
-GET /api/v1/live/multi?vatsim=1134998,1011180&fshub=NeightWolf49&tokens=18bXlTA3OUu6F2ShL0XGuHBtCE1AEWsXef4ISoIs6pPM2XaU6KVgKNuudu6Q
+GET /api/v1/live/multi?vatsim=1234567,2345678&fshub=DemoPilot10&tokens=fshub_live_sample_token_abc123xyz456
 ```
 
 #### Response Payload (Sample)
@@ -96,59 +96,59 @@ GET /api/v1/live/multi?vatsim=1134998,1011180&fshub=NeightWolf49&tokens=18bXlTA3
   "total_flights": 2,
   "flights": [
     {
-      "id": "vatsim_1134998",
+      "id": "vatsim_1234567",
       "source": "VATSIM",
       "network": "VATSIM",
-      "callsign": "THY33",
-      "pilot_id": 1134998,
-      "pilot_name": "Burak Sadikoglu LTAC",
+      "callsign": "AAL100",
+      "pilot_id": 1234567,
+      "pilot_name": "Demo Pilot (VATSIM)",
       "pilot_avatar": "/assets/default-pilot-avatar.png",
-      "airline": null,
-      "aircraft": "B77W",
-      "departure": "LTFM",
-      "arrival": "KIAH",
-      "route": "TUDBU DCT ETUBA DCT NAVOD DCT MAVIR DCT ARSIN DCT PEROL DCT RENKA DCT INBED DCT BOMBI DCT ADKUV DCT LENDO DCT DENUT L610 KOPUL Q60 OKSAW DCT TEWXI DCT VATRY/N0486F340 DCT SUTEX DCT DOGAL/M083F340 DCT 54N020W 54N030W 52N040W 49N050W DCT JOOPY/N0486F360 N326A BRADD DCT BOS DCT BAF Q448 PTW J48 CSN DCT FANPO Q40 MAULS/N0481F380 Q40 AEX ZEEKK3",
-      "latitude": 41.2748,
-      "longitude": 28.7321,
-      "altitude_ft": 32262,
-      "groundspeed_kts": 443,
-      "heading_deg": 268,
-      "squawk": "1234",
+      "airline": { "name": "American Airlines", "icao": "AAL", "iata": "AA" },
+      "aircraft": "B789",
+      "departure": "EGLL",
+      "arrival": "KJFK",
+      "route": "EGLL WOBUN WELIN CPT KENET DIKAS EVRIN CILAN MALOT 54N020W 54N030W 53N040W 50N050W COLOR ALLEX TOPPS ENE PARCH3 KJFK",
+      "latitude": 51.4700,
+      "longitude": -0.4543,
+      "altitude_ft": 36000,
+      "groundspeed_kts": 490,
+      "heading_deg": 275,
+      "squawk": "3421",
       "phase": "ENROUTE",
       "vatsim": {
-        "cid": 1134998,
+        "cid": 1234567,
         "is_online": true,
-        "callsign": "THY33",
-        "squawk": "1234"
+        "callsign": "AAL100",
+        "squawk": "3421"
       }
     },
     {
-      "id": "fshub_va_N121HJ",
+      "id": "fshub_va_N889VA",
       "source": "FSHUB_VA",
       "network": "FSHub",
-      "callsign": "N121HJ",
-      "pilot_id": 29950,
-      "pilot_name": "gorillaglue4",
-      "pilot_avatar": "https://g.fshubcdn.com/avatars/u_29950_80.png",
+      "callsign": "N889VA",
+      "pilot_id": 99999,
+      "pilot_name": "SkyCaptain_Demo",
+      "pilot_avatar": "/assets/default-pilot-avatar.png",
       "airline": {
-        "id": 5169,
-        "name": "WolfAir Aviation",
-        "abbr": "WLF",
+        "id": 101,
+        "name": "Global Virtual Airways",
+        "abbr": "GVA",
         "is_va": true
       },
-      "aircraft": "HDJT",
-      "departure": "GMMX",
-      "arrival": "LEMD",
-      "route": "GMMX OBOGA VALBA TOLSI KORIS VJF HIJ PARKA SOTUK LEMD",
-      "latitude": 40.7018,
-      "longitude": -3.5758,
-      "altitude_ft": 5444,
-      "groundspeed_kts": 126,
-      "heading_deg": 185,
-      "squawk": "2117",
-      "phase": "ON APPROACH",
+      "aircraft": "C680",
+      "departure": "KMIA",
+      "arrival": "KLGA",
+      "route": "KMIA DEFUN AR16 DIW Q87 TAALN Q87 HURTS PROUD2 KLGA",
+      "latitude": 28.5383,
+      "longitude": -81.3792,
+      "altitude_ft": 41000,
+      "groundspeed_kts": 460,
+      "heading_deg": 18,
+      "squawk": "1200",
+      "phase": "CRUISE",
       "vatsim": {
-        "cid": "1011180",
+        "cid": null,
         "is_online": false
       }
     }
@@ -165,7 +165,7 @@ Embed a pure, responsive 60 FPS live radar map with aircraft motion smoothing, f
 ### Embed HTML Tag
 ```html
 <iframe 
-  src="http://localhost:3510/embed.html?fshub_token=YOUR_TOKEN&vatsim=1134998" 
+  src="http://localhost:3510/embed.html?fshub_token=YOUR_FSHUB_TOKEN&vatsim=1234567" 
   width="100%" 
   height="700px" 
   frameborder="0" 
@@ -177,7 +177,7 @@ Embed a pure, responsive 60 FPS live radar map with aircraft motion smoothing, f
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `fshub_token` | String | FSHub Personal API Token (auto-inspects pilot & Virtual Airline fleet) |
-| `vatsim` | String | Comma-separated list of VATSIM CIDs or Callsigns (e.g. `1134998,1011180`) |
+| `vatsim` | String | Comma-separated list of VATSIM CIDs or Callsigns (e.g. `1234567,AAL100`) |
 | `fshub` | String | Comma-separated list of FSHub usernames or IDs |
 | `ivao` | String | Comma-separated list of IVAO VIDs |
 | `hud` | Boolean | Pass `?hud=false` to hide the top-left floating cockpit HUD |
@@ -282,8 +282,8 @@ Directly tracks a single flight with real-time SimBrief OFP correlation.
 ```json
 {
   "network": "VATSIM",
-  "identifier": "THY33",
-  "simbrief_username": "my_simbrief_user"
+  "identifier": "AAL100",
+  "simbrief_username": "demo_simbrief_user"
 }
 ```
 
