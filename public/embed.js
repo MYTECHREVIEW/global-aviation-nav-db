@@ -418,8 +418,32 @@ function initMap() {
         subdomains: 'abcd'
     }).addTo(map);
 
+    // Clicking out on map deselects pilot, hides popup and clears route
+    map.on('click', () => {
+        deselectPilot();
+    });
+
+    const popupEl = document.getElementById('fshubLivePopup');
+    if (popupEl) {
+        L.DomEvent.disableClickPropagation(popupEl);
+    }
+
     startMotionLoop();
     startDataPolling();
+}
+
+function deselectPilot() {
+    selectedPilotId = null;
+    const card = document.getElementById('fshubLivePopup');
+    if (card) card.classList.add('hidden');
+
+    if (activeRouteLayer && map.hasLayer(activeRouteLayer)) {
+        map.removeLayer(activeRouteLayer);
+        activeRouteLayer = null;
+    }
+    if (activeWaypointsLayerGroup) {
+        activeWaypointsLayerGroup.clearLayers();
+    }
 }
 
 function startMotionLoop() {
@@ -560,7 +584,11 @@ function renderFleetOnMap(flights) {
                 className: 'plane-leaflet-tooltip'
             });
 
-            buf.marker.on('click', () => {
+            buf.marker.on('click', (e) => {
+                if (e && e.originalEvent) {
+                    e.originalEvent.stopPropagation();
+                }
+                L.DomEvent.stopPropagation(e);
                 selectPilot(id, f);
             });
         }

@@ -35,59 +35,6 @@
             background: #060913;
         }
 
-        /* Floating Embed HUD */
-        .embed-hud-wrapper {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            z-index: 1000;
-            max-width: 340px;
-            pointer-events: auto;
-        }
-
-        /* Embed Mini Controls */
-        .embed-controls {
-            position: absolute;
-            bottom: 16px;
-            left: 16px;
-            z-index: 1000;
-            display: flex;
-            gap: 8px;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 6px 10px;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .embed-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #cbd5e1;
-            font-size: 0.72rem;
-            font-weight: 600;
-            padding: 5px 10px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .embed-btn:hover {
-            background: rgba(56, 189, 248, 0.2);
-            border-color: #38bdf8;
-            color: #ffffff;
-        }
-
-        .embed-btn.active {
-            background: #0284c7;
-            border-color: #38bdf8;
-            color: #ffffff;
-        }
-
         /* Right Slide-over Inspector Card for Embed */
         .fshub-pilot-popup-card {
             position: absolute;
@@ -109,14 +56,8 @@
         <div id="inspectorContent"></div>
     </div>
 
-    <!-- Embed Bottom Controls -->
-    <div class="embed-controls">
-        <button class="embed-btn" onclick="recenterFleet()">🎯 Recenter</button>
-        <button class="embed-btn" onclick="toggleLayerStyle()">🗺️ Style</button>
-    </div>
-
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="embed.js?v=3.5"></script>
+    <script src="embed.js?v=4.0"></script>
 </body>
 </html>

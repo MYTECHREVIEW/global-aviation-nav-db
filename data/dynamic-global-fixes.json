@@ -879,7 +879,7 @@
     "country_code": null,
     "frequency_mhz": null,
     "source": "OPENNAV_ONLINE",
-    "updated_at": "2026-08-24T05:34:22.094Z"
+    "updated_at": "2026-08-24T05:53:11.104Z"
   },
   "KINER": {
     "id": "ONLINE_KINER",
@@ -892,6 +892,45 @@
     "country_code": null,
     "frequency_mhz": null,
     "source": "OPENNAV_ONLINE",
-    "updated_at": "2026-08-24T05:34:23.195Z"
+    "updated_at": "2026-08-24T05:53:11.943Z"
+  },
+  "KUNOD": {
+    "id": "ONLINE_KUNOD",
+    "ident": "KUNOD",
+    "name": "KUNOD",
+    "type": "WAYPOINT",
+    "latitude": 48.33885,
+    "longitude": 9.618542,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-08-24T05:53:05.581Z"
+  },
+  "LIRSU": {
+    "id": "ONLINE_LIRSU",
+    "ident": "LIRSU",
+    "name": "LIRSU",
+    "type": "WAYPOINT",
+    "latitude": 50.18665,
+    "longitude": 6.453308,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-08-24T05:53:06.527Z"
+  },
+  "ICTAM": {
+    "id": "INTERP_ICTAM",
+    "ident": "ICTAM",
+    "name": "ICTAM (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 51.462274,
+    "longitude": -0.789616,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-24T05:53:08.331Z"
   }
 }
