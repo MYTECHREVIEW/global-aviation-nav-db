@@ -608,6 +608,9 @@ app.post('/api/v1/route/analyze', async (req, res) => {
 
     try {
         const analysis = await routeParser.analyzeAndFixRoute(route.trim(), { include_labels });
+        if (analysis.fixes_repaired && analysis.fixes_repaired.length > 0) {
+            routeTraceMemoryCache.clear();
+        }
         res.json({
             success: true,
             ...analysis

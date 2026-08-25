@@ -188,6 +188,16 @@ class DynamicNavDataService {
                     });
 
                     if (bestFix) {
+                        // Proximity Sanity Check: If candidate is > 800 NM from previous fix, reject foreign continent matches
+                        if (prevLat !== null && prevLon !== null) {
+                            const distNm = Math.hypot(bestFix.latitude - prevLat, bestFix.longitude - prevLon) * 60;
+                            if (distNm > 800) {
+                                bestFix = null;
+                            }
+                        }
+                    }
+
+                    if (bestFix) {
                         this.saveFix(bestFix);
                         console.log(`[DynamicNavData] Successfully resolved & saved online fix: ${clean} (${bestFix.latitude.toFixed(4)}, ${bestFix.longitude.toFixed(4)})`);
                         return bestFix;

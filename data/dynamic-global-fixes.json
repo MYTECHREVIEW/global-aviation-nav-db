@@ -1689,16 +1689,16 @@
     "updated_at": "2026-08-25T00:20:40.897Z"
   },
   "TAM": {
-    "id": "DYNAMIC_TAM",
+    "id": "ONLINE_TAM",
     "ident": "TAM",
-    "name": "TAM (Enroute Fix)",
-    "type": "WAYPOINT",
-    "latitude": 41.271922,
-    "longitude": -105.048238,
-    "elevation_ft": null,
-    "country_code": null,
-    "frequency_mhz": null,
-    "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-08-25T00:20:41.325Z"
+    "name": "TAMPICO VOR/DME",
+    "type": "VOR",
+    "latitude": 22.289444,
+    "longitude": -97.862778,
+    "elevation_ft": 45,
+    "country_code": "MX",
+    "frequency_mhz": 114.7,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-08-25T00:22:00.000Z"
   }
 }
