@@ -901,39 +901,39 @@
   },
   "GERTU": {
     "ident": "GERTU",
-    "name": "GERTU (Enroute Fix)",
+    "name": "GERTU (Brazil Airway UZ12/UZ22)",
     "type": "WAYPOINT",
-    "latitude": -24.749382,
-    "longitude": -49.63637,
-    "country_code": null,
-    "region": "Custom",
+    "latitude": -14.975,
+    "longitude": -48.513889,
+    "country_code": "BR",
+    "region": "Brazil",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-08-25T20:47:15.524Z"
+    "updated_at": "2026-08-25T21:30:00.000Z"
   },
   "ASDOB": {
     "ident": "ASDOB",
-    "name": "ASDOB (Enroute Fix)",
+    "name": "ASDOB (Brazil Airway UZ12/UN857)",
     "type": "WAYPOINT",
-    "latitude": -26.067469,
-    "longitude": -52.802629,
-    "country_code": null,
-    "region": "Custom",
+    "latitude": -5.916667,
+    "longitude": -51.05,
+    "country_code": "BR",
+    "region": "Brazil",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-08-25T20:47:15.535Z"
+    "updated_at": "2026-08-25T21:30:00.000Z"
   },
   "VIBSI": {
     "ident": "VIBSI",
-    "name": "VIBSI (Enroute Fix)",
+    "name": "VIBSI (Brazil/Guiana Airway UN857)",
     "type": "WAYPOINT",
-    "latitude": -6.192778,
-    "longitude": -59.609444,
-    "country_code": null,
-    "region": "Custom",
+    "latitude": 2.05,
+    "longitude": -55.333333,
+    "country_code": "BR",
+    "region": "Brazil",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-08-25T20:47:16.118Z"
+    "updated_at": "2026-08-25T21:30:00.000Z"
   },
   "ULMIN": {
     "ident": "ULMIN",
@@ -994,5 +994,53 @@
     "elevation_ft": null,
     "frequency_mhz": null,
     "updated_at": "2026-08-25T20:49:25.704Z"
+  },
+  "GERTU": {
+    "ident": "GERTU",
+    "name": "GERTU (Brazil Airway UZ25)",
+    "type": "WAYPOINT",
+    "latitude": -11.146833,
+    "longitude": -54.440833,
+    "country_code": "BR",
+    "region": "Brazil",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-25T21:35:00.000Z"
+  },
+  "ASDOB": {
+    "ident": "ASDOB",
+    "name": "ASDOB (Brazil Airway UZ25)",
+    "type": "WAYPOINT",
+    "latitude": -1.799297,
+    "longitude": -60.190210,
+    "country_code": "BR",
+    "region": "Brazil",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-25T21:35:00.000Z"
+  },
+  "POS": {
+    "ident": "POS",
+    "name": "PIARCO VOR/DME",
+    "type": "VOR",
+    "latitude": 10.466389,
+    "longitude": -61.392500,
+    "country_code": "TT",
+    "region": "Trinidad and Tobago",
+    "elevation_ft": 40,
+    "frequency_mhz": 116.3,
+    "updated_at": "2026-08-25T21:35:00.000Z"
+  },
+  "VIBSI": {
+    "ident": "VIBSI",
+    "name": "VIBSI (Piarco FIR Airway UL452)",
+    "type": "WAYPOINT",
+    "latitude": 11.833333,
+    "longitude": -61.983333,
+    "country_code": "TT",
+    "region": "Piarco",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-25T21:35:00.000Z"
   }
 }

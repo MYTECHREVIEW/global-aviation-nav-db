@@ -453,7 +453,14 @@ class RouteParser {
         for (const cand of allCandidates) {
             const dRef = haversineDistanceM(effectiveRefLat, effectiveRefLon, cand.latitude, cand.longitude);
             const dNext = (nextLat !== null && nextLon !== null) ? haversineDistanceM(cand.latitude, cand.longitude, nextLat, nextLon) : 0;
-            const score = dRef + dNext;
+            
+            let detourPenalty = 0;
+            if (effectiveRefLat !== null && nextLat !== null) {
+                const directDist = haversineDistanceM(effectiveRefLat, effectiveRefLon, nextLat, nextLon);
+                detourPenalty = Math.max(0, (dRef + dNext) - directDist);
+            }
+
+            const score = (nextLat !== null) ? (dRef + dNext + detourPenalty * 3) : dRef;
             if (score < minScore) {
                 minScore = score;
                 bestCandidate = cand;
@@ -1103,7 +1110,7 @@ class RouteParser {
             let nextCandidateLon = arrPoint ? arrPoint.longitude : null;
             let gapCount = 1;
             for (let j = i + 1; j < cleanTokens.length; j++) {
-                const nextPt = this.resolvePoint(cleanTokens[j], currentRefLat, currentRefLon);
+                const nextPt = this.resolvePoint(cleanTokens[j], currentRefLat, currentRefLon, false, arrPoint?.latitude, arrPoint?.longitude);
                 if (nextPt) {
                     nextCandidateLat = nextPt.latitude;
                     nextCandidateLon = nextPt.longitude;
