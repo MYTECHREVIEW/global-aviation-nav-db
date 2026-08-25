@@ -9,6 +9,7 @@ const { fetchSimbriefOfp } = require('./src/simbrief/simbrief-service');
 const apiKeyManager = require('./src/auth/api-key-manager');
 const liveTrackerService = require('./src/tracking/live-tracker-service');
 const { loadSttApiConfig } = require('./src/config/stt-config');
+const gitSyncService = require('./src/services/git-sync-service');
 
 apiKeyManager.initializeKeys();
 const sttConfig = loadSttApiConfig();
@@ -362,7 +363,7 @@ app.get('/api/v1/waypoints/custom', (req, res) => {
  * Add or Update a Curated Custom Global Waypoint
  * POST /api/v1/waypoints/custom
  */
-app.post('/api/v1/waypoints/custom', (req, res) => {
+app.post('/api/v1/waypoints/custom', async (req, res) => {
     try {
         const { ident, name, type, latitude, longitude, country_code, region, elevation_ft, frequency_mhz } = req.body || {};
         if (!ident || typeof latitude !== 'number' || typeof longitude !== 'number') {
@@ -379,10 +380,15 @@ app.post('/api/v1/waypoints/custom', (req, res) => {
             elevation_ft,
             frequency_mhz
         });
+
+        // Stage waypoint file changes to Git index
+        const gitSync = await gitSyncService.stageWaypointFixes([saved]);
+
         res.json({
             success: true,
             message: `Custom waypoint "${saved.ident}" saved to persistent database.`,
-            waypoint: saved
+            waypoint: saved,
+            git_sync: gitSync
         });
     } catch (e) {
         res.status(500).json({ error: e.message });
@@ -610,6 +616,8 @@ app.post('/api/v1/route/analyze', async (req, res) => {
         const analysis = await routeParser.analyzeAndFixRoute(route.trim(), { include_labels });
         if (analysis.fixes_repaired && analysis.fixes_repaired.length > 0) {
             routeTraceMemoryCache.clear();
+            const gitStatus = await gitSyncService.stageWaypointFixes(analysis.fixes_repaired);
+            analysis.git_sync = gitStatus;
         }
         res.json({
             success: true,

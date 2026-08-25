@@ -624,6 +624,9 @@ async function analyzeAndFixRoute() {
                         Total Distance: <strong>${data.total_distance_nm} NM</strong> (reduced from ${data.original_distance_nm} NM)
                     </div>
                     ${fixHtml}
+                    <div style="font-size: 0.68rem; color: #a7f3d0; margin-top: 6px; padding-top: 4px; border-top: 1px dashed rgba(16,185,129,0.3); display: flex; align-items: center; gap: 4px;">
+                        📦 <span>Database updated & staged for Git push</span>
+                    </div>
                 `;
             } else if (data.issues_found && data.issues_found.length > 0) {
                 box.style.background = 'rgba(245, 158, 11, 0.15)';
