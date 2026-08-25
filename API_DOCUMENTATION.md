@@ -419,9 +419,36 @@ async function fetchAndRenderCustomPilotCard() {
 
 ---
 
-## 💾 5. Custom Global Waypoints Database API
+## 💾 5. Custom Global Waypoints & Grist Cloud Redundancy Database
 
-Manage the persistent curated navigation fix database stored at `data/custom-global-waypoints.json`.
+Manage the persistent curated navigation fix database stored locally at `data/custom-global-waypoints.json` with cloud redundancy on **Grist** (`wj7bUFrVUiV7`).
+
+### ☁️ Cloud Redundancy Architecture (Grist Schema)
+All verified waypoints and navaids are automatically categorized and synchronized into 5 dedicated Grist tables:
+
+| Table ID | Navigation Type | Description |
+| :--- | :--- | :--- |
+| **`Fixes`** | `WAYPOINT`, `TERMINAL_WAYPOINT` | RNAV fixes, enroute airway intersections, SID/STAR fixes. |
+| **`VORs`** | `VOR`, `VOR-DME` | VHF Omnidirectional Range navigation beacons. |
+| **`VORTACs_TACANs`** | `VORTAC`, `TACAN`, `DME` | Military and co-located tactical air navigation beacons. |
+| **`NDBs`** | `NDB` | Non-Directional radio beacons. |
+| **`Airports`** | `AIRPORT` | Global ICAO aerodromes and landing facilities. |
+
+#### Complete Field Schema (Every Table):
+- **`Ident`** *(Text)*: ICAO/IATA identifier (e.g. `POS`, `GERTU`, `OKSAW`).
+- **`Name`** *(Text)*: Official aeronautical facility name.
+- **`Type`** *(Text)*: Classification (`WAYPOINT`, `VOR`, `VORTAC`, `NDB`, `AIRPORT`).
+- **`Latitude`** *(Numeric)*: Decimal WGS-84 latitude.
+- **`Longitude`** *(Numeric)*: Decimal WGS-84 longitude.
+- **`CountryCode`** *(Text)*: 2-letter ISO country code (e.g. `BR`, `TT`, `MX`, `US`).
+- **`Region`** *(Text)*: Airspace FIR / Regional authority.
+- **`ElevationFt`** *(Numeric)*: Station elevation above mean sea level.
+- **`FrequencyMHz`** *(Text)*: Radio frequency in MHz or kHz (e.g. `116.30`).
+- **`Source`** *(Text)*: Authoritative source (e.g. `DECEA_AIP`, `TTCAA_AIP`, `OPENNAV_ONLINE`).
+- **`DateUploaded`** *(DateTime)*: Timestamp when the record was initially ingested.
+- **`DateUpdated`** *(DateTime)*: Timestamp when the record was last verified or repaired.
+
+---
 
 ### `GET /api/v1/waypoints/custom`
 List all custom and curated global waypoints.
@@ -430,7 +457,7 @@ GET /api/v1/waypoints/custom
 ```
 
 ### `POST /api/v1/waypoints/custom`
-Add or update a waypoint in the persistent database.
+Add or update a waypoint in the persistent database and automatically sync to Grist cloud redundancy:
 ```json
 {
   "ident": "OKSAW",

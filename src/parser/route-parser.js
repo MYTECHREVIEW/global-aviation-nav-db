@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const dynamicNavDataService = require('../services/dynamic-navdata-service');
+const gristWaypointsService = require('../services/grist-waypoints-service');
 
 function haversineDistanceM(lat1, lon1, lat2, lon2) {
     const R = 6371000;
@@ -341,6 +342,12 @@ class RouteParser {
             fs.writeFileSync(this.customWaypointsDbPath, JSON.stringify(this.customWaypoints, null, 2));
             if (this.parsedRouteCache) this.parsedRouteCache.clear();
             console.log(`[RouteParser] Successfully saved custom waypoint: ${ident} (${waypoint.latitude}, ${waypoint.longitude}) to persistent database`);
+            
+            // Asynchronously sync to Grist redundancy cloud database
+            gristWaypointsService.upsertWaypoint(this.customWaypoints[ident]).catch(err => {
+                console.warn(`[RouteParser] Background Grist sync notice for ${ident}:`, err.message);
+            });
+
             return this.customWaypoints[ident];
         } catch (e) {
             console.error('[RouteParser] Failed to persist custom waypoint:', e);
