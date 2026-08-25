@@ -838,5 +838,29 @@
     "longitude": -3.1,
     "country_code": "GB",
     "region": "UK Arrival"
+  },
+  "IKLAN": {
+    "ident": "IKLAN",
+    "name": "IKLAN (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 21.219167,
+    "longitude": -98.316201,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-25T00:20:40.890Z"
+  },
+  "TAM": {
+    "ident": "TAM",
+    "name": "TAMPICO VOR/DME",
+    "type": "VOR",
+    "latitude": 22.289444,
+    "longitude": -97.862778,
+    "country_code": "MX",
+    "region": "Custom",
+    "elevation_ft": 45,
+    "frequency_mhz": 114.7,
+    "updated_at": "2026-08-25T00:22:00.000Z"
   }
 }

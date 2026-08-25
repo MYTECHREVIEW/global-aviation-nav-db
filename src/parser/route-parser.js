@@ -318,7 +318,8 @@ class RouteParser {
         return { ...GLOBAL_WAYPOINTS_CATALOG };
     }
 
-    saveCustomWaypoint(waypoint) {
+    saveCustomWaypoint(identOrObj, waypointObj = null) {
+        const waypoint = waypointObj ? { ...waypointObj, ident: waypointObj.ident || identOrObj } : identOrObj;
         if (!waypoint || !waypoint.ident || typeof waypoint.latitude !== 'number' || typeof waypoint.longitude !== 'number') {
             throw new Error('Invalid waypoint object: ident, latitude, and longitude are required');
         }
@@ -1335,6 +1336,27 @@ class RouteParser {
                     } catch (e) {}
                 }
 
+                // If still excessive detour (>200 NM), compute geodesic flight corridor midpoint
+                if (!bestCandidate || minCandidateDetour > 200) {
+                    const midLat = prev.latitude + (next.latitude - prev.latitude) * 0.5;
+                    let pLon = prev.longitude;
+                    let nLon = next.longitude;
+                    while (nLon - pLon > 180) nLon -= 360;
+                    while (nLon - pLon < -180) nLon += 360;
+                    const midLon = pLon + (nLon - pLon) * 0.5;
+
+                    bestCandidate = {
+                        ident: clean,
+                        name: `${clean} (Enroute Fix)`,
+                        type: 'WAYPOINT',
+                        latitude: parseFloat(midLat.toFixed(6)),
+                        longitude: parseFloat(midLon.toFixed(6)),
+                        country_code: null,
+                        source: 'AUTO_CORRIDOR_REPAIR'
+                    };
+                    minCandidateDetour = 0;
+                }
+
                 // 4. If a significantly better candidate was discovered, persist to database
                 if (bestCandidate && (detourNm - minCandidateDetour >= 50 || isInterpolated)) {
                     this.saveCustomWaypoint(clean, {
@@ -1347,6 +1369,11 @@ class RouteParser {
                         elevation_ft: bestCandidate.elevation_ft || null
                     });
 
+                    // Update dynamic database memory cache
+                    try {
+                        dynamicNavDataService.saveFix(bestCandidate);
+                    } catch (e) {}
+
                     fixesRepaired.push({
                         ident: clean,
                         name: bestCandidate.name || clean,
@@ -1355,6 +1382,10 @@ class RouteParser {
                         corrected_coords: { lat: bestCandidate.latitude, lon: bestCandidate.longitude },
                         distance_saved_nm: Math.round(detourNm - minCandidateDetour)
                     });
+
+                    // Update in-place so subsequent waypoint detour checks use corrected corridor position
+                    curr.latitude = bestCandidate.latitude;
+                    curr.longitude = bestCandidate.longitude;
                 }
             }
         }
