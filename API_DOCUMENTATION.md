@@ -264,14 +264,14 @@ GET /api/v1/report/list
 
 ---
 
-## 🛩️ 4. Standalone Clean Embed Radar SDK & Visual Pipeline
+## 🛩️ 4. Standalone Clean Embed Radar SDK & Pilot Cards
 
-Embed a pure, responsive 60 FPS live radar map with aircraft motion smoothing, flight route corridors, and slide-over pilot inspector card without any management sidebars.
+Embed a pure, responsive 60 FPS live radar map with aircraft motion smoothing, flight route corridors, dynamic network color classification, and customizable pilot telemetry cards.
 
 ### Embed HTML Tag
 ```html
 <iframe 
-  src="https://routes.simtechtracker.com/embed.html?popup_style=compact&stats=true" 
+  src="https://routes.simtechtracker.com/embed.html?popup_style=mini&stats=true" 
   width="100%" 
   height="650px" 
   frameborder="0" 
@@ -279,11 +279,136 @@ Embed a pure, responsive 60 FPS live radar map with aircraft motion smoothing, f
 </iframe>
 ```
 
-### Supported URL Query Parameters
+---
+
+### 📇 Pilot Card Style Variations
+The radar includes 3 built-in, responsive card layouts selectable via `popup_style=` (or `card_style=`):
+
+| Style | Width | Dimensions | Content & Layout |
+| :--- | :--- | :--- | :--- |
+| **`mini`** | `410px` | Ultra-compact single-row HUD | Pilot avatar, name/callsign, route pill (`EDDS ➔ EDDF FL220`), telemetry grid (`ALT`, `SPD`, `HDG`, `SQK`), expand toggle button `⤢`, and one-click Discord report 🚩. |
+| **`compact`** | `380px` | Medium card with full corridor | Adds commercial airline / operating VA badges (`🏢 Op by WLF`), aircraft type, full flight plan corridor box, flight phase pill, and collapse button `⤡`. |
+| **`full`** | `440px` | Full slide-over inspector | Includes detailed progress bars, departure/arrival runways, nearest airport elevation, and full waypoint log. |
+
+#### Live Interactive Card Toggle Behavior:
+- When starting in **`mini`**, clicking `⤢` expands directly to **`compact`**.
+- When in **`compact`**, clicking `⤡` collapses back to **`mini`**.
+- Whenever the user closes the card or clicks on a different aircraft, the card **automatically reverts back to the default style** (`mini`).
+
+---
+
+### 📊 Bottom-Right Fleet Summary HUD Card
+Enable the ultra-compact 4-metric fleet status HUD by passing `&stats=true` or `&stats=1` in the embed URL:
+
+```http
+https://routes.simtechtracker.com/embed.html?fshub_token=YOUR_TOKEN&stats=true&popup_style=mini
+```
+
+#### Metrics Displayed:
+- **Active Pilots**: Total pilots currently connected (Airborne + Ground).
+- **Airborne**: Aircraft actively flying (velocity-based, ignoring ground elevation).
+- **Ground**: Aircraft parked, taxiing, at the gate, or on standby.
+- **VATSIM Online**: Count of pilots actively flying on the VATSIM network.
+
+---
+
+### 💻 Client-Side JavaScript Control API
+When embedded in custom applications or iframes, programmatic controls are available on `window`:
+
+```javascript
+// 1. Toggle pilot card style between mini and compact
+window.toggleInspectorCardStyle();
+
+// 2. Programmatically show or hide the bottom-right fleet stats HUD
+window.setFleetStatsVisible(true);  // Show
+window.setFleetStatsVisible(false); // Hide
+
+// 3. Toggle fleet stats HUD visibility on the fly
+window.toggleFleetStats();
+
+// 4. Report active pilot route issue directly
+window.reportCurrentPilotRoute();
+```
+
+---
+
+### 🛠️ Example: Building a Custom Pilot Card with API Telemetry
+
+If you prefer building your own custom HTML telemetry widgets instead of using the iframe embed, fetch live flight metrics directly from `POST /api/v1/live/multi`:
+
+```javascript
+// Fetch live fleet telemetry from AeroNav API
+async function fetchAndRenderCustomPilotCard() {
+    const response = await fetch('https://routes.simtechtracker.com/api/v1/live/multi', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': 'YOUR_AERONAV_API_KEY_HERE'
+        },
+        body: JSON.stringify({
+            targets: [
+                { network: 'FSHUB', token: 'YOUR_FSHUB_TOKEN_HERE' },
+                { network: 'VATSIM', id: '1234567' }
+            ]
+        })
+    });
+
+    const data = await response.json();
+    if (!data.flights || data.flights.length === 0) return;
+
+    // Render first active flight into a custom HTML card
+    const flight = data.flights[0];
+    const cardContainer = document.getElementById('myPilotCard');
+
+    cardContainer.innerHTML = `
+        <div class="custom-pilot-card">
+            <!-- Header -->
+            <div class="pilot-header">
+                <img src="${flight.pilot_avatar || '/assets/default-pilot-avatar.png'}" class="pilot-avatar">
+                <div>
+                    <h3 class="pilot-callsign">${flight.callsign}</h3>
+                    <span class="pilot-name">${flight.pilot_name}</span>
+                </div>
+                <span class="flight-phase-badge ${flight.phase}">${flight.phase}</span>
+            </div>
+
+            <!-- Route Corridor -->
+            <div class="flight-corridor">
+                <span class="airport-code">${flight.departure || 'N/A'}</span>
+                <span class="route-arrow">➔</span>
+                <span class="airport-code">${flight.arrival || 'N/A'}</span>
+                <span class="aircraft-type">${flight.aircraft || 'B738'}</span>
+            </div>
+
+            <!-- Live Telemetry Metrics Grid -->
+            <div class="telemetry-grid">
+                <div class="telem-item">
+                    <label>ALTITUDE</label>
+                    <span class="telem-val text-green">${flight.altitude_ft?.toLocaleString() || 0} ft</span>
+                </div>
+                <div class="telem-item">
+                    <label>GROUNDSPEED</label>
+                    <span class="telem-val text-cyan">${flight.groundspeed_kts || 0} kts</span>
+                </div>
+                <div class="telem-item">
+                    <label>HEADING</label>
+                    <span class="telem-val text-amber">${String(flight.heading_deg || 0).padStart(3, '0')}°</span>
+                </div>
+                <div class="telem-item">
+                    <label>SQUAWK</label>
+                    <span class="telem-val text-white">${flight.squawk || '1200'}</span>
+                </div>
+            </div>
+        </div>
+    `;
+}
+```
+
+#### Supported URL Query Parameters
 | Parameter | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `popup_style` / `card_style` | String | `auto` | Inspector card layout variation: `full`, `compact`, `mini`, or `auto` (auto adjusts based on container dimensions). |
-| `stats` / `show_stats` | Boolean | `false` | Pass `?stats=true` or `?stats=1` to display the bottom-right 4-metric Fleet Summary HUD (Pilots Online, Airborne, On-Ground, VATSIM Online). |
+| `popup_style` / `card_style` | String | `auto` | Inspector card layout variation: `full`, `compact`, `mini`, or `auto`. |
+| `stats` / `show_stats` | Boolean | `false` | Pass `?stats=true` or `?stats=1` to display the bottom-right 4-metric Fleet Summary HUD. |
 | `fshub_token` | String | *optional* | FSHub Personal API Token (auto-inspects pilot & Virtual Airline fleet). |
 | `vatsim` | String | *optional* | Comma-separated list of VATSIM CIDs or Callsigns (e.g. `1234567,WLF416`). |
 | `fshub` | String | *optional* | Comma-separated list of FSHub usernames or IDs. |
@@ -291,12 +416,6 @@ Embed a pure, responsive 60 FPS live radar map with aircraft motion smoothing, f
 | `hud` | Boolean | `true` | Pass `?hud=false` to hide the top-left floating cockpit HUD. |
 | `route` | String | *optional* | Custom route string to force-draw on initial load. |
 | `style` | String | `dark` | Map basemap style: `dark`, `satellite`, or `voyager`. |
-
-### Client-Side JavaScript API
-When embedded in custom web applications or iframes, the radar exposes programmatic controls on `window`:
-- `window.toggleInspectorCardStyle()` — Toggles the active pilot inspector between mini and full views. (Automatically reverts to default format when switching pilots or closing).
-- `window.setFleetStatsVisible(boolean)` — Programmatically shows (`true`) or hides (`false`) the bottom-right fleet summary card.
-- `window.toggleFleetStats()` — Toggles fleet summary card visibility on the fly.
 
 ---
 

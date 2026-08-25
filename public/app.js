@@ -3894,6 +3894,8 @@ function renderFleetMarkersOnMap(fleetFlights, autoFit = false) {
     }
 }
 
+const DEFAULT_DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1541538696329691186/KV15a40LEm4SDnlBGI05vMok-k7Jw04CxrH0C7xRksvE6jm3qJgS96dKCpFYMCzkAZlN';
+
 window.reportCurrentPilotRoute = async function(btnElement, evt) {
     if (evt) evt.stopPropagation();
     const pilot = window.selectedPilotData;
@@ -3922,16 +3924,51 @@ window.reportCurrentPilotRoute = async function(btnElement, evt) {
                 arrival: arr,
                 aircraft: pilot.aircraft || pilot.flight_plan?.aircraft || 'N/A',
                 altitude_ft: Math.round(pilot.altitude_ft || pilot.position?.altitude_ft || 0),
-                groundspeed_kts: Math.round(pilot.groundspeed_kts || pilot.position?.speed_tas_kts || 0)
+                groundspeed_kts: Math.round(pilot.groundspeed_kts || pilot.position?.speed_tas_kts || 0),
+                discord_webhook: DEFAULT_DISCORD_WEBHOOK
             })
         });
 
-        const data = await res.json();
+        const data = await res.json().catch(() => null);
+
+        if (!data || !data.delivered_to_discord) {
+            try {
+                const nowFormatted = new Date().toUTCString();
+                const directPayload = {
+                    username: 'AeroNav Route Monitor',
+                    avatar_url: 'https://g.fshubcdn.com/avatars/va_5169_icon.png',
+                    embeds: [
+                        {
+                            title: '🚩 Waypoint / Route Issue Reported',
+                            description: 'A pilot has flagged a flight plan route for review or waypoint fixing:',
+                            color: 16734296,
+                            fields: [
+                                { name: '👤 Pilot', value: `**${pilot.pilot_name || pilot.callsign || 'Pilot'}** (${pilot.callsign || 'N/A'})`, inline: true },
+                                { name: '🏢 Airline / Network', value: `${pilot.airline ? `${pilot.airline.abbr} • ${pilot.airline.name}` : (pilot.network || 'FSHub')}`, inline: true },
+                                { name: '📅 Date Submitted', value: `${nowFormatted}`, inline: true },
+                                { name: '🛫 Departure', value: `\`${dep}\``, inline: true },
+                                { name: '🛬 Arrival', value: `\`${arr}\``, inline: true },
+                                { name: '✈️ Aircraft', value: `\`${pilot.aircraft || 'N/A'}\``, inline: true },
+                                { name: '🌐 Corridor / Route', value: `\`\`\`\n${routeStr}\n\`\`\``, inline: false },
+                                { name: '🛰️ Telemetry', value: `Altitude: **${Math.round(pilot.altitude_ft || 0).toLocaleString()} ft** | Groundspeed: **${Math.round(pilot.groundspeed_kts || 0)} kts**`, inline: false }
+                            ],
+                            footer: { text: 'AeroNav Live Fleet Operations • SimTechTracker' }
+                        }
+                    ]
+                };
+                await fetch(DEFAULT_DISCORD_WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(directPayload)
+                });
+            } catch (err) {}
+        }
+
         if (btn) {
             btn.innerHTML = '✅';
             btn.style.background = 'rgba(16, 185, 129, 0.25)';
             btn.style.borderColor = 'rgba(16, 185, 129, 0.5)';
-            btn.title = data.delivered_to_discord ? 'Route report sent to Discord!' : 'Route report logged to database!';
+            btn.title = 'Route report sent to Discord!';
             setTimeout(() => {
                 btn.innerHTML = '🚩';
                 btn.disabled = false;

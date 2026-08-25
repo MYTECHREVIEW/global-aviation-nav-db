@@ -7,6 +7,8 @@
 // ⚙️ INITIALIZATION & CONFIGURATION
 // ═══════════════════════════════════════════════════════════════════════════════
 
+const DEFAULT_DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1541538696329691186/KV15a40LEm4SDnlBGI05vMok-k7Jw04CxrH0C7xRksvE6jm3qJgS96dKCpFYMCzkAZlN';
+
 const urlParams = new URLSearchParams(window.location.search);
 const config = {
     apiKey: urlParams.get('api_key') || urlParams.get('key') || '',
@@ -15,7 +17,7 @@ const config = {
     fshub: urlParams.get('fshub') || '',
     ivao: urlParams.get('ivao') || '',
     route: urlParams.get('route') || '',
-    discordWebhook: urlParams.get('discord_webhook') || urlParams.get('webhook') || '',
+    discordWebhook: urlParams.get('discord_webhook') || urlParams.get('webhook') || DEFAULT_DISCORD_WEBHOOK,
     pollIntervalMs: parseInt(urlParams.get('interval') || '4000', 10),
     style: urlParams.get('style') || 'dark'
 };
@@ -755,24 +757,26 @@ function renderFleetOnMap(flights) {
 
         buf.pushTelemetry(f);
 
+        const isVat = (f.vatsim && f.vatsim.is_online) || (f.network && f.network.toUpperCase() === 'VATSIM');
+        const isSelected = selectedPilotId === id;
+        const isVa = f.airline && f.airline.is_va;
+        const iconColor = isSelected ? '#38bdf8' : (isVat ? '#00ff88' : (isVa ? '#c084fc' : '#38bdf8'));
+        const haloColor = isSelected ? '#38bdf8' : (isVat ? '#00ff88' : (isVa ? '#a855f7' : '#38bdf8'));
+
+        const info = classifyAircraftType(f.aircraft, f.route);
+        const planeHtml = getAircraftMarkerHtml(f.aircraft, buf.renderHeading || f.heading_deg || 0, iconColor, isSelected, haloColor, f.route);
+
+        const customIcon = L.divIcon({
+            html: planeHtml,
+            className: 'aircraft-div-icon',
+            iconSize: [info.size, info.size],
+            iconAnchor: [Math.round(info.size / 2), Math.round(info.size / 2)]
+        });
+
         if (!buf.marker) {
-            const isVa = f.airline && f.airline.is_va;
-            const acColor = '#38bdf8'; // Clean cyan
-            const haloColor = '#38bdf8';
+            buf.marker = L.marker([buf.renderLat, buf.renderLon], { icon: customIcon, zIndexOffset: isSelected ? 1100 : 900 }).addTo(map);
 
-            const info = classifyAircraftType(f.aircraft, f.route);
-            const planeHtml = getAircraftMarkerHtml(f.aircraft, buf.renderHeading || f.heading_deg || 0, acColor, false, haloColor, f.route);
-
-            const customIcon = L.divIcon({
-                html: planeHtml,
-                className: 'aircraft-div-icon',
-                iconSize: [info.size, info.size],
-                iconAnchor: [Math.round(info.size / 2), Math.round(info.size / 2)]
-            });
-
-            buf.marker = L.marker([buf.renderLat, buf.renderLon], { icon: customIcon, zIndexOffset: 1000 }).addTo(map);
-
-            buf.marker.bindTooltip(`<strong>${f.callsign}</strong>`, {
+            buf.marker.bindTooltip(`<strong>${f.callsign}</strong>${isVat ? ' <span style="color:#00ff88;">[VATSIM]</span>' : ''}`, {
                 permanent: false,
                 direction: 'top',
                 className: 'plane-leaflet-tooltip'
@@ -785,6 +789,9 @@ function renderFleetOnMap(flights) {
                 L.DomEvent.stopPropagation(e);
                 selectPilot(id, f);
             });
+        } else {
+            buf.marker.setIcon(customIcon);
+            buf.marker.setZIndexOffset(isSelected ? 1100 : 900);
         }
 
         bounds.push([buf.renderLat, buf.renderLon]);
@@ -1266,12 +1273,49 @@ window.reportCurrentPilotRoute = async function(btnElement, evt) {
             })
         });
 
-        const data = await res.json();
+        const data = await res.json().catch(() => null);
+
+        // If backend did not deliver to Discord but webhook is provided in client config, dispatch directly
+        if (config.discordWebhook && (!data || !data.delivered_to_discord)) {
+            try {
+                const nowFormatted = new Date().toUTCString();
+                const directPayload = {
+                    username: 'AeroNav Route Monitor',
+                    avatar_url: 'https://g.fshubcdn.com/avatars/va_5169_icon.png',
+                    embeds: [
+                        {
+                            title: '🚩 Waypoint / Route Issue Reported',
+                            description: 'A pilot has flagged a flight plan route for review or waypoint fixing:',
+                            color: 16734296,
+                            fields: [
+                                { name: '👤 Pilot', value: `**${pilot.pilot_name || pilot.callsign || 'Pilot'}** (${pilot.callsign || 'N/A'})`, inline: true },
+                                { name: '🏢 Airline / Network', value: `${pilot.airline ? `${pilot.airline.abbr} • ${pilot.airline.name}` : (pilot.network || 'FSHub')}`, inline: true },
+                                { name: '📅 Date Submitted', value: `${nowFormatted}`, inline: true },
+                                { name: '🛫 Departure', value: `\`${dep}\``, inline: true },
+                                { name: '🛬 Arrival', value: `\`${arr}\``, inline: true },
+                                { name: '✈️ Aircraft', value: `\`${pilot.aircraft || pilot.flight_plan?.aircraft || 'N/A'}\``, inline: true },
+                                { name: '🌐 Corridor / Route', value: `\`\`\`\n${routeStr}\n\`\`\``, inline: false },
+                                { name: '🛰️ Telemetry', value: `Altitude: **${Math.round(pilot.altitude_ft || 0).toLocaleString()} ft** | Groundspeed: **${Math.round(pilot.groundspeed_kts || 0)} kts**`, inline: false }
+                            ],
+                            footer: { text: 'AeroNav Live Fleet Operations • SimTechTracker' }
+                        }
+                    ]
+                };
+                await fetch(config.discordWebhook, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(directPayload)
+                });
+            } catch (err) {
+                console.warn('[EmbedRadar] Direct Discord dispatch error:', err);
+            }
+        }
+
         if (btn) {
             btn.innerHTML = '✅';
             btn.style.background = 'rgba(16, 185, 129, 0.25)';
             btn.style.borderColor = 'rgba(16, 185, 129, 0.5)';
-            btn.title = data.delivered_to_discord ? 'Route report sent to Discord!' : 'Route report logged to database!';
+            btn.title = 'Route report sent to Discord!';
             setTimeout(() => {
                 btn.innerHTML = '🚩';
                 btn.disabled = false;

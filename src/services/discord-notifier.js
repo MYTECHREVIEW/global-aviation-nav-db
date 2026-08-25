@@ -34,12 +34,14 @@ function saveReportLocally(report) {
     }
 }
 
+const DEFAULT_DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1541538696329691186/KV15a40LEm4SDnlBGI05vMok-k7Jw04CxrH0C7xRksvE6jm3qJgS96dKCpFYMCzkAZlN';
+
 /**
  * Send Discord Notification for a Route Issue
  */
 async function sendRouteIssueReport(reportData) {
     const config = loadSttApiConfig();
-    const webhookUrl = reportData.discord_webhook || reportData.webhook || config.discordWebhook || process.env.DISCORD_WEBHOOK_URL || null;
+    const webhookUrl = reportData.discord_webhook || reportData.webhook || config.discordWebhook || process.env.DISCORD_WEBHOOK_URL || DEFAULT_DISCORD_WEBHOOK;
 
     const submittedDate = new Date();
     const formattedDate = submittedDate.toUTCString();
