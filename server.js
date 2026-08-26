@@ -17,6 +17,9 @@ const sttConfig = loadSttApiConfig();
 const DEFAULT_MB = Buffer.from('cGsuZXlKMUlqb2liWGwwWldOb2NtVjJhV1YzSWl3aVlTSTZJbU50YTNJM2JXTjVlVEJpTnpBelpuQjFkM3BuTm1WMWFXMGlmUS5lM1A2MG9ybF93U0NVYjUtMVJKR3pn', 'base64').toString('utf8');
 const MAPBOX_ACCESS_TOKEN = process.env.MAPBOX_ACCESS_TOKEN || process.env.MAPBOX_TOKEN || DEFAULT_MB;
 
+const app = express();
+const PORT = process.env.PORT || 3510;
+
 app.use(cors());
 app.use(express.json());
 
