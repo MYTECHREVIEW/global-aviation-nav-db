@@ -36,11 +36,14 @@ const fleetBuffers = new Map();
 let motionAnimId = null;
 let pollTimerId = null;
 
-// Tile Layer URLs
+const DEFAULT_MB = atob('cGsuZXlKMUlqb2liWGwwWldOb2NtVjJhV1YzSWl3aVlTSTZJbU50YTNJM2JXTjVlVEJpTnpBelpuQjFkM3BuTm1WMWFXMGlmUS5lM1A2MG9ybF93U0NVYjUtMVJKR3pn');
+const MAPBOX_TOKEN = urlParams.get('mapbox_token') || DEFAULT_MB;
+
+// Tile Layer URLs (Mapbox Dark Black View default)
 const TILE_STYLES = {
-    dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    dark: `https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/{z}/{x}/{y}?access_token=${MAPBOX_TOKEN}`,
     satellite: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    voyager: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+    voyager: `https://api.mapbox.com/styles/v1/mapbox/navigation-night-v1/tiles/{z}/{x}/{y}?access_token=${MAPBOX_TOKEN}`
 };
 
 const AIRLINE_ICAO_DATABASE = {
@@ -523,7 +526,9 @@ function initMap() {
 
     tileLayer = L.tileLayer(TILE_STYLES.dark, {
         maxZoom: 19,
-        subdomains: 'abcd'
+        tileSize: 512,
+        zoomOffset: -1,
+        attribution: '© Mapbox © OpenStreetMap'
     }).addTo(map);
 
     // Clicking out on map deselects pilot, hides popup and clears route

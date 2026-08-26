@@ -501,3 +501,31 @@ High-speed route tracing engine with multi-layer in-memory LRU caching (`<0.2ms`
 
 - `GET /api/v1/simbrief/fetch?username={username}` — Fetches latest active flight plan (OFP).
 - `POST /api/v1/simbrief/trace` — Fetches and instantly traces flight plan into waypoints & GeoJSON.
+
+---
+
+## 🗺️ 9. Mapbox Dark Black View & Static Map Snapshot API
+
+AeroNav Global API integrates with Mapbox high-resolution dark black vector and satellite styling (`mapbox/dark-v11`).
+
+### 1. Static Route Map Image Generation (`POST /api/v1/route/trace`)
+Whenever a route contains 2 or more coordinates, `POST /api/v1/route/trace` and `POST /api/v1/simbrief/trace` automatically generate a `static_map_url` containing the flight plan route line string rendered over the Mapbox Dark Black View (`dark-v11`).
+
+### 2. Standalone Mapbox Static Map Endpoint (`GET /api/v1/map/static`)
+Stream high-resolution static PNG snapshots or retrieve JSON metadata directly:
+
+```http
+GET /api/v1/map/static?lat=40.75&lon=-73.87&zoom=12&style=dark-v11
+```
+
+| Query Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `lat` | Number | *Required* | Center latitude. |
+| `lon` | Number | *Required* | Center longitude. |
+| `zoom` | Number | `12` | Zoom level (1–20). |
+| `width` | Number | `1000` | Image width (100–1280px). |
+| `height` | Number | `500` | Image height (100–1280px). |
+| `bearing` | Number | `0` | Camera heading rotation (0–360°). |
+| `pitch` | Number | `0` | Camera tilt angle (0–60°). |
+| `style` | String | `dark-v11` | Mapbox style: `dark-v11`, `satellite-v9`, `navigation-night-v1`. |
+| `format` | String | `image` | `image` (streams PNG bytes), `json` (returns URL payload), or `redirect`. |

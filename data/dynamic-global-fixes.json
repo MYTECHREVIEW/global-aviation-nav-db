@@ -1798,7 +1798,7 @@
     "name": "ASDOB (Brazil Airway UZ25)",
     "type": "WAYPOINT",
     "latitude": -1.799297,
-    "longitude": -60.190210,
+    "longitude": -60.19021,
     "elevation_ft": null,
     "country_code": "BR",
     "frequency_mhz": null,
@@ -1811,7 +1811,7 @@
     "name": "PIARCO VOR/DME",
     "type": "VOR",
     "latitude": 10.466389,
-    "longitude": -61.392500,
+    "longitude": -61.3925,
     "elevation_ft": 40,
     "country_code": "TT",
     "frequency_mhz": 116.3,
@@ -2142,5 +2142,44 @@
     "frequency_mhz": null,
     "source": "OPENNAV_ONLINE",
     "updated_at": "2026-08-25T20:49:20.023Z"
+  },
+  "LOMVI": {
+    "id": "ONLINE_LOMVI",
+    "ident": "LOMVI",
+    "name": "LOMVI",
+    "type": "WAYPOINT",
+    "latitude": 70.083333,
+    "longitude": 19.002319,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-08-26T21:05:55.399Z"
+  },
+  "BETMA": {
+    "id": "ONLINE_BETMA",
+    "ident": "BETMA",
+    "name": "BETMA",
+    "type": "WAYPOINT",
+    "latitude": 70.622297,
+    "longitude": 19.010564,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-08-26T21:05:56.226Z"
+  },
+  "LON": {
+    "id": "ONLINE_LON",
+    "ident": "LON",
+    "name": "LONGYEAR",
+    "type": "VOR",
+    "latitude": 78.249722,
+    "longitude": 15.401111,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-08-26T21:05:59.547Z"
   }
 }

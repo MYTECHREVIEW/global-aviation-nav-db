@@ -10,7 +10,7 @@ services:
     environment:
       - PORT=3510
       - NODE_ENV=production
-      - MAPBOX_ACCESS_TOKEN=
+      - MAPBOX_ACCESS_TOKEN=${MAPBOX_ACCESS_TOKEN:-}
     volumes:
       # Directory volume for persistent API keys
       - aeronav_keys:/app/data/keys

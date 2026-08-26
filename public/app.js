@@ -35,7 +35,8 @@ function getVisibleLongitude(rawLon, mapInstance) {
     return bestLon;
 }
 
-let lastMarkerClickTime = 0;
+const DEFAULT_MB = atob('cGsuZXlKMUlqb2liWGwwWldOb2NtVjJhV1YzSWl3aVlTSTZJbU50YTNJM2JXTjVlVEJpTnpBelpuQjFkM3BuTm1WMWFXMGlmUS5lM1A2MG9ybF93U0NVYjUtMVJKR3pn');
+let mapboxToken = DEFAULT_MB;
 
 function initMap() {
     map = L.map('map', {
@@ -44,11 +45,21 @@ function initMap() {
         worldCopyJump: true
     }).setView([38.5, -96.0], 4);
 
-    // Dark Carto Basemap
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    // Mapbox Dark Black View (mapbox/dark-v11)
+    const baseTileLayer = L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/{z}/{x}/{y}?access_token=${mapboxToken}`, {
         maxZoom: 19,
-        subdomains: 'abcd'
+        tileSize: 512,
+        zoomOffset: -1,
+        attribution: '© Mapbox © OpenStreetMap'
     }).addTo(map);
+
+    // Dynamic token update if server environment has a custom override
+    fetch('/api/v1/config/env').then(r => r.json()).then(cfg => {
+        if (cfg && cfg.mapbox_token && cfg.mapbox_token !== mapboxToken) {
+            mapboxToken = cfg.mapbox_token;
+            baseTileLayer.setUrl(`https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/{z}/{x}/{y}?access_token=${mapboxToken}`);
+        }
+    }).catch(() => {});
 
     routeLayerGroup = L.layerGroup().addTo(map);
     fleetMarkersLayerGroup = L.layerGroup().addTo(map);
