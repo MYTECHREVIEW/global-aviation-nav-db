@@ -463,10 +463,7 @@ volumes:
                     <span class="stats-value" id="statsAirbornePilots">0</span>
                 </div>
                 <div class="stats-row">
-                    <span class="stats-label">PILOTS ON-GROUND:</span>
-                    <span class="stats-value" id="statsGroundPilots">0</span>
-                </div>
-                <div class="stats-row">
+                    <span class="stats-label">PILOTS                 <div class="stats-row">
                     <span class="stats-label">VATSIM ONLINE:</span>
                     <span class="stats-value" id="statsVatsimPilots">0</span>
                 </div>
@@ -474,8 +471,45 @@ volumes:
         </main>
     </div>
 
-    <!-- Tab Switching Engine -->
+    <!-- Tab Switching & Auth Key Loading Engine -->
     <script>
+        async function fetchAndRenderApiKeys() {
+            const tbody = document.getElementById('keysTableBody');
+            if (!tbody) return;
+            try {
+                const res = await fetch('/api/v1/auth/keys');
+                const data = await res.json();
+                if (!data.keys || data.keys.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">No API keys generated yet.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = data.keys.map(k => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: #f8fafc; display: flex; align-items: center; gap: 4px;">
+                                <span>${k.name || 'Unnamed Client'}</span>
+                                ${k.va_ident ? `<span style="background: rgba(192, 132, 252, 0.15); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.35); font-size: 0.62rem; padding: 1px 5px; border-radius: 4px; font-weight: 700;">${k.va_ident}</span>` : ''}
+                            </div>
+                            <div style="font-size: 0.7rem; color: #64748b;">${k.created_at ? new Date(k.created_at).toLocaleDateString() : ''} ${k.expires_at ? `• Exp: ${new Date(k.expires_at).toLocaleDateString()}` : '• Permanent'}${k.grist_record_id ? ` • Grist #${k.grist_record_id}` : ''}</div>
+                        </td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <code style="font-size: 0.72rem; color: #00ff88; background: #000; padding: 4px 6px; border-radius: 4px; border: 1px solid rgba(0,255,136,0.2); max-width: 210px; overflow-x: auto; white-space: nowrap;">${k.key || k.masked_key}</code>
+                                <button class="btn-copy" style="padding: 2px 6px; font-size: 0.68rem;" onclick="copyFullKey('${k.key || k.masked_key}', this)">📋 Copy</button>
+                            </div>
+                        </td>
+                        <td>${k.request_count || 0}</td>
+                        <td><span style="color: ${k.status === 'active' ? '#00ff88' : '#ef4444'}; font-weight: 600; font-size: 0.75rem;">${k.status.toUpperCase()}</span></td>
+                        <td>
+                            ${k.status === 'active' ? `<button class="btn-revoke" onclick="revokeKey('${k.id}')">Revoke</button>` : '<span style="color:#64748b; font-size: 0.72rem;">Revoked</span>'}
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">Failed to load API keys.</td></tr>';
+            }
+        }
+
         function switchNavTab(tabId, btnEl) {
             if (!tabId) return;
             const tabButtons = document.querySelectorAll('#tabNavContainer .tab-btn');
@@ -497,14 +531,19 @@ volumes:
             }
 
             if (tabId === 'tab-keys') {
+                fetchAndRenderApiKeys();
                 if (typeof checkGitStatus === 'function') checkGitStatus();
-                if (typeof loadApiKeys === 'function') loadApiKeys();
             }
         }
+
+        // Preload API keys on initial page load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAndRenderApiKeys();
+        });
     </script>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="app.js?v=3.8.0"></script>
+    <script src="app.js?v=3.9.0"></script>
 </body>
 </html>
