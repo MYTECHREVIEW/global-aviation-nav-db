@@ -1287,22 +1287,53 @@ class RouteParser {
         const issuesFound = [];
         const fixesRepaired = [];
 
+        // 1.5. SimBrief Surveyed Coordinates Cross-Verification
+        const simbriefFixesMap = new Map();
+        if (options.simbrief_fixes && Array.isArray(options.simbrief_fixes)) {
+            for (const f of options.simbrief_fixes) {
+                if (f.ident && f.latitude != null && f.longitude != null) {
+                    simbriefFixesMap.set(String(f.ident).toUpperCase().trim(), f);
+                }
+            }
+        } else if (options.simbrief_user) {
+            try {
+                const { fetchSimbriefOfp } = require('../simbrief/simbrief-service');
+                const ofp = await fetchSimbriefOfp(options.simbrief_user);
+                if (ofp && ofp.navlog_fixes) {
+                    for (const f of ofp.navlog_fixes) {
+                        if (f.ident && f.latitude != null && f.longitude != null) {
+                            simbriefFixesMap.set(String(f.ident).toUpperCase().trim(), f);
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('[RouteParser] SimBrief OFP cross-verification warning:', e.message);
+            }
+        }
+
         // 2. Anomaly & Detour Analysis across each intermediate waypoint
         for (let i = 1; i < wps.length - 1; i++) {
             const prev = wps[i - 1];
             const curr = wps[i];
             const next = wps[i + 1];
+            const clean = sanitizeToken(curr.ident);
 
             const dDirect = haversineDistanceM(prev.latitude, prev.longitude, next.latitude, next.longitude) / 1852;
             const dVia = (haversineDistanceM(prev.latitude, prev.longitude, curr.latitude, curr.longitude) +
                           haversineDistanceM(curr.latitude, curr.longitude, next.latitude, next.longitude)) / 1852;
             const detourNm = dVia - dDirect;
 
-            // Anomaly condition: Detour > 250 NM or path detour ratio > 2.0
+            // Anomaly condition: Detour > 250 NM or path detour ratio > 2.0 or SimBrief discrepancy
+            const simbriefMatch = simbriefFixesMap.get(clean);
+            const distFromSimbriefNm = simbriefMatch
+                ? haversineDistanceM(curr.latitude, curr.longitude, simbriefMatch.latitude, simbriefMatch.longitude) / 1852
+                : 0;
+
+            const isSimbriefDiscrepancy = simbriefMatch && distFromSimbriefNm > 2.0;
             const isDetourAnomaly = detourNm > 250 || (dVia > dDirect * 2 && detourNm > 100);
             const isInterpolated = curr.id && String(curr.id).startsWith('INTERP_');
 
-            if (isDetourAnomaly || isInterpolated) {
+            if (isDetourAnomaly || isInterpolated || isSimbriefDiscrepancy) {
                 issuesFound.push({
                     index: i,
                     ident: curr.ident,
@@ -1310,27 +1341,43 @@ class RouteParser {
                     current_lat: curr.latitude,
                     current_lon: curr.longitude,
                     detour_nm: Math.round(detourNm),
-                    reason: isDetourAnomaly ? `Excessive corridor detour (${Math.round(detourNm)} NM)` : `Interpolated placeholder fix`
+                    simbrief_deviation_nm: isSimbriefDiscrepancy ? Math.round(distFromSimbriefNm * 10) / 10 : null,
+                    reason: isSimbriefDiscrepancy
+                        ? `SimBrief coordinates discrepancy (${Math.round(distFromSimbriefNm)} NM offset)`
+                        : (isDetourAnomaly ? `Excessive corridor detour (${Math.round(detourNm)} NM)` : `Interpolated placeholder fix`)
                 });
 
                 // 3. Search for optimal global replacement candidate along prev <-> next line
-                const clean = sanitizeToken(curr.ident);
-                const candidates = [];
-
-                if (this.navaidsByIdent[clean]) candidates.push(...this.navaidsByIdent[clean]);
-                if (this.waypointsByIdent[clean]) candidates.push(...this.waypointsByIdent[clean]);
-                if (GLOBAL_WAYPOINTS_CATALOG[clean]) candidates.push(GLOBAL_WAYPOINTS_CATALOG[clean]);
-
                 let bestCandidate = null;
                 let minCandidateDetour = detourNm;
 
-                for (const cand of candidates) {
-                    const candDVia = (haversineDistanceM(prev.latitude, prev.longitude, cand.latitude, cand.longitude) +
-                                      haversineDistanceM(cand.latitude, cand.longitude, next.latitude, next.longitude)) / 1852;
-                    const candDetour = candDVia - dDirect;
-                    if (candDetour < minCandidateDetour) {
-                        minCandidateDetour = candDetour;
-                        bestCandidate = cand;
+                // Priority 1: Exact SimBrief Surveyed Coordinates
+                if (simbriefMatch) {
+                    bestCandidate = {
+                        ident: clean,
+                        name: simbriefMatch.name || clean,
+                        type: simbriefMatch.type || curr.type || 'WAYPOINT',
+                        latitude: simbriefMatch.latitude,
+                        longitude: simbriefMatch.longitude,
+                        source: 'SIMBRIEF_SURVEYED'
+                    };
+                    minCandidateDetour = 0;
+                }
+
+                if (!bestCandidate) {
+                    const candidates = [];
+                    if (this.navaidsByIdent[clean]) candidates.push(...this.navaidsByIdent[clean]);
+                    if (this.waypointsByIdent[clean]) candidates.push(...this.waypointsByIdent[clean]);
+                    if (GLOBAL_WAYPOINTS_CATALOG[clean]) candidates.push(GLOBAL_WAYPOINTS_CATALOG[clean]);
+
+                    for (const cand of candidates) {
+                        const candDVia = (haversineDistanceM(prev.latitude, prev.longitude, cand.latitude, cand.longitude) +
+                                          haversineDistanceM(cand.latitude, cand.longitude, next.latitude, next.longitude)) / 1852;
+                        const candDetour = candDVia - dDirect;
+                        if (candDetour < minCandidateDetour) {
+                            minCandidateDetour = candDetour;
+                            bestCandidate = cand;
+                        }
                     }
                 }
 

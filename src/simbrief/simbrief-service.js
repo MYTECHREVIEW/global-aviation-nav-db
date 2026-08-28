@@ -40,6 +40,25 @@ function fetchSimbriefOfp(identifier) {
                     // Clean route if it has DCT or empty spaces
                     const formattedRoute = rawRoute;
 
+                    // Extract exact surveyed Navlog Fixes from SimBrief OFP
+                    const navlogFixes = [];
+                    const rawFixes = data.navlog?.fix || [];
+                    const fixList = Array.isArray(rawFixes) ? rawFixes : [rawFixes];
+                    for (const f of fixList) {
+                        if (f && f.ident && f.pos_lat != null && f.pos_long != null) {
+                            navlogFixes.push({
+                                ident: String(f.ident).toUpperCase().trim(),
+                                name: f.name || f.ident,
+                                type: f.type || 'WAYPOINT',
+                                latitude: parseFloat(f.pos_lat),
+                                longitude: parseFloat(f.pos_long),
+                                frequency_mhz: f.frequency || null,
+                                altitude_feet: parseInt(f.altitude_feet, 10) || null,
+                                stage: f.stage || null
+                            });
+                        }
+                    }
+
                     const ofp = {
                         success: true,
                         simbrief_user: clean,
@@ -53,6 +72,7 @@ function fetchSimbriefOfp(identifier) {
                         arrival_name: dest.name || arrIcao,
                         alternate_icao: alternate.icao_code || null,
                         route: formattedRoute,
+                        navlog_fixes: navlogFixes,
                         cruise_altitude_ft: parseInt(general.initial_altitude, 10) || 35000,
                         cruise_tas_kts: parseInt(general.cruise_tas, 10) || 450,
                         cost_index: general.costindex || null,

@@ -682,23 +682,28 @@ app.get('/api/v1/map/static', async (req, res) => {
 });
 
 /**
- * Intelligent Route Analysis & Auto-Fix Engine
+ * Intelligent Route Analysis & Auto-Fix Engine with SimBrief Cross-Verification
  * POST /api/v1/route/analyze
- * Body: { "route": "GCRR VASTO NIDEB TIGGI PINEK KORUL KOLEK EBOMO RUSIB SHIRI TOJAQ EGGD", "include_labels": true }
+ * Body: { "route": "FACT KODES UDLUM FVRG", "simbrief_user": "mytekreview", "auto_push": true, "include_labels": true }
  */
 app.post('/api/v1/route/analyze', async (req, res) => {
-    const { route, include_labels = true } = req.body || {};
+    const { route, simbrief_user, auto_push = true, include_labels = true } = req.body || {};
 
     if (!route || typeof route !== 'string' || !route.trim()) {
         return res.status(400).json({ error: 'Route string is required for route analysis.' });
     }
 
     try {
-        const analysis = await routeParser.analyzeAndFixRoute(route.trim(), { include_labels });
+        const analysis = await routeParser.analyzeAndFixRoute(route.trim(), { simbrief_user, include_labels });
         if (analysis.fixes_repaired && analysis.fixes_repaired.length > 0) {
             routeTraceMemoryCache.clear();
-            const gitStatus = await gitSyncService.stageWaypointFixes(analysis.fixes_repaired);
-            analysis.git_sync = gitStatus;
+            if (auto_push) {
+                const gitPushResult = await gitSyncService.commitAndPushFixes(analysis.fixes_repaired);
+                analysis.git_sync = gitPushResult;
+            } else {
+                const gitStatus = await gitSyncService.stageWaypointFixes(analysis.fixes_repaired);
+                analysis.git_sync = gitStatus;
+            }
         }
         res.json({
             success: true,
@@ -706,6 +711,20 @@ app.post('/api/v1/route/analyze', async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({ error: e.message });
+    }
+});
+
+/**
+ * Get Git Commit & Push Audit Log
+ * GET /api/v1/git/log?limit=25
+ */
+app.get('/api/v1/git/log', async (req, res) => {
+    try {
+        const limit = req.query?.limit ? parseInt(req.query.limit, 10) : 25;
+        const logData = await gitSyncService.getGitLog(limit);
+        res.json(logData);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to retrieve Git log: ' + err.message });
     }
 });
 
