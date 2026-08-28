@@ -59,51 +59,74 @@ class DynamicNavDataService {
         this.scheduleSave();
     }
 
-    fetchHttp(url, options = {}) {
+    fetchHttp(url, options = {}, redirectCount = 0) {
         return new Promise((resolve) => {
-            const client = url.startsWith('https') ? https : http;
-            const req = client.get(url, {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)',
-                    'Accept': 'text/html,application/json,*/*',
-                    ...options.headers
-                },
-                timeout: options.timeout || 1200
-            }, (res) => {
-                let data = '';
-                res.on('data', chunk => data += chunk);
-                res.on('end', () => resolve({ status: res.statusCode, data, headers: res.headers }));
-            });
-            req.on('error', () => resolve(null));
-            req.on('timeout', () => { req.destroy(); resolve(null); });
+            if (redirectCount > 3) return resolve(null);
+            try {
+                const parsed = new URL(url);
+                const client = parsed.protocol === 'https:' ? https : http;
+                const req = client.get(url, {
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)',
+                        'Accept': 'text/html,application/json,*/*',
+                        ...options.headers
+                    },
+                    timeout: options.timeout || 2500
+                }, (res) => {
+                    if ([301, 302, 307, 308].includes(res.statusCode) && res.headers.location) {
+                        const redirectUrl = res.headers.location.startsWith('http')
+                            ? res.headers.location
+                            : new URL(res.headers.location, url).toString();
+                        return resolve(this.fetchHttp(redirectUrl, options, redirectCount + 1));
+                    }
+                    let data = '';
+                    res.on('data', chunk => data += chunk);
+                    res.on('end', () => resolve({ status: res.statusCode, data, headers: res.headers, finalUrl: url }));
+                });
+                req.on('error', () => resolve(null));
+                req.on('timeout', () => { req.destroy(); resolve(null); });
+            } catch (e) {
+                resolve(null);
+            }
         });
     }
 
-    postHttp(url, postData, options = {}) {
+    postHttp(url, postData, options = {}, redirectCount = 0) {
         return new Promise((resolve) => {
-            const parsed = new URL(url);
-            const client = url.startsWith('https') ? https : http;
-            const req = client.request({
-                hostname: parsed.hostname,
-                port: parsed.port || (url.startsWith('https') ? 443 : 80),
-                path: parsed.pathname + (parsed.search || ''),
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Content-Length': Buffer.byteLength(postData),
-                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)',
-                    ...options.headers
-                },
-                timeout: options.timeout || 1200
-            }, (res) => {
-                let data = '';
-                res.on('data', chunk => data += chunk);
-                res.on('end', () => resolve({ status: res.statusCode, data, headers: res.headers }));
-            });
-            req.on('error', () => resolve(null));
-            req.on('timeout', () => { req.destroy(); resolve(null); });
-            req.write(postData);
-            req.end();
+            if (redirectCount > 3) return resolve(null);
+            try {
+                const parsed = new URL(url);
+                const client = parsed.protocol === 'https:' ? https : http;
+                const req = client.request({
+                    hostname: parsed.hostname,
+                    port: parsed.port || (parsed.protocol === 'https:' ? 443 : 80),
+                    path: parsed.pathname + (parsed.search || ''),
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Content-Length': Buffer.byteLength(postData),
+                        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)',
+                        ...options.headers
+                    },
+                    timeout: options.timeout || 2500
+                }, (res) => {
+                    if ([301, 302, 307, 308].includes(res.statusCode) && res.headers.location) {
+                        const redirectUrl = res.headers.location.startsWith('http')
+                            ? res.headers.location
+                            : new URL(res.headers.location, url).toString();
+                        return resolve(this.fetchHttp(redirectUrl, options, redirectCount + 1));
+                    }
+                    let data = '';
+                    res.on('data', chunk => data += chunk);
+                    res.on('end', () => resolve({ status: res.statusCode, data, headers: res.headers, finalUrl: url }));
+                });
+                req.on('error', () => resolve(null));
+                req.on('timeout', () => { req.destroy(); resolve(null); });
+                req.write(postData);
+                req.end();
+            } catch (e) {
+                resolve(null);
+            }
         });
     }
 

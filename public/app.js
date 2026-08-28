@@ -579,12 +579,16 @@ async function analyzeAndFixRoute() {
         btn.disabled = true;
     }
 
-    try {
+        const simbriefUserEl = document.getElementById('simbriefUserInput') || document.getElementById('simbriefPilotId');
+        const storedSimbriefUser = simbriefUserEl ? simbriefUserEl.value.trim() : (localStorage.getItem('stt_simbrief_user') || '');
+
         const response = await fetch('/api/v1/route/analyze', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 route: route,
+                simbrief_user: storedSimbriefUser || undefined,
+                auto_push: true,
                 include_labels: showWaypointLabels
             })
         });
@@ -621,22 +625,25 @@ async function analyzeAndFixRoute() {
                 box.style.borderColor = 'rgba(16, 185, 129, 0.4)';
                 let fixHtml = data.fixes_repaired.map(f => `
                     <div style="margin-top: 4px; padding: 4px 6px; background: rgba(0,0,0,0.25); border-radius: 4px;">
-                        <strong style="color: #00ff88;">🛠️ ${f.ident}:</strong> ${f.name} ${f.country_code ? `(${f.country_code})` : ''} ➔ Saved to Database
-                        <div style="font-size: 0.7rem; color: #38bdf8;">Saved ${f.distance_saved_nm} NM detour</div>
+                        <strong style="color: #00ff88;">🛠️ ${f.ident}:</strong> ${f.name} (${f.latitude ? parseFloat(f.latitude).toFixed(5) : ''}, ${f.longitude ? parseFloat(f.longitude).toFixed(5) : ''}) ➔ Saved
+                        <div style="font-size: 0.7rem; color: #38bdf8;">${f.source === 'SIMBRIEF_SURVEYED' ? '🎯 Calibrated from SimBrief Surveyed Coordinates' : 'Corridor GPS Calibrated'}</div>
                     </div>
                 `).join('');
 
+                const gitSha = data.git_sync?.logEntry?.commit_message ? '🚀 Pushed to Git' : (data.git_sync?.message || '📦 Database updated');
+
                 box.innerHTML = `
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                        <strong style="color: #00ff88;">✅ ${data.fixes_repaired.length} Fix${data.fixes_repaired.length > 1 ? 'es' : ''} Repaired & Saved</strong>
-                        <span style="color: #38bdf8; font-weight: 700;">-${data.distance_saved_nm} NM</span>
+                        <strong style="color: #00ff88;">✅ ${data.fixes_repaired.length} Waypoint${data.fixes_repaired.length > 1 ? 's' : ''} Calibrated & Saved</strong>
+                        <span style="color: #38bdf8; font-weight: 700;">${data.total_distance_nm} NM</span>
                     </div>
                     <div style="color: #cbd5e1; font-size: 0.72rem; margin-bottom: 6px;">
-                        Total Distance: <strong>${data.total_distance_nm} NM</strong> (reduced from ${data.original_distance_nm} NM)
+                        Total Distance: <strong>${data.total_distance_nm} NM</strong> (optimal Great-Circle track)
                     </div>
                     ${fixHtml}
-                    <div style="font-size: 0.68rem; color: #a7f3d0; margin-top: 6px; padding-top: 4px; border-top: 1px dashed rgba(16,185,129,0.3); display: flex; align-items: center; gap: 4px;">
-                        📦 <span>Database updated & staged for Git push</span>
+                    <div style="font-size: 0.68rem; color: #a7f3d0; margin-top: 6px; padding-top: 4px; border-top: 1px dashed rgba(16,185,129,0.3); display: flex; align-items: center; justify-content: space-between;">
+                        <span>📦 Database updated & memory cache reloaded</span>
+                        <span style="color: #38bdf8;">${gitSha}</span>
                     </div>
                 `;
             } else if (data.issues_found && data.issues_found.length > 0) {
