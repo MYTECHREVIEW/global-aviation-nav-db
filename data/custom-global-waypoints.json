@@ -1117,5 +1117,43 @@
     "longitude": 83.8825,
     "country_code": "NP",
     "region": "Asia"
+  },
+  "IPATA": {
+    "ident": "IPATA",
+    "name": "IPATA",
+    "type": "WAYPOINT",
+    "latitude": 13.865947,
+    "longitude": 121.813344,
+    "country_code": "PH",
+    "region": "Asia"
+  },
+  "MASBA": {
+    "ident": "MASBA",
+    "name": "MASBA",
+    "type": "WAYPOINT",
+    "latitude": 12.37,
+    "longitude": 123.63,
+    "country_code": "PH",
+    "region": "Asia"
+  },
+  "BN": {
+    "ident": "BN",
+    "name": "BUTUAN VOR-DME",
+    "type": "VOR-DME",
+    "latitude": 8.95535,
+    "longitude": 125.486,
+    "elevation_ft": 140,
+    "frequency_mhz": 112.5,
+    "country_code": "PH",
+    "region": "Asia"
+  },
+  "RIMAR": {
+    "ident": "RIMAR",
+    "name": "RIMAR",
+    "type": "WAYPOINT",
+    "latitude": 7.968556,
+    "longitude": 125.577028,
+    "country_code": "PH",
+    "region": "Asia"
   }
 }

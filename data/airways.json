@@ -79326,5 +79326,35 @@
       "seq": 140,
       "fixIdent": "GRATX"
     }
+  ],
+  "B462": [
+    {
+      "seq": 10,
+      "fixIdent": "IPATA"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "MASBA"
+    }
+  ],
+  "W9A": [
+    {
+      "seq": 10,
+      "fixIdent": "MASBA"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "BN"
+    }
+  ],
+  "W9": [
+    {
+      "seq": 10,
+      "fixIdent": "BN"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "RIMAR"
+    }
   ]
 }

@@ -732,11 +732,34 @@ class RouteParser {
             }
 
             // ═══════════════════════════════════════════════════════════════════
-            // 4. STANDARD RESOLUTION
+            // 4. STANDARD RESOLUTION & PROCEDURE TOKEN HANDLING
             // ═══════════════════════════════════════════════════════════════════
             // Do not resolve standalone airway designators as points
             if (isAirwayDesignator(token)) {
                 continue;
+            }
+
+            // Handle procedure tokens (e.g. IPATA2P, RIMAR2P, GUKDO1A)
+            const procMatch = token.match(/^([A-Z]{3,5})([0-9][A-Z]?)$/);
+            if (procMatch) {
+                const baseFix = procMatch[1];
+                const nextToken = i + 1 < cleanTokens.length ? cleanTokens[i + 1] : null;
+                const prevPoint = resolvedPoints.length > 0 ? resolvedPoints[resolvedPoints.length - 1] : null;
+
+                if (nextToken === baseFix) {
+                    continue; // Skip procedure prefix as next token is the actual fix
+                }
+                if (prevPoint && prevPoint.ident === baseFix) {
+                    continue; // Skip procedure suffix as prev point is the fix
+                }
+                const basePt = this.resolvePoint(baseFix, currentRefLat, currentRefLon);
+                if (basePt) {
+                    basePt.via_procedure = token;
+                    resolvedPoints.push(basePt);
+                    currentRefLat = basePt.latitude;
+                    currentRefLon = basePt.longitude;
+                    continue;
+                }
             }
 
             let nextCandidateLat = arrPoint ? arrPoint.latitude : null;
@@ -1110,6 +1133,29 @@ class RouteParser {
             // 4. STANDARD RESOLUTION WITH AUTONOMOUS ONLINE RESOLVER
             if (isAirwayDesignator(token)) {
                 continue;
+            }
+
+            // Handle procedure tokens (e.g. IPATA2P, RIMAR2P, GUKDO1A)
+            const procMatch = token.match(/^([A-Z]{3,5})([0-9][A-Z]?)$/);
+            if (procMatch) {
+                const baseFix = procMatch[1];
+                const nextToken = i + 1 < cleanTokens.length ? cleanTokens[i + 1] : null;
+                const prevPoint = resolvedPoints.length > 0 ? resolvedPoints[resolvedPoints.length - 1] : null;
+
+                if (nextToken === baseFix) {
+                    continue; // Skip procedure prefix as next token is the actual fix
+                }
+                if (prevPoint && prevPoint.ident === baseFix) {
+                    continue; // Skip procedure suffix as prev point is the fix
+                }
+                const basePt = await this.resolvePointAsync(baseFix, currentRefLat, currentRefLon);
+                if (basePt) {
+                    basePt.via_procedure = token;
+                    resolvedPoints.push(basePt);
+                    currentRefLat = basePt.latitude;
+                    currentRefLon = basePt.longitude;
+                    continue;
+                }
             }
 
             // Look ahead for next coordinate to provide geodesic bounds if needed
