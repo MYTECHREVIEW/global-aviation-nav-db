@@ -1182,110 +1182,121 @@
   },
   "ENDEQ": {
     "ident": "ENDEQ",
-    "name": "ENDEQ (Enroute Fix)",
+    "name": "ENDEQ",
     "type": "WAYPOINT",
-    "latitude": 53.41951,
-    "longitude": -5.480201,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-28T21:49:25.254Z"
+    "latitude": 53.445661,
+    "longitude": -5.5,
+    "country_code": "IE",
+    "region": "Europe"
   },
   "ALAVA": {
     "ident": "ALAVA",
-    "name": "ALAVA (Enroute Fix)",
+    "name": "ALAVA",
     "type": "WAYPOINT",
-    "latitude": 53.416421,
-    "longitude": -4.544267,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-28T21:49:25.261Z"
+    "latitude": 53.431667,
+    "longitude": -4.5,
+    "country_code": "UK",
+    "region": "Europe"
   },
   "AMSAN": {
     "ident": "AMSAN",
-    "name": "AMSAN (Enroute Fix)",
+    "name": "AMSAN",
     "type": "WAYPOINT",
-    "latitude": 52.403894,
-    "longitude": 4.40255,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-28T21:49:25.268Z"
+    "latitude": 52.188333,
+    "longitude": 5.145,
+    "country_code": "NL",
+    "region": "Europe"
   },
   "TOLTA": {
     "ident": "TOLTA",
-    "name": "TOLTA (Enroute Fix)",
+    "name": "TOLTA",
     "type": "WAYPOINT",
-    "latitude": 52.074891,
-    "longitude": 5.810745,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-28T21:49:25.275Z"
+    "latitude": 51.687111,
+    "longitude": 9.512367,
+    "country_code": "DE",
+    "region": "Europe"
   },
   "KUMER": {
     "ident": "KUMER",
-    "name": "KUMER (Enroute Fix)",
+    "name": "KUMER",
     "type": "WAYPOINT",
-    "latitude": 51.745888,
-    "longitude": 7.218939,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-28T21:49:25.281Z"
+    "latitude": 51.537361,
+    "longitude": 10.634994,
+    "country_code": "DE",
+    "region": "Europe"
   },
   "SULED": {
     "ident": "SULED",
-    "name": "SULED (Enroute Fix)",
+    "name": "SULED",
     "type": "WAYPOINT",
-    "latitude": 51.416885,
-    "longitude": 8.627133,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-28T21:49:25.287Z"
+    "latitude": 51.161831,
+    "longitude": 12.229953,
+    "country_code": "DE",
+    "region": "Europe"
   },
   "PIKIB": {
     "ident": "PIKIB",
-    "name": "PIKIB (Enroute Fix)",
+    "name": "PIKIB",
     "type": "WAYPOINT",
-    "latitude": 51.087882,
-    "longitude": 10.035328,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-28T21:49:25.294Z"
+    "latitude": 50.988333,
+    "longitude": 13.075,
+    "country_code": "DE",
+    "region": "Europe"
   },
   "LALUK": {
     "ident": "LALUK",
-    "name": "LALUK (Enroute Fix)",
+    "name": "LALUK",
     "type": "WAYPOINT",
-    "latitude": 50.758879,
-    "longitude": 11.443523,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-28T21:49:25.300Z"
+    "latitude": 50.804408,
+    "longitude": 13.880214,
+    "country_code": "DE",
+    "region": "Europe"
   },
   "GOLOP": {
     "ident": "GOLOP",
-    "name": "GOLOP (Enroute Fix)",
+    "name": "GOLOP",
     "type": "WAYPOINT",
-    "latitude": 50.429876,
-    "longitude": 12.851717,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-28T21:49:25.306Z"
+    "latitude": 50.585761,
+    "longitude": 14.495731,
+    "country_code": "CZ",
+    "region": "Europe"
+  },
+  "MALUD": {
+    "ident": "MALUD",
+    "name": "MALUD",
+    "type": "WAYPOINT",
+    "latitude": 53.413333,
+    "longitude": -3.608333,
+    "country_code": "UK",
+    "region": "Europe"
+  },
+  "WAL": {
+    "ident": "WAL",
+    "name": "WALLASEY VOR-DME",
+    "type": "VOR-DME",
+    "latitude": 53.391667,
+    "longitude": -3.132778,
+    "elevation_ft": 50,
+    "frequency_mhz": 114.1,
+    "country_code": "UK",
+    "region": "Europe"
+  },
+  "DOLAS": {
+    "ident": "DOLAS",
+    "name": "DOLAS",
+    "type": "WAYPOINT",
+    "latitude": 52.978611,
+    "longitude": 1.000833,
+    "country_code": "UK",
+    "region": "Europe"
+  },
+  "LAMSO": {
+    "ident": "LAMSO",
+    "name": "LAMSO",
+    "type": "WAYPOINT",
+    "latitude": 52.732778,
+    "longitude": 2.994444,
+    "country_code": "NL",
+    "region": "Europe"
   }
 }
