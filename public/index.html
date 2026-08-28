@@ -40,10 +40,10 @@
         <aside class="sidebar">
             <!-- Tabs (Base: Route Tracer & Waypoint Search) -->
             <div class="tab-nav" id="tabNavContainer">
-                <button class="tab-btn active" data-tab="tab-route">🛩️ Route Tracer</button>
-                <button class="tab-btn" data-tab="tab-search">🔍 Waypoint Search</button>
-                <button class="tab-btn" data-tab="tab-api">📡 API Docs</button>
-                <button class="tab-btn" data-tab="tab-keys">🔑 API Keys & Git</button>
+                <button class="tab-btn active" data-tab="tab-route" onclick="switchNavTab('tab-route', this)">🛩️ Route Tracer</button>
+                <button class="tab-btn" data-tab="tab-search" onclick="switchNavTab('tab-search', this)">🔍 Waypoint Search</button>
+                <button class="tab-btn" data-tab="tab-api" onclick="switchNavTab('tab-api', this)">📡 API Docs</button>
+                <button class="tab-btn" data-tab="tab-keys" onclick="switchNavTab('tab-keys', this)">🔑 API Keys & Git</button>
             </div>
 
             <!-- TAB 1: ROUTE TRACER -->
@@ -474,8 +474,37 @@ volumes:
         </main>
     </div>
 
+    <!-- Tab Switching Engine -->
+    <script>
+        function switchNavTab(tabId, btnEl) {
+            if (!tabId) return;
+            const tabButtons = document.querySelectorAll('#tabNavContainer .tab-btn');
+            const tabPanes = document.querySelectorAll('.sidebar > .tab-content');
+
+            tabButtons.forEach(b => b.classList.remove('active'));
+            tabPanes.forEach(p => p.classList.remove('active'));
+
+            if (btnEl) {
+                btnEl.classList.add('active');
+            } else {
+                const targetBtn = document.querySelector(`#tabNavContainer .tab-btn[data-tab="${tabId}"]`);
+                if (targetBtn) targetBtn.classList.add('active');
+            }
+
+            const targetPane = document.getElementById(tabId);
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
+
+            if (tabId === 'tab-keys') {
+                if (typeof checkGitStatus === 'function') checkGitStatus();
+                if (typeof loadApiKeys === 'function') loadApiKeys();
+            }
+        }
+    </script>
+
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="app.js?v=3.7.0"></script>
+    <script src="app.js?v=3.8.0"></script>
 </body>
 </html>

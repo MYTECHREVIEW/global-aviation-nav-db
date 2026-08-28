@@ -131,7 +131,7 @@ body {
 }
 
 .tab-content.active {
-    display: block;
+    display: block !important;
 }
 
 /* Control Cards */

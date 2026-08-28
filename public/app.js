@@ -97,33 +97,45 @@ function initMap() {
     });
 }
 
+function switchNavTab(tabId, btnEl) {
+    if (!tabId) return;
+    const tabNav = document.getElementById('tabNavContainer');
+    const tabButtons = tabNav ? tabNav.querySelectorAll('.tab-btn') : document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.sidebar > .tab-content');
+
+    tabButtons.forEach(b => b.classList.remove('active'));
+    tabContents.forEach(c => c.classList.remove('active'));
+
+    if (btnEl) {
+        btnEl.classList.add('active');
+    } else {
+        const matchingBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+        if (matchingBtn) matchingBtn.classList.add('active');
+    }
+
+    const targetEl = document.getElementById(tabId);
+    if (targetEl) {
+        targetEl.classList.add('active');
+    }
+
+    if (tabId === 'tab-keys') {
+        if (typeof checkGitStatus === 'function') checkGitStatus();
+        if (typeof loadApiKeys === 'function') loadApiKeys();
+    }
+}
+window.switchNavTab = switchNavTab;
+
 function setupTabs() {
     const tabNav = document.getElementById('tabNavContainer');
     if (!tabNav) return;
 
     const tabButtons = tabNav.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.sidebar > .tab-content');
-
     tabButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             const targetId = btn.getAttribute('data-tab');
-            if (!targetId) return;
-
-            // Remove active class from all header buttons
-            tabButtons.forEach(b => b.classList.remove('active'));
-            // Remove active class from all sidebar tab contents
-            tabContents.forEach(c => c.classList.remove('active'));
-
-            // Activate current tab button
-            btn.classList.add('active');
-
-            // Activate target container
-            const targetEl = document.getElementById(targetId);
-            if (targetEl) {
-                targetEl.classList.add('active');
-            }
+            switchNavTab(targetId, btn);
         });
     });
 }
