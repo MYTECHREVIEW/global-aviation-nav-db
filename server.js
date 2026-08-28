@@ -17,11 +17,19 @@ const sttConfig = loadSttApiConfig();
 const DEFAULT_MB = Buffer.from('cGsuZXlKMUlqb2liWGwwWldOb2NtVjJhV1YzSWl3aVlTSTZJbU50YTNJM2JXTjVlVEJpTnpBelpuQjFkM3BuTm1WMWFXMGlmUS5lM1A2MG9ybF93U0NVYjUtMVJKR3pn', 'base64').toString('utf8');
 const MAPBOX_ACCESS_TOKEN = process.env.MAPBOX_ACCESS_TOKEN || process.env.MAPBOX_TOKEN || DEFAULT_MB;
 
+const compression = require('compression');
+
 const app = express();
 const PORT = process.env.PORT || 3510;
 
+// High-performance gzip/deflate compression for massive GeoJSON and JSON payloads
+app.use(compression({
+    level: 6,
+    threshold: 512
+}));
+
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '2mb' }));
 
 // Permissive iframe embedding and CORS middleware (allows embed.html in Wolfair/SimTechTracker/portals)
 app.use((req, res, next) => {
@@ -584,17 +592,22 @@ app.post('/api/v1/route/trace', async (req, res) => {
     }
 
     const routeStr = route || `${departure} ${arrival}`;
+    const normalizedRoute = String(routeStr).trim().toUpperCase().replace(/\s+/g, ' ');
+    const normDep = departure ? departure.trim().toUpperCase() : '';
+    const normArr = arrival ? arrival.trim().toUpperCase() : '';
     const include_labels = req.body?.include_labels ?? req.body?.show_labels ?? true;
-    const cacheKey = `${departure || ''}|${arrival || ''}|${routeStr}|${alt_ft}|${speed_kts}|${include_labels}`;
+    const cacheKey = `${normDep}|${normArr}|${normalizedRoute}|${alt_ft}|${speed_kts}|${include_labels}`;
+
+    res.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=86400');
 
     if (routeTraceMemoryCache.has(cacheKey)) {
         return res.json(routeTraceMemoryCache.get(cacheKey));
     }
 
     const result = await routeParser.parseRouteAsync(
-        routeStr,
-        departure,
-        arrival,
+        normalizedRoute,
+        normDep || null,
+        normArr || null,
         alt_ft,
         speed_kts,
         { include_labels }

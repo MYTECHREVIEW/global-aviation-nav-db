@@ -37,25 +37,50 @@ function interpolateGreatCircle(lat1, lon1, lat2, lon2, numSegments = 10) {
     while (l2 - l1 > 180) l2 -= 360;
     while (l2 - l1 < -180) l2 += 360;
 
-    const p1 = [l1 * Math.PI / 180, lat1 * Math.PI / 180];
-    const p2 = [l2 * Math.PI / 180, lat2 * Math.PI / 180];
+    const RAD = Math.PI / 180;
+    const DEG = 180 / Math.PI;
 
-    const d = 2 * Math.asin(Math.sqrt(
-        Math.pow(Math.sin((p1[1] - p2[1]) / 2), 2) +
-        Math.cos(p1[1]) * Math.cos(p2[1]) * Math.pow(Math.sin((p1[0] - p2[0]) / 2), 2)
-    ));
+    const p1 = [l1 * RAD, lat1 * RAD];
+    const p2 = [l2 * RAD, lat2 * RAD];
+
+    const sinDLat2 = Math.sin((p1[1] - p2[1]) * 0.5);
+    const sinDLon2 = Math.sin((p1[0] - p2[0]) * 0.5);
+    const cosLat1 = Math.cos(p1[1]);
+    const cosLat2 = Math.cos(p2[1]);
+
+    const d = 2 * Math.asin(Math.sqrt(sinDLat2 * sinDLat2 + cosLat1 * cosLat2 * sinDLon2 * sinDLon2));
 
     if (d === 0 || isNaN(d)) return [[lon1, lat1], [l2, lat2]];
 
+    // Short-segment fast path (< 10 NM / 0.003 rad): High precision linear interpolation
+    if (d < 0.003) {
+        for (let i = 0; i <= numSegments; i++) {
+            const f = i / numSegments;
+            coords.push([
+                parseFloat((l1 + (l2 - l1) * f).toFixed(6)),
+                parseFloat((lat1 + (lat2 - lat1) * f).toFixed(6))
+            ]);
+        }
+        return coords;
+    }
+
+    const invSinD = 1 / Math.sin(d);
+    const cosLat1CosLon1 = cosLat1 * Math.cos(p1[0]);
+    const cosLat1SinLon1 = cosLat1 * Math.sin(p1[0]);
+    const cosLat2CosLon2 = cosLat2 * Math.cos(p2[0]);
+    const cosLat2SinLon2 = cosLat2 * Math.sin(p2[0]);
+    const sinLat1 = Math.sin(p1[1]);
+    const sinLat2 = Math.sin(p2[1]);
+
     for (let i = 0; i <= numSegments; i++) {
         const f = i / numSegments;
-        const A = Math.sin((1 - f) * d) / Math.sin(d);
-        const B = Math.sin(f * d) / Math.sin(d);
-        const x = A * Math.cos(p1[1]) * Math.cos(p1[0]) + B * Math.cos(p2[1]) * Math.cos(p2[0]);
-        const y = A * Math.cos(p1[1]) * Math.sin(p1[0]) + B * Math.cos(p2[1]) * Math.sin(p2[0]);
-        const z = A * Math.sin(p1[1]) + B * Math.sin(p2[1]);
-        const lat = Math.atan2(z, Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))) * 180 / Math.PI;
-        let lon = Math.atan2(y, x) * 180 / Math.PI;
+        const A = Math.sin((1 - f) * d) * invSinD;
+        const B = Math.sin(f * d) * invSinD;
+        const x = A * cosLat1CosLon1 + B * cosLat2CosLon2;
+        const y = A * cosLat1SinLon1 + B * cosLat2SinLon2;
+        const z = A * sinLat1 + B * sinLat2;
+        const lat = Math.atan2(z, Math.hypot(x, y)) * DEG;
+        let lon = Math.atan2(y, x) * DEG;
 
         if (coords.length > 0) {
             const prevLon = coords[coords.length - 1][0];
