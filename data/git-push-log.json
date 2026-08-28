@@ -1,0 +1,110 @@
+[
+  {
+    "timestamp": "2026-08-28T01:07:34.843Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [NARAN] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "NARAN",
+        "name": "NARAN (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 28.36385,
+          "lon": 82.416401
+        },
+        "corrected_coords": {
+          "lat": 28.36385,
+          "lon": 82.416401
+        },
+        "distance_saved_nm": 0
+      }
+    ],
+    "idents": [
+      "NARAN"
+    ],
+    "status": "PUSHED",
+    "output": "[main b6bd1aa] fix(navdata): auto-calibrate waypoints [NARAN] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 25 insertions(+)\n",
+    "error": null
+  },
+  {
+    "timestamp": "2026-08-28T01:08:19.837Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [KABIG, MAKPA] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "KABIG",
+        "name": "KABIG (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 28.135267,
+          "lon": 83.0874
+        },
+        "corrected_coords": {
+          "lat": 28.135267,
+          "lon": 83.0874
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "MAKPA",
+        "name": "MAKPA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 27.906684,
+          "lon": 83.758399
+        },
+        "corrected_coords": {
+          "lat": 27.906684,
+          "lon": 83.758399
+        },
+        "distance_saved_nm": 0
+      }
+    ],
+    "idents": [
+      "KABIG",
+      "MAKPA"
+    ],
+    "status": "PUSHED",
+    "output": "[main a3e5951] fix(navdata): auto-calibrate waypoints [KABIG, MAKPA] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 52 insertions(+), 2 deletions(-)\n",
+    "error": null
+  },
+  {
+    "timestamp": "2026-08-28T21:43:53.989Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [ANOXI, LAIYA] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "ANOXI",
+        "name": "ANOXI (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 8.602136,
+          "lon": 124.720803
+        },
+        "corrected_coords": {
+          "lat": 8.848239,
+          "lon": 124.566603
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "LAIYA",
+        "name": "LAIYA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 10.570957,
+          "lon": 123.487201
+        },
+        "corrected_coords": {
+          "lat": 11.67842,
+          "lon": 122.7933
+        },
+        "distance_saved_nm": 0
+      }
+    ],
+    "idents": [
+      "ANOXI",
+      "LAIYA"
+    ],
+    "status": "PUSHED",
+    "output": "[main 176211c] fix(navdata): auto-calibrate waypoints [ANOXI, LAIYA] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 55 insertions(+), 5 deletions(-)\n",
+    "error": null
+  }
+]
