@@ -1090,5 +1090,17 @@
     "longitude": 30.166667,
     "country_code": "ZW",
     "region": "Africa"
+  },
+  "NARAN": {
+    "ident": "NARAN",
+    "name": "NARAN (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 28.36385,
+    "longitude": 82.416401,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T01:07:33.102Z"
   }
 }

@@ -2350,5 +2350,18 @@
     "frequency_mhz": null,
     "source": "OPENNAV_ONLINE",
     "updated_at": "2026-08-28T00:48:16.752Z"
+  },
+  "NARAN": {
+    "id": "INTERP_NARAN",
+    "ident": "NARAN",
+    "name": "NARAN (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 28.36385,
+    "longitude": 82.416401,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-28T01:07:30.780Z"
   }
 }
