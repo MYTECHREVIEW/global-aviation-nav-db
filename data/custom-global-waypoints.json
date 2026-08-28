@@ -1179,5 +1179,113 @@
     "elevation_ft": null,
     "frequency_mhz": null,
     "updated_at": "2026-08-28T21:43:52.334Z"
+  },
+  "ENDEQ": {
+    "ident": "ENDEQ",
+    "name": "ENDEQ (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 53.41951,
+    "longitude": -5.480201,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T21:49:25.254Z"
+  },
+  "ALAVA": {
+    "ident": "ALAVA",
+    "name": "ALAVA (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 53.416421,
+    "longitude": -4.544267,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T21:49:25.261Z"
+  },
+  "AMSAN": {
+    "ident": "AMSAN",
+    "name": "AMSAN (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 52.403894,
+    "longitude": 4.40255,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T21:49:25.268Z"
+  },
+  "TOLTA": {
+    "ident": "TOLTA",
+    "name": "TOLTA (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 52.074891,
+    "longitude": 5.810745,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T21:49:25.275Z"
+  },
+  "KUMER": {
+    "ident": "KUMER",
+    "name": "KUMER (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 51.745888,
+    "longitude": 7.218939,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T21:49:25.281Z"
+  },
+  "SULED": {
+    "ident": "SULED",
+    "name": "SULED (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 51.416885,
+    "longitude": 8.627133,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T21:49:25.287Z"
+  },
+  "PIKIB": {
+    "ident": "PIKIB",
+    "name": "PIKIB (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 51.087882,
+    "longitude": 10.035328,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T21:49:25.294Z"
+  },
+  "LALUK": {
+    "ident": "LALUK",
+    "name": "LALUK (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 50.758879,
+    "longitude": 11.443523,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T21:49:25.300Z"
+  },
+  "GOLOP": {
+    "ident": "GOLOP",
+    "name": "GOLOP (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 50.429876,
+    "longitude": 12.851717,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T21:49:25.306Z"
   }
 }
