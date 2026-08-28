@@ -2365,7 +2365,7 @@
     "updated_at": "2026-08-28T01:07:33.111Z"
   },
   "KABIG": {
-    "id": "INTERP_KABIG",
+    "id": "DYNAMIC_KABIG",
     "ident": "KABIG",
     "name": "KABIG (Enroute Fix)",
     "type": "WAYPOINT",
@@ -2374,11 +2374,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-28T01:08:16.063Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-28T01:08:18.287Z"
   },
   "MAKPA": {
-    "id": "INTERP_MAKPA",
+    "id": "DYNAMIC_MAKPA",
     "ident": "MAKPA",
     "name": "MAKPA (Enroute Fix)",
     "type": "WAYPOINT",
@@ -2387,7 +2387,33 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-28T01:08:18.294Z"
+  },
+  "ANOXI": {
+    "id": "INTERP_ANOXI",
+    "ident": "ANOXI",
+    "name": "ANOXI (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 8.602136,
+    "longitude": 124.720803,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
     "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-28T01:08:16.565Z"
+    "updated_at": "2026-08-28T21:43:35.919Z"
+  },
+  "LAIYA": {
+    "id": "INTERP_LAIYA",
+    "ident": "LAIYA",
+    "name": "LAIYA (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 10.570957,
+    "longitude": 123.487201,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-28T21:43:39.995Z"
   }
 }

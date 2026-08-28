@@ -1155,5 +1155,29 @@
     "longitude": 125.577028,
     "country_code": "PH",
     "region": "Asia"
+  },
+  "ANOXI": {
+    "ident": "ANOXI",
+    "name": "ANOXI (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 8.848239,
+    "longitude": 124.566603,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T21:43:52.326Z"
+  },
+  "LAIYA": {
+    "ident": "LAIYA",
+    "name": "LAIYA (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 11.67842,
+    "longitude": 122.7933,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T21:43:52.334Z"
   }
 }
