@@ -42,19 +42,38 @@ function initMap() {
         worldCopyJump: true
     }).setView([38.5, -96.0], 4);
 
-    // Mapbox Dark Black View (mapbox/dark-v11)
-    const baseTileLayer = L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/{z}/{x}/{y}?access_token=${mapboxToken}`, {
+    // CARTO dark fallback — always available, no token required
+    const fallbackTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+        maxZoom: 20,
+        attribution: '© CARTO'
+    });
+
+    // Correct Mapbox raster tile URL: tiles/512/{z}/{x}/{y} for tileSize:512
+    const mbUrl = `https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/512/{z}/{x}/{y}?access_token=${mapboxToken}`;
+    const baseTileLayer = L.tileLayer(mbUrl, {
         maxZoom: 19,
         tileSize: 512,
         zoomOffset: -1,
         attribution: '© Mapbox © OpenStreetMap'
     }).addTo(map);
 
+    let mapboxFailed = false;
+
+    // If Mapbox tiles fail (expired token, network, rate-limit) — swap to CARTO fallback
+    baseTileLayer.on('tileerror', () => {
+        if (mapboxFailed) return;
+        mapboxFailed = true;
+        console.warn('[Map] Mapbox tile error — switching to CARTO dark fallback.');
+        map.removeLayer(baseTileLayer);
+        fallbackTile.addTo(map);
+    });
+
     // Dynamic token update if server environment has a custom override
     fetch('/api/v1/config/env').then(r => r.json()).then(cfg => {
         if (cfg && cfg.mapbox_token && cfg.mapbox_token !== mapboxToken) {
             mapboxToken = cfg.mapbox_token;
-            baseTileLayer.setUrl(`https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/{z}/{x}/{y}?access_token=${mapboxToken}`);
+            // Update URL with corrected 512-path format
+            baseTileLayer.setUrl(`https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/512/{z}/{x}/{y}?access_token=${mapboxToken}`);
         }
     }).catch(() => {});
 
@@ -96,6 +115,7 @@ function initMap() {
         clearRouteFromMap();
     });
 }
+
 
 function switchNavTab(tabId, btnEl) {
     if (!tabId) return;
