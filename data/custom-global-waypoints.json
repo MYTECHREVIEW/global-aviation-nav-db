@@ -1018,5 +1018,77 @@
     "elevation_ft": null,
     "frequency_mhz": null,
     "updated_at": "2026-08-26T21:05:59.536Z"
+  },
+  "PEWBI": {
+    "ident": "PEWBI",
+    "name": "PEWBI (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 50.625906,
+    "longitude": -5.776708,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T00:47:36.113Z"
+  },
+  "TACQI": {
+    "ident": "TACQI",
+    "name": "TACQI (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 50.205592,
+    "longitude": -4.518076,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T00:47:36.122Z"
+  },
+  "SOVET": {
+    "ident": "SOVET",
+    "name": "SOVET (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 44.008505,
+    "longitude": 2.244999,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-28T00:47:36.127Z"
+  },
+  "UDLUM": {
+    "ident": "UDLUM",
+    "name": "UDLUM",
+    "type": "WAYPOINT",
+    "latitude": -22.183333,
+    "longitude": 29.833333,
+    "country_code": "ZW",
+    "region": "Africa"
+  },
+  "KODES": {
+    "ident": "KODES",
+    "name": "KODES",
+    "type": "WAYPOINT",
+    "latitude": -33.144444,
+    "longitude": 18.755556,
+    "country_code": "ZA",
+    "region": "Africa"
+  },
+  "OKDOL": {
+    "ident": "OKDOL",
+    "name": "OKDOL",
+    "type": "WAYPOINT",
+    "latitude": -20.198333,
+    "longitude": 30.638333,
+    "country_code": "ZW",
+    "region": "Africa"
+  },
+  "OKTOL": {
+    "ident": "OKTOL",
+    "name": "OKTOL",
+    "type": "WAYPOINT",
+    "latitude": -21.416667,
+    "longitude": 30.166667,
+    "country_code": "ZW",
+    "region": "Africa"
   }
 }
