@@ -42,6 +42,8 @@
             <div class="tab-nav" id="tabNavContainer">
                 <button class="tab-btn active" data-tab="tab-route">🛩️ Route Tracer</button>
                 <button class="tab-btn" data-tab="tab-search">🔍 Waypoint Search</button>
+                <button class="tab-btn" data-tab="tab-api">📡 API Docs</button>
+                <button class="tab-btn" data-tab="tab-keys">🔑 API Keys & Git</button>
             </div>
 
             <!-- TAB 1: ROUTE TRACER -->
@@ -269,8 +271,175 @@
                 </div>
             </div>
 
-            <!-- Dynamic Dev Containers Placeholder (Only populated on localhost) -->
-            <div id="devTabsContainer"></div>
+            <!-- TAB 3: API DOCS -->
+            <div class="tab-content" id="tab-api">
+                <div class="control-card compose-card">
+                    <div class="card-header-flex">
+                        <h3>🐳 Docker Compose & Dockage Stack</h3>
+                        <button id="copyComposeBtn" class="btn-copy">📋 Copy YAML</button>
+                    </div>
+                    <p class="help-text">Copy and paste this configuration directly into <strong>Portainer Web Editor</strong>, <strong>Dockage</strong>, or your server's <code>docker-compose.yml</code>.</p>
+                    <div class="code-block-wrapper">
+                        <pre class="code-pre"><code id="composeYamlCode">version: '3.8'
+
+services:
+  global-aviation-nav-db:
+    image: ghcr.io/mytechreview/global-aviation-nav-db:latest
+    container_name: global-aviation-nav-db
+    restart: unless-stopped
+    ports:
+      - "3510:3510"
+    environment:
+      - PORT=3510
+      - NODE_ENV=production
+      - MAPBOX_ACCESS_TOKEN=
+    volumes:
+      - aeronav_keys:/app/data/keys
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3510/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  aeronav_keys:
+    name: aeronav_api_keys</code></pre>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <h3>🔑 Authentication</h3>
+                    <p class="help-text">Pass API Key via <code>X-API-Key</code> header or <code>?api_key=</code> parameter. Public telemetry endpoints allow direct CORS pass-through.</p>
+                </div>
+
+                <!-- MULTI-NETWORK TARGET ARRAY TRACKING -->
+                <div class="control-card">
+                    <h3>🌐 Multi-Network Live Target Array API</h3>
+                    <div class="api-doc-item">
+                        <div class="api-doc-header"><span class="method post">POST</span> <code>/api/v1/live/multi</code></div>
+                        <p class="api-doc-desc">Concurrently tracks any combination of VATSIM CIDs/callsigns, FSHub tokens/user IDs/VAs, and IVAO IDs in a single batch request.</p>
+                    </div>
+                </div>
+
+                <!-- MODULAR RADAR EMBED & SDK -->
+                <div class="control-card">
+                    <h3>🛩️ Modular Radar Embed SDK</h3>
+                    <p class="help-text">Embed a standalone, clean 60FPS telemetry radar map with live route corridors and slide-over pilot inspector without any sidebars or management controls:</p>
+                    <pre class="code-pre"><code>&lt;!-- Clean Responsive Map Embed --&gt;
+&lt;iframe 
+  src="http://localhost:3510/embed.html?fshub_token=YOUR_FSHUB_TOKEN&vatsim=1234567" 
+  width="100%" 
+  height="650px" 
+  frameborder="0" 
+  style="border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);"&gt;
+&lt;/iframe&gt;</code></pre>
+                </div>
+
+                <!-- CORE DATA PASS-THROUGH ENDPOINTS -->
+                <div class="control-card">
+                    <h3>📡 Data Pass-Through & Flight Planning Endpoints</h3>
+                    <div class="api-doc-item">
+                        <div class="api-doc-header"><span class="method post">POST</span> <code>/api/v1/route/trace</code></div>
+                        <p class="api-doc-desc">Traces flight plan with SIDs, Airways, STARs, and international fixes into geodesic coordinates and GeoJSON corridors.</p>
+                    </div>
+                    <div class="api-doc-item">
+                        <div class="api-doc-header"><span class="method all">POST/GET</span> <code>/api/v1/fshub/inspect</code></div>
+                        <p class="api-doc-desc">Pass FSHub Token to fetch user profile, stats, personal flight, and active VA fleet flights.</p>
+                    </div>
+                    <div class="api-doc-item">
+                        <div class="api-doc-header"><span class="method post">POST</span> <code>/api/v1/simbrief/trace</code></div>
+                        <p class="api-doc-desc">Auto-import and trace SimBrief OFP in 1 step.</p>
+                    </div>
+                    <div class="api-doc-item">
+                        <div class="api-doc-header"><span class="method get">GET</span> <code>/api/v1/waypoints/search?q=MATLK</code></div>
+                        <p class="api-doc-desc">Search global navigation fixes, VORs, NDBs, and airports.</p>
+                    </div>
+                    <div class="api-doc-item">
+                        <div class="api-doc-header"><span class="method all">GET/POST</span> <code>/api/v1/waypoints/custom</code></div>
+                        <p class="api-doc-desc">Inspect or add/update custom persistent navigation waypoints in <code>data/custom-global-waypoints.json</code>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: API KEYS & GIT -->
+            <div class="tab-content" id="tab-keys">
+                <div class="control-card git-card">
+                    <div class="card-header-flex">
+                        <h3>🚀 GitHub Cloud Sync</h3>
+                        <a href="https://github.com/MYTECHREVIEW/global-aviation-nav-db" target="_blank" class="github-link-btn">View Repo ↗</a>
+                    </div>
+                    <p class="help-text">Push changes directly to GitHub so Portainer on TrueNAS can pull and update.</p>
+                    <div class="git-status-row">
+                        <span class="status-indicator-dot" id="gitStatusDot"></span>
+                        <span id="gitStatusText">Checking GitHub sync status...</span>
+                    </div>
+                    <div id="gitFilesContainer" class="git-files-container">
+                        <div class="git-files-header">
+                            <span class="git-files-title">📂 Pending Local Changes (<span id="gitFilesCount">0</span>)</span>
+                            <button id="gitRefreshBtn" class="btn-refresh-sm">🔄 Refresh</button>
+                        </div>
+                        <div id="gitFilesList" class="git-files-list">
+                            <div class="git-file-empty">Checking working directory...</div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Commit Message (Optional)</label>
+                        <input type="text" id="gitCommitMsg" placeholder="e.g. Update route parser and database" />
+                    </div>
+                    <button id="gitPushBtn" class="btn-primary btn-git"><span>⬆️ Push Changes to GitHub</span></button>
+                    <div id="gitPushResult" class="git-push-result" style="display: none;"></div>
+                </div>
+
+                <div class="control-card">
+                    <h3>🔑 Generate API Key</h3>
+                    <div class="input-grid">
+                        <div>
+                            <label>Key Name</label>
+                            <input type="text" id="newKeyName" placeholder="e.g. Flight Tracker Webhook" />
+                        </div>
+                        <div>
+                            <label>Expiration</label>
+                            <select id="newKeyExpires" class="custom-select">
+                                <option value="">Never (Permanent)</option>
+                                <option value="30">30 Days</option>
+                                <option value="90">90 Days</option>
+                                <option value="365" selected>1 Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button id="generateKeyBtn" class="btn-primary" style="margin-top: 10px;"><span>⚡ Generate API Key</span></button>
+                    <div id="createdKeyBox" class="created-key-box" style="display: none;">
+                        <div class="created-key-header">
+                            <span class="badge-success">New API Key Created</span>
+                        </div>
+                        <div class="key-display-row">
+                            <code id="createdKeyVal">aeronav_live_...</code>
+                            <button id="copyKeyBtn" class="btn-copy">📋 Copy</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <div class="card-header-flex">
+                        <h3>Active API Keys</h3>
+                        <button id="refreshKeysBtn" class="btn-refresh">🔄 Refresh</button>
+                    </div>
+                    <div class="table-scroll">
+                        <table class="wp-table keys-table">
+                            <thead>
+                                <tr>
+                                    <th>Client Name</th>
+                                    <th>API Key</th>
+                                    <th>Reqs</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="keysTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </aside>
 
         <!-- Map Container -->
@@ -307,6 +476,6 @@
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="app.js?v=3.5.0"></script>
+    <script src="app.js?v=3.6.0"></script>
 </body>
 </html>
