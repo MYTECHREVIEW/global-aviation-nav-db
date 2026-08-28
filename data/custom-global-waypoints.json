@@ -1093,38 +1093,29 @@
   },
   "NARAN": {
     "ident": "NARAN",
-    "name": "NARAN (Enroute Fix)",
+    "name": "NARAN",
     "type": "WAYPOINT",
-    "latitude": 28.36385,
-    "longitude": 82.416401,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-28T01:07:33.102Z"
+    "latitude": 27.679444,
+    "longitude": 84.429722,
+    "country_code": "NP",
+    "region": "Asia"
   },
   "KABIG": {
     "ident": "KABIG",
-    "name": "KABIG (Enroute Fix)",
+    "name": "KABIG",
     "type": "WAYPOINT",
-    "latitude": 28.135267,
-    "longitude": 83.0874,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-28T01:08:18.281Z"
+    "latitude": 27.570278,
+    "longitude": 84.048611,
+    "country_code": "NP",
+    "region": "Asia"
   },
   "MAKPA": {
     "ident": "MAKPA",
-    "name": "MAKPA (Enroute Fix)",
+    "name": "MAKPA",
     "type": "WAYPOINT",
-    "latitude": 27.906684,
-    "longitude": 83.758399,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-28T01:08:18.287Z"
+    "latitude": 27.522222,
+    "longitude": 83.8825,
+    "country_code": "NP",
+    "region": "Asia"
   }
 }
