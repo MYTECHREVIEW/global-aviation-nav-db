@@ -1,16 +1,15 @@
-
 let map;
 let routeLayerGroup;
 let fleetMarkersLayerGroup = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    initMap();
-    setupTabs();
-    setupEventListeners();
-    setupSimbrief();
-    setupLiveTracking();
-    setupFshubLiveHub();
-    setupDevTabEvents();
+    try { setupTabs(); } catch (e) { console.error('setupTabs error:', e); }
+    try { initMap(); } catch (e) { console.error('initMap error:', e); }
+    try { setupEventListeners(); } catch (e) { console.error('setupEventListeners error:', e); }
+    try { setupSimbrief(); } catch (e) { console.error('setupSimbrief error:', e); }
+    try { setupLiveTracking(); } catch (e) { console.error('setupLiveTracking error:', e); }
+    try { setupFshubLiveHub(); } catch (e) { console.error('setupFshubLiveHub error:', e); }
+    try { setupDevTabEvents(); } catch (e) { console.error('setupDevTabEvents error:', e); }
 
     const badge = document.getElementById('mapBadge');
     if (badge) badge.style.display = 'none';
@@ -82,9 +81,8 @@ function initMap() {
         }
     });
 
-    // Click-away listener: unloads the route flight plan only when user clicks on empty map space
+    // Deselect active single-pilot tracking card when clicking bare map canvas
     map.on('click', (e) => {
-        // If a marker was clicked recently (within 1000ms), do NOT clear
         if (Date.now() - lastMarkerClickTime < 1000) return;
         if (e && e.originalEvent && e.originalEvent._stopped) return;
         const target = e?.originalEvent?.target;
@@ -101,20 +99,32 @@ function initMap() {
 
 function setupTabs() {
     const tabNav = document.getElementById('tabNavContainer');
-    tabNav.addEventListener('click', (e) => {
-        const btn = e.target.closest('.tab-btn');
-        if (!btn) return;
+    if (!tabNav) return;
 
-        const allBtns = document.querySelectorAll('.tab-btn');
-        const allContents = document.querySelectorAll('.tab-content');
+    const tabButtons = tabNav.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.sidebar > .tab-content');
 
-        allBtns.forEach(b => b.classList.remove('active'));
-        allContents.forEach(c => c.classList.remove('active'));
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const targetId = btn.getAttribute('data-tab');
+            if (!targetId) return;
 
-        btn.classList.add('active');
-        const target = btn.getAttribute('data-tab');
-        const targetEl = document.getElementById(target);
-        if (targetEl) targetEl.classList.add('active');
+            // Remove active class from all header buttons
+            tabButtons.forEach(b => b.classList.remove('active'));
+            // Remove active class from all sidebar tab contents
+            tabContents.forEach(c => c.classList.remove('active'));
+
+            // Activate current tab button
+            btn.classList.add('active');
+
+            // Activate target container
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+                targetEl.classList.add('active');
+            }
+        });
     });
 }
 
