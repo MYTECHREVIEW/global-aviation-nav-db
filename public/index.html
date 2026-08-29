@@ -463,7 +463,10 @@ volumes:
                     <span class="stats-value" id="statsAirbornePilots">0</span>
                 </div>
                 <div class="stats-row">
-                    <span class="stats-label">PILOTS                 <div class="stats-row">
+                    <span class="stats-label">PILOTS ON-GROUND:</span>
+                    <span class="stats-value" id="statsGroundPilots">0</span>
+                </div>
+                <div class="stats-row">
                     <span class="stats-label">VATSIM ONLINE:</span>
                     <span class="stats-value" id="statsVatsimPilots">0</span>
                 </div>
@@ -542,8 +545,8 @@ volumes:
         });
     </script>
 
-    <!-- Leaflet JS -->
+    <!-- Leaflet JS — must load BEFORE app.js so L is defined when initMap() runs -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="app.js?v=3.9.0"></script>
+    <script src="app.js?v=4.0.0"></script>
 </body>
 </html>
