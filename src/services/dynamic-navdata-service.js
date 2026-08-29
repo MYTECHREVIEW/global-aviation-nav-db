@@ -151,6 +151,14 @@ class DynamicNavDataService {
     }
 
     async resolveOnline(ident, prevLat = null, prevLon = null, nextLat = null, nextLon = null, fraction = 0.5) {
+        // Hard deadline: entire online resolution must complete within 4 seconds
+        return Promise.race([
+            this._resolveOnlineInner(ident, prevLat, prevLon, nextLat, nextLon, fraction),
+            new Promise(resolve => setTimeout(() => resolve(null), 4000))
+        ]);
+    }
+
+    async _resolveOnlineInner(ident, prevLat = null, prevLon = null, nextLat = null, nextLon = null, fraction = 0.5) {
         if (!ident) return null;
         const clean = ident.trim().toUpperCase();
 
