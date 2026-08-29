@@ -1,6 +1,7 @@
 let map;
 let routeLayerGroup;
 let fleetMarkersLayerGroup = null;
+let lastMarkerClickTime = 0; // Tracks last aircraft/marker click to suppress map canvas deselect
 
 document.addEventListener('DOMContentLoaded', () => {
     try { setupTabs(); } catch (e) { console.error('setupTabs error:', e); }

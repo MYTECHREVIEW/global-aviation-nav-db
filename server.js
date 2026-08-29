@@ -44,6 +44,9 @@ app.use((req, res, next) => {
     next();
 });
 
+// Silence favicon 404
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 app.use(express.static(path.join(__dirname, 'public'), {
     setHeaders: (res, filePath) => {
         res.removeHeader('X-Frame-Options');
