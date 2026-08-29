@@ -1200,12 +1200,15 @@
   },
   "AMSAN": {
     "ident": "AMSAN",
-    "name": "AMSAN",
+    "name": "AMSAN (Enroute Fix)",
     "type": "WAYPOINT",
-    "latitude": 52.188333,
-    "longitude": 5.145,
-    "country_code": "NL",
-    "region": "Europe"
+    "latitude": 52.209945,
+    "longitude": 6.253405,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-29T18:39:47.697Z"
   },
   "TOLTA": {
     "ident": "TOLTA",
