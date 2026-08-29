@@ -15,7 +15,13 @@ class DynamicNavDataService {
     loadDynamicDatabase() {
         try {
             if (fs.existsSync(DYNAMIC_DB_PATH)) {
-                const raw = fs.readFileSync(DYNAMIC_DB_PATH, 'utf8');
+                const raw = fs.readFileSync(DYNAMIC_DB_PATH, 'utf8').trim();
+                // Treat empty file same as missing — don't crash on JSON.parse('')
+                if (!raw) {
+                    this.cache = {};
+                    this.scheduleSave();
+                    return;
+                }
                 this.cache = JSON.parse(raw);
                 console.log(`[DynamicNavData] Loaded ${Object.keys(this.cache).length} cached dynamic international fixes.`);
             } else {
@@ -23,8 +29,10 @@ class DynamicNavDataService {
                 this.scheduleSave();
             }
         } catch (e) {
-            console.error('[DynamicNavData] Error loading dynamic fixes DB:', e.message);
+            console.error('[DynamicNavData] Error loading dynamic fixes DB:', e.message, '— resetting to empty cache.');
             this.cache = {};
+            // Write valid empty JSON immediately to repair the corrupt file
+            try { fs.writeFileSync(DYNAMIC_DB_PATH, '{}', 'utf8'); } catch (_) {}
         }
     }
 
