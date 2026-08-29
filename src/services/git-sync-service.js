@@ -63,7 +63,12 @@ class GitSyncService {
 
         return new Promise((resolve) => {
             const cmd = `git add ${files.join(' ')} && git commit -m "${commitMsg.replace(/"/g, '\\"')}" && git push origin main`;
-            exec(cmd, { cwd: REPO_ROOT }, (err, stdout, stderr) => {
+            const opts = {
+                cwd: REPO_ROOT,
+                timeout: 30000, // 30s max — prevents hanging git push from freezing the server
+                env: { ...process.env, GIT_TERMINAL_PROMPT: '0' } // Never prompt for credentials
+            };
+            exec(cmd, opts, (err, stdout, stderr) => {
                 const timestamp = new Date().toISOString();
                 const logEntry = {
                     timestamp,
@@ -87,6 +92,7 @@ class GitSyncService {
             });
         });
     }
+
 
     /**
      * Retrieve chronological Git commit and push history

@@ -1026,6 +1026,19 @@ app.post('/api/v1/live/track', async (req, res) => {
     }
 });
 
+// ── Global Crash Guards — prevent silent server death ─────────────────────────
+process.on('uncaughtException', (err) => {
+    console.error('[CRASH] Uncaught Exception:', err.message);
+    console.error(err.stack);
+    // Do NOT exit — keep server alive for other requests
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('[CRASH] Unhandled Promise Rejection at:', promise);
+    console.error('[CRASH] Reason:', reason);
+    // Do NOT exit — keep server alive for other requests
+});
+
 app.listen(PORT, () => {
     console.log(`✈️ Global Aviation Navigation Database & Route API is running on http://localhost:${PORT}`);
 });
