@@ -375,6 +375,7 @@ async function analyzeAndFixRoute() {
         const simbriefUserEl = document.getElementById('simbriefUserInput') || document.getElementById('simbriefPilotId');
         const storedSimbriefUser = simbriefUserEl ? simbriefUserEl.value.trim() : (localStorage.getItem('stt_simbrief_user') || '');
 
+    try {
         const response = await fetch('/api/v1/route/analyze', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
