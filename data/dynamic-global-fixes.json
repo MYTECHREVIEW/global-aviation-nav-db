@@ -1,6 +1,6 @@
 {
   "IVURO": {
-    "id": "INTERP_IVURO",
+    "id": "DYNAMIC_IVURO",
     "ident": "IVURO",
     "name": "IVURO (Enroute Fix)",
     "type": "WAYPOINT",
@@ -9,11 +9,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T01:23:46.496Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T01:27:31.852Z"
   },
   "LALDO": {
-    "id": "INTERP_LALDO",
+    "id": "DYNAMIC_LALDO",
     "ident": "LALDO",
     "name": "LALDO (Enroute Fix)",
     "type": "WAYPOINT",
@@ -22,11 +22,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T01:23:46.501Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T01:27:31.859Z"
   },
   "EGTAL": {
-    "id": "INTERP_EGTAL",
+    "id": "DYNAMIC_EGTAL",
     "ident": "EGTAL",
     "name": "EGTAL (Enroute Fix)",
     "type": "WAYPOINT",
@@ -35,11 +35,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T01:23:46.502Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T01:27:31.868Z"
   },
   "BIVIN": {
-    "id": "INTERP_BIVIN",
+    "id": "DYNAMIC_BIVIN",
     "ident": "BIVIN",
     "name": "BIVIN (Enroute Fix)",
     "type": "WAYPOINT",
@@ -48,11 +48,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T01:23:46.503Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T01:27:31.876Z"
   },
   "MERUN": {
-    "id": "INTERP_MERUN",
+    "id": "DYNAMIC_MERUN",
     "ident": "MERUN",
     "name": "MERUN (Enroute Fix)",
     "type": "WAYPOINT",
@@ -61,7 +61,7 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T01:23:46.505Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T01:27:31.884Z"
   }
 }
