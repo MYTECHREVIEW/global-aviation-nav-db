@@ -505,7 +505,7 @@ class RouteParser {
         return bestCandidate;
     }
 
-    async resolvePointAsync(token, refLat = null, refLon = null, isExplicitAirport = false, nextLat = null, nextLon = null, fraction = 0.5) {
+    async resolvePointAsync(token, refLat = null, refLon = null, isExplicitAirport = false, nextLat = null, nextLon = null, fraction = 0.5, options = {}) {
         const clean = sanitizeToken(token);
         if (!clean || isSpeedLevelToken(clean) || isNatTrackToken(clean) || clean === 'DCT' || clean === 'DIRECT') return null;
 
@@ -520,7 +520,8 @@ class RouteParser {
             }
         }
 
-        const online = await dynamicNavDataService.resolveOnline(clean, refLat, refLon, nextLat, nextLon, fraction);
+        const enableScraper = options.enable_online_scrape === true;
+        const online = await dynamicNavDataService.resolveOnline(clean, refLat, refLon, nextLat, nextLon, fraction, enableScraper);
         if (online) {
             if (!this.waypointsByIdent[clean]) this.waypointsByIdent[clean] = [];
             this.waypointsByIdent[clean].push(online);
@@ -1199,7 +1200,7 @@ class RouteParser {
             }
             const fraction = 1 / gapCount;
 
-            const point = await this.resolvePointAsync(token, currentRefLat, currentRefLon, false, nextCandidateLat, nextCandidateLon, fraction);
+            const point = await this.resolvePointAsync(token, currentRefLat, currentRefLon, false, nextCandidateLat, nextCandidateLon, fraction, options);
             if (point) {
                 resolvedPoints.push(point);
                 currentRefLat = point.latitude;
@@ -1454,7 +1455,7 @@ class RouteParser {
                 // If no local candidate improves the route, attempt online scraper probe
                 if (!bestCandidate || minCandidateDetour > 200) {
                     try {
-                        const onlineFix = await dynamicNavDataService.resolveOnline(clean, prev.latitude, prev.longitude, next.latitude, next.longitude);
+                        const onlineFix = await dynamicNavDataService.resolveOnline(clean, prev.latitude, prev.longitude, next.latitude, next.longitude, 0.5, true);
                         if (onlineFix) {
                             const onlineDVia = (haversineDistanceM(prev.latitude, prev.longitude, onlineFix.latitude, onlineFix.longitude) +
                                                 haversineDistanceM(onlineFix.latitude, onlineFix.longitude, next.latitude, next.longitude)) / 1852;

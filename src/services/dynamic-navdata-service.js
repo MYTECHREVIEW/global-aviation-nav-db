@@ -150,15 +150,18 @@ class DynamicNavDataService {
         return fix;
     }
 
-    async resolveOnline(ident, prevLat = null, prevLon = null, nextLat = null, nextLon = null, fraction = 0.5) {
-        // Fast deadline: entire online resolution must complete within 1.2 seconds max
+    async resolveOnline(ident, prevLat = null, prevLon = null, nextLat = null, nextLon = null, fraction = 0.5, enableScraper = false) {
+        if (!enableScraper) {
+            return this._resolveOnlineInner(ident, prevLat, prevLon, nextLat, nextLon, fraction, false);
+        }
+        // When scraping is requested, set a 1.2s timeout deadline
         return Promise.race([
-            this._resolveOnlineInner(ident, prevLat, prevLon, nextLat, nextLon, fraction),
+            this._resolveOnlineInner(ident, prevLat, prevLon, nextLat, nextLon, fraction, true),
             new Promise(resolve => setTimeout(() => resolve(null), 1200))
         ]);
     }
 
-    async _resolveOnlineInner(ident, prevLat = null, prevLon = null, nextLat = null, nextLon = null, fraction = 0.5) {
+    async _resolveOnlineInner(ident, prevLat = null, prevLon = null, nextLat = null, nextLon = null, fraction = 0.5, enableScraper = false) {
         if (!ident) return null;
         const clean = ident.trim().toUpperCase();
 
@@ -175,9 +178,10 @@ class DynamicNavDataService {
             }
         }
 
-        // 2. Ultra-Fast Parallel Search on OpenNav (Max 1.2s timeout)
-        try {
-            const searchRes = await this.postHttp('https://opennav.com/search', `q=${encodeURIComponent(clean)}`, { timeout: 1000 });
+        // 2. Only probe external website if enableScraper is true (e.g. deep Auto-Fix)
+        if (enableScraper) {
+            try {
+                const searchRes = await this.postHttp('https://opennav.com/search', `q=${encodeURIComponent(clean)}`, { timeout: 800 });
             if (searchRes && searchRes.data) {
                 const links = [];
                 const matches = searchRes.data.matchAll(/\/(waypoint|navaid)\/([A-Z0-9]+)\/([A-Z0-9]+)/gi);
@@ -246,6 +250,8 @@ class DynamicNavDataService {
         } catch (err) {
             // Non-blocking fallback
         }
+    }
+
 
         // 3. Instant Geodesic Interpolation Fallback (Guarantees <1ms return if online lookup misses)
         if (prevLat !== null && prevLon !== null && nextLat !== null && nextLon !== null) {

@@ -583,6 +583,7 @@ const routeTraceMemoryCache = new Map();
 const MAX_ROUTE_TRACE_CACHE = 5000;
 
 app.post('/api/v1/route/trace', async (req, res) => {
+    console.log('[RouteTrace] Incoming POST /api/v1/route/trace:', req.body?.route || `${req.body?.departure} ${req.body?.arrival}`);
     const { route, departure, arrival, altitude_ft } = req.body || {};
     const rawSpeed = req.body?.speed_kts ?? req.body?.airspeed_kts;
     const speed_kts = parseInt(rawSpeed, 10) > 50 ? parseInt(rawSpeed, 10) : 450;
@@ -604,10 +605,13 @@ app.post('/api/v1/route/trace', async (req, res) => {
     res.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=86400');
 
     if (routeTraceMemoryCache.has(cacheKey)) {
+        console.log('[RouteTrace] Returning cached result for key:', cacheKey);
         return res.json(routeTraceMemoryCache.get(cacheKey));
     }
 
     try {
+        console.log('[RouteTrace] Starting parseRouteAsync...');
+        const t0 = Date.now();
         const result = await routeParser.parseRouteAsync(
             normalizedRoute,
             normDep || null,
@@ -616,6 +620,7 @@ app.post('/api/v1/route/trace', async (req, res) => {
             speed_kts,
             { include_labels }
         );
+        console.log(`[RouteTrace] parseRouteAsync finished in ${Date.now() - t0}ms. Waypoints: ${result.waypoints?.length}`);
 
         // Build Static Map URL with GeoJSON overlay (Mapbox dark-v11 black view)
         let staticMapUrl = null;
