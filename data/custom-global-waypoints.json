@@ -1445,5 +1445,29 @@
     "elevation_ft": null,
     "frequency_mhz": null,
     "updated_at": "2026-08-30T01:41:39.906Z"
+  },
+  "EPKOS": {
+    "ident": "EPKOS",
+    "name": "EPKOS (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 16.041049,
+    "longitude": 76.519299,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T01:42:50.648Z"
+  },
+  "SAGOR": {
+    "ident": "SAGOR",
+    "name": "SAGOR (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 10.08708,
+    "longitude": 80.027401,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T01:42:50.656Z"
   }
 }
