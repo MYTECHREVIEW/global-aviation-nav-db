@@ -510,9 +510,65 @@ function lerpAngle(a, b, t) {
     return (a + diff * t + 360) % 360;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// 🗺️ MAP INITIALIZATION & MOTION ENGINE
-// ═══════════════════════════════════════════════════════════════════════════════
+function normalizeLonDelta(targetLon, refLon) {
+    let diff = (targetLon - refLon) % 360;
+    if (diff > 180) diff -= 360;
+    if (diff < -180) diff += 360;
+    return refLon + diff;
+}
+
+function unwrapLatLngs(coords) {
+    if (!coords || coords.length === 0) return [];
+    const unwrapped = [];
+    let prevLon = null;
+
+    for (let i = 0; i < coords.length; i++) {
+        const c = coords[i];
+        const lat = Array.isArray(c) ? c[0] : c.lat;
+        let lon = Array.isArray(c) ? c[1] : (c.lng !== undefined ? c.lng : c.lon);
+
+        if (prevLon !== null) {
+            lon = normalizeLonDelta(lon, prevLon);
+        }
+
+        prevLon = lon;
+        unwrapped.push([lat, lon]);
+    }
+    return unwrapped;
+}
+
+function getRouteWorldShift(coords, mapCenterLng) {
+    if (!coords || coords.length === 0) return 0;
+    const avgLon = coords.reduce((acc, c) => acc + (Array.isArray(c) ? c[1] : (c.lng ?? c.lon)), 0) / coords.length;
+    let bestOffset = 0;
+    let minDiff = Infinity;
+    for (let k = -4; k <= 4; k++) {
+        const offset = k * 360;
+        const diff = Math.abs(avgLon + offset - mapCenterLng);
+        if (diff < minDiff) {
+            minDiff = diff;
+            bestOffset = offset;
+        }
+    }
+    return bestOffset;
+}
+
+function getVisibleLongitude(rawLon, mapInstance) {
+    if (!mapInstance) return rawLon;
+    const centerLon = mapInstance.getCenter().lng;
+    let bestLon = rawLon;
+    let minDiff = Infinity;
+
+    for (let offset = -1080; offset <= 1080; offset += 360) {
+        const testLon = rawLon + offset;
+        const diff = Math.abs(testLon - centerLon);
+        if (diff < minDiff) {
+            minDiff = diff;
+            bestLon = testLon;
+        }
+    }
+    return bestLon;
+}
 
 function initMap() {
     map = L.map('embedMap', {
@@ -566,10 +622,10 @@ function startMotionLoop() {
         const now = performance.now();
 
         fleetBuffers.forEach((buf, id) => {
-            if (!buf.marker || !map.hasLayer(buf.marker)) return;
             buf.update(now);
 
-            buf.marker.setLatLng([buf.renderLat, buf.renderLon]);
+            const visLon = getVisibleLongitude(buf.renderLon, map);
+            buf.marker.setLatLng([buf.renderLat, visLon]);
 
             const markerEl = buf.marker.getElement();
             if (markerEl) {
@@ -799,7 +855,8 @@ function renderFleetOnMap(flights) {
             buf.marker.setZIndexOffset(isSelected ? 1100 : 900);
         }
 
-        bounds.push([buf.renderLat, buf.renderLon]);
+        const visLon = getVisibleLongitude(buf.renderLon, map);
+        bounds.push([buf.renderLat, visLon]);
     });
 
     // Auto-focus on active fleet on initial load
@@ -847,37 +904,62 @@ const clientEmbedRouteCache = new Map();
 function renderTracedRouteOnMap(routeData) {
     activeRouteData = routeData;
 
-    if (activeRouteLayer) map.removeLayer(activeRouteLayer);
+    if (activeRouteLayer && map.hasLayer(activeRouteLayer)) {
+        map.removeLayer(activeRouteLayer);
+    }
     if (!activeWaypointsLayerGroup) {
         activeWaypointsLayerGroup = L.layerGroup().addTo(map);
     }
     activeWaypointsLayerGroup.clearLayers();
 
-    if (routeData.waypoints && routeData.waypoints.length > 1) {
-        const latlngs = routeData.waypoints.map(w => [w.latitude, w.longitude]);
-        
-        // 1. Neon Green Glow Underlay
-        L.polyline(latlngs, {
-            color: '#00ff88',
-            weight: 6,
-            opacity: 0.25,
-            lineCap: 'round'
-        }).addTo(activeWaypointsLayerGroup);
+    if (!routeData) return;
 
-        // 2. Primary Neon Green Dashed Flight Corridor
-        activeRouteLayer = L.polyline(latlngs, {
-            color: '#00ff88',
-            weight: 3,
-            opacity: 0.9,
-            dashArray: '8, 4',
-            lineCap: 'round'
-        }).addTo(activeWaypointsLayerGroup);
+    // Use high-density smoothed route coordinates if available, otherwise fallback to waypoints
+    const rawCoords = (routeData.route_coordinates && routeData.route_coordinates.length > 0)
+        ? routeData.route_coordinates.map(c => [c[1], c[0]])
+        : (routeData.waypoints ? routeData.waypoints.map(w => [w.latitude, w.longitude]) : []);
 
-        // 3. Color-Coded Waypoint Fixes & Rectangular Pill Labels
-        routeData.waypoints.forEach((wp) => {
+    if (rawCoords.length < 2) return;
+
+    const baseLatLngs = unwrapLatLngs(rawCoords);
+    const mapCenterLng = map ? map.getCenter().lng : -96.0;
+    const worldShift = getRouteWorldShift(baseLatLngs, mapCenterLng);
+    const latLngs = baseLatLngs.map(([lat, lon]) => [lat, lon + worldShift]);
+
+    // 1. Neon Green Glow Underlay
+    L.polyline(latLngs, {
+        color: '#00ff88',
+        weight: 6,
+        opacity: 0.25,
+        lineCap: 'round'
+    }).addTo(activeWaypointsLayerGroup);
+
+    // 2. Primary Neon Green Dashed Flight Corridor
+    activeRouteLayer = L.polyline(latLngs, {
+        color: '#00ff88',
+        weight: 3,
+        opacity: 0.9,
+        dashArray: '8, 4',
+        lineCap: 'round'
+    }).addTo(activeWaypointsLayerGroup);
+
+    // 3. Color-Coded Waypoint Fixes & Rectangular Pill Labels
+    if (routeData.waypoints && routeData.waypoints.length > 0) {
+        let runningWpLon = routeData.waypoints[0].unwrapped_longitude !== undefined 
+            ? routeData.waypoints[0].unwrapped_longitude 
+            : routeData.waypoints[0].longitude;
+
+        routeData.waypoints.forEach((wp, idx) => {
             const isVor = (wp.type || '').includes('VOR') || (wp.type || '').includes('TACAN') || (wp.type || '').includes('NDB');
             const isApt = wp.type === 'AIRPORT';
             const isFix = wp.type === 'TERMINAL_WAYPOINT' || wp.type === 'INTERSECTION' || wp.type === 'FIX';
+
+            let wpLon = wp.unwrapped_longitude !== undefined ? wp.unwrapped_longitude : wp.longitude;
+            if (idx > 0) {
+                wpLon = normalizeLonDelta(wpLon, runningWpLon);
+            }
+            runningWpLon = wpLon;
+            const shiftedWpLon = wpLon + worldShift;
 
             let markerColor = '#f43f5e'; // Waypoint Rose
             let radius = 4;
@@ -897,7 +979,7 @@ function renderTracedRouteOnMap(routeData) {
                 labelClass = 'map-wp-label wp-fix';
             }
 
-            const marker = L.circleMarker([wp.latitude, wp.longitude], {
+            const marker = L.circleMarker([wp.latitude, shiftedWpLon], {
                 radius: radius,
                 fillColor: markerColor,
                 color: '#fff',
@@ -913,9 +995,9 @@ function renderTracedRouteOnMap(routeData) {
                 className: labelClass
             });
         });
-
-        map.fitBounds(activeRouteLayer.getBounds(), { padding: [50, 50] });
     }
+
+    map.fitBounds(activeRouteLayer.getBounds(), { padding: [50, 50] });
 }
 
 async function loadAndTraceRoute(routeStr, dep, arr) {
