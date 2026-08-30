@@ -1025,5 +1025,91 @@
     "status": "PUSHED",
     "output": "[main bfa1ad6] fix(navdata): auto-calibrate waypoints [VEBIT, GERSA, ENOBA, ASBOP, BORDI] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 1 file changed, 5 insertions(+), 5 deletions(-)\n",
     "error": null
+  },
+  {
+    "timestamp": "2026-08-30T02:40:32.732Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [ISDAK, MENED, ANRUG, ONEBA, BUPMI] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "ISDAK",
+        "name": "ISDAK (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 37.071046,
+          "lon": 111.883751
+        },
+        "corrected_coords": {
+          "lat": 37.033499,
+          "lon": 111.842404
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "MENED",
+        "name": "MENED (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 36.320099,
+          "lon": 111.05681
+        },
+        "corrected_coords": {
+          "lat": 36.247686,
+          "lon": 110.977069
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "ANRUG",
+        "name": "ANRUG (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 35.461873,
+          "lon": 110.111735
+        },
+        "corrected_coords": {
+          "lat": 35.339844,
+          "lon": 109.977357
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "ONEBA",
+        "name": "ONEBA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 34.432002,
+          "lon": 108.977645
+        },
+        "corrected_coords": {
+          "lat": 34.199343,
+          "lon": 108.721441
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "BUPMI",
+        "name": "BUPMI (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 33.058841,
+          "lon": 107.465525
+        },
+        "corrected_coords": {
+          "lat": 32.255932,
+          "lon": 106.581362
+        },
+        "distance_saved_nm": 0
+      }
+    ],
+    "idents": [
+      "ISDAK",
+      "MENED",
+      "ANRUG",
+      "ONEBA",
+      "BUPMI"
+    ],
+    "status": "PUSHED",
+    "output": "[main 20678c7] fix(navdata): auto-calibrate waypoints [ISDAK, MENED, ANRUG, ONEBA, BUPMI] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 125 insertions(+)\n",
+    "error": null
   }
 ]

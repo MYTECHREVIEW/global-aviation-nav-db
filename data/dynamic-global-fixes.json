@@ -468,68 +468,68 @@
     "updated_at": "2026-08-30T02:37:29.156Z"
   },
   "ISDAK": {
-    "id": "INTERP_ISDAK",
+    "id": "DYNAMIC_ISDAK",
     "ident": "ISDAK",
     "name": "ISDAK (Enroute Fix)",
     "type": "WAYPOINT",
-    "latitude": 37.071046,
-    "longitude": 111.883751,
+    "latitude": 37.033499,
+    "longitude": 111.842404,
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T02:40:28.914Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T02:40:31.227Z"
   },
   "MENED": {
-    "id": "INTERP_MENED",
+    "id": "DYNAMIC_MENED",
     "ident": "MENED",
     "name": "MENED (Enroute Fix)",
     "type": "WAYPOINT",
-    "latitude": 36.320099,
-    "longitude": 111.05681,
+    "latitude": 36.247686,
+    "longitude": 110.977069,
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T02:40:28.916Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T02:40:31.232Z"
   },
   "ANRUG": {
-    "id": "INTERP_ANRUG",
+    "id": "DYNAMIC_ANRUG",
     "ident": "ANRUG",
     "name": "ANRUG (Enroute Fix)",
     "type": "WAYPOINT",
-    "latitude": 35.461873,
-    "longitude": 110.111735,
+    "latitude": 35.339844,
+    "longitude": 109.977357,
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T02:40:28.918Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T02:40:31.238Z"
   },
   "ONEBA": {
-    "id": "INTERP_ONEBA",
+    "id": "DYNAMIC_ONEBA",
     "ident": "ONEBA",
     "name": "ONEBA (Enroute Fix)",
     "type": "WAYPOINT",
-    "latitude": 34.432002,
-    "longitude": 108.977645,
+    "latitude": 34.199343,
+    "longitude": 108.721441,
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T02:40:28.920Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T02:40:31.244Z"
   },
   "BUPMI": {
-    "id": "INTERP_BUPMI",
+    "id": "DYNAMIC_BUPMI",
     "ident": "BUPMI",
     "name": "BUPMI (Enroute Fix)",
     "type": "WAYPOINT",
-    "latitude": 33.058841,
-    "longitude": 107.465525,
+    "latitude": 32.255932,
+    "longitude": 106.581362,
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T02:40:28.921Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T02:40:31.249Z"
   }
 }
