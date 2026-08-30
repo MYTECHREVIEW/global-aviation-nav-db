@@ -251,10 +251,11 @@ class DynamicNavDataService {
         if (prevLat !== null && prevLon !== null && nextLat !== null && nextLon !== null) {
             const safeFraction = Math.max(0.05, Math.min(0.95, fraction || 0.5));
             const midLat = prevLat + (nextLat - prevLat) * safeFraction;
-            let pLon = prevLon;
-            let nLon = nextLon;
-            while (nLon - pLon > 180) nLon -= 360;
-            while (nLon - pLon < -180) nLon += 360;
+            const pLon = prevLon;
+            let lonDiff = (nextLon - pLon) % 360;
+            if (lonDiff > 180) lonDiff -= 360;
+            if (lonDiff < -180) lonDiff += 360;
+            const nLon = pLon + lonDiff;
             const midLon = pLon + (nLon - pLon) * safeFraction;
 
             const interpolated = {

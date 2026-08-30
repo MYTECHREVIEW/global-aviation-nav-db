@@ -30,12 +30,17 @@ function calculateBearingDeg(lat1, lon1, lat2, lon2) {
     return (theta * 180 / Math.PI + 360) % 360;
 }
 
+function normalizeLonDelta(targetLon, refLon) {
+    let diff = (targetLon - refLon) % 360;
+    if (diff > 180) diff -= 360;
+    if (diff < -180) diff += 360;
+    return refLon + diff;
+}
+
 function interpolateGreatCircle(lat1, lon1, lat2, lon2, numSegments = 10) {
     const coords = [];
     let l1 = lon1;
-    let l2 = lon2;
-    while (l2 - l1 > 180) l2 -= 360;
-    while (l2 - l1 < -180) l2 += 360;
+    let l2 = normalizeLonDelta(lon2, lon1);
 
     const RAD = Math.PI / 180;
     const DEG = 180 / Math.PI;
@@ -83,18 +88,16 @@ function interpolateGreatCircle(lat1, lon1, lat2, lon2, numSegments = 10) {
         let lon = Math.atan2(y, x) * DEG;
 
         if (coords.length > 0) {
-            const prevLon = coords[coords.length - 1][0];
-            while (lon - prevLon > 180) lon -= 360;
-            while (lon - prevLon < -180) lon += 360;
+            lon = normalizeLonDelta(lon, coords[coords.length - 1][0]);
         } else {
-            while (lon - l1 > 180) lon -= 360;
-            while (lon - l1 < -180) lon += 360;
+            lon = normalizeLonDelta(lon, l1);
         }
 
         coords.push([parseFloat(lon.toFixed(6)), parseFloat(lat.toFixed(6))]);
     }
     return coords;
 }
+
 
 function sanitizeToken(raw) {
     if (!raw) return '';
@@ -830,9 +833,7 @@ class RouteParser {
                 segmentBearingDeg = Math.round(calculateBearingDeg(prev.latitude, prev.longitude, pt.latitude, pt.longitude) * 10) / 10;
 
                 const startLon = runningLon;
-                let endLon = pt.longitude;
-                while (endLon - startLon > 180) endLon -= 360;
-                while (endLon - startLon < -180) endLon += 360;
+                const endLon = normalizeLonDelta(pt.longitude, startLon);
 
                 const segmentCoords = interpolateGreatCircle(prev.latitude, startLon, pt.latitude, endLon, 12);
                 if (i === 1) {
@@ -1230,9 +1231,7 @@ class RouteParser {
                 segmentBearingDeg = Math.round(calculateBearingDeg(prev.latitude, prev.longitude, pt.latitude, pt.longitude) * 10) / 10;
 
                 const startLon = runningLon;
-                let endLon = pt.longitude;
-                while (endLon - startLon > 180) endLon -= 360;
-                while (endLon - startLon < -180) endLon += 360;
+                const endLon = normalizeLonDelta(pt.longitude, startLon);
 
                 const segmentCoords = interpolateGreatCircle(prev.latitude, startLon, pt.latitude, endLon, 12);
                 if (i === 1) {
@@ -1471,10 +1470,8 @@ class RouteParser {
                 // If still excessive detour (>200 NM), compute geodesic flight corridor midpoint
                 if (!bestCandidate || minCandidateDetour > 200) {
                     const midLat = prev.latitude + (next.latitude - prev.latitude) * 0.5;
-                    let pLon = prev.longitude;
-                    let nLon = next.longitude;
-                    while (nLon - pLon > 180) nLon -= 360;
-                    while (nLon - pLon < -180) nLon += 360;
+                    const pLon = prev.longitude;
+                    const nLon = normalizeLonDelta(next.longitude, pLon);
                     const midLon = pLon + (nLon - pLon) * 0.5;
 
                     bestCandidate = {
