@@ -1541,5 +1541,65 @@
     "elevation_ft": null,
     "frequency_mhz": null,
     "updated_at": "2026-08-30T01:43:11.292Z"
+  },
+  "ISDAK": {
+    "ident": "ISDAK",
+    "name": "ISDAK (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 37.033499,
+    "longitude": 111.842404,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T02:40:31.218Z"
+  },
+  "MENED": {
+    "ident": "MENED",
+    "name": "MENED (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 36.247686,
+    "longitude": 110.977069,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T02:40:31.227Z"
+  },
+  "ANRUG": {
+    "ident": "ANRUG",
+    "name": "ANRUG (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 35.339844,
+    "longitude": 109.977357,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T02:40:31.232Z"
+  },
+  "ONEBA": {
+    "ident": "ONEBA",
+    "name": "ONEBA (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 34.199343,
+    "longitude": 108.721441,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T02:40:31.238Z"
+  },
+  "BUPMI": {
+    "ident": "BUPMI",
+    "name": "BUPMI (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 32.255932,
+    "longitude": 106.581362,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T02:40:31.244Z"
   }
 }

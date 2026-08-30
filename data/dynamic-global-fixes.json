@@ -466,5 +466,70 @@
     "frequency_mhz": null,
     "source": "GEODESIC_INTERPOLATION",
     "updated_at": "2026-08-30T02:37:29.156Z"
+  },
+  "ISDAK": {
+    "id": "INTERP_ISDAK",
+    "ident": "ISDAK",
+    "name": "ISDAK (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 37.071046,
+    "longitude": 111.883751,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T02:40:28.914Z"
+  },
+  "MENED": {
+    "id": "INTERP_MENED",
+    "ident": "MENED",
+    "name": "MENED (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 36.320099,
+    "longitude": 111.05681,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T02:40:28.916Z"
+  },
+  "ANRUG": {
+    "id": "INTERP_ANRUG",
+    "ident": "ANRUG",
+    "name": "ANRUG (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 35.461873,
+    "longitude": 110.111735,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T02:40:28.918Z"
+  },
+  "ONEBA": {
+    "id": "INTERP_ONEBA",
+    "ident": "ONEBA",
+    "name": "ONEBA (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 34.432002,
+    "longitude": 108.977645,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T02:40:28.920Z"
+  },
+  "BUPMI": {
+    "id": "INTERP_BUPMI",
+    "ident": "BUPMI",
+    "name": "BUPMI (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 33.058841,
+    "longitude": 107.465525,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T02:40:28.921Z"
   }
 }
