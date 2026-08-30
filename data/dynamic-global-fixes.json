@@ -182,7 +182,7 @@
     "updated_at": "2026-08-30T01:42:50.662Z"
   },
   "DALOL": {
-    "id": "INTERP_DALOL",
+    "id": "DYNAMIC_DALOL",
     "ident": "DALOL",
     "name": "DALOL (Enroute Fix)",
     "type": "WAYPOINT",
@@ -191,11 +191,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T01:43:09.352Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T01:43:11.269Z"
   },
   "ENVAR": {
-    "id": "INTERP_ENVAR",
+    "id": "DYNAMIC_ENVAR",
     "ident": "ENVAR",
     "name": "ENVAR (Enroute Fix)",
     "type": "WAYPOINT",
@@ -204,11 +204,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T01:43:09.354Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T01:43:11.275Z"
   },
   "MUKEP": {
-    "id": "INTERP_MUKEP",
+    "id": "DYNAMIC_MUKEP",
     "ident": "MUKEP",
     "name": "MUKEP (Enroute Fix)",
     "type": "WAYPOINT",
@@ -217,24 +217,24 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T01:43:09.356Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T01:43:11.281Z"
   },
   "OVSUN": {
-    "id": "INTERP_OVSUN",
+    "id": "DYNAMIC_OVSUN",
     "ident": "OVSUN",
     "name": "OVSUN (Enroute Fix)",
     "type": "WAYPOINT",
     "latitude": 38.233404,
-    "longitude": 143.176817,
+    "longitude": 143.176818,
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T01:43:09.358Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T01:43:11.287Z"
   },
   "IGMIS": {
-    "id": "INTERP_IGMIS",
+    "id": "DYNAMIC_IGMIS",
     "ident": "IGMIS",
     "name": "IGMIS (Enroute Fix)",
     "type": "WAYPOINT",
@@ -243,11 +243,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T01:43:09.360Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T01:43:11.292Z"
   },
   "POROT": {
-    "id": "INTERP_POROT",
+    "id": "DYNAMIC_POROT",
     "ident": "POROT",
     "name": "POROT (Enroute Fix)",
     "type": "WAYPOINT",
@@ -256,7 +256,7 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T01:43:09.361Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T01:43:11.298Z"
   }
 }
