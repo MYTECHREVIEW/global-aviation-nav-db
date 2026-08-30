@@ -457,5 +457,573 @@
     "status": "PUSHED",
     "output": "[main 2d5a8d9] fix(navdata): auto-calibrate waypoints [IVURO, LALDO, EGTAL, BIVIN, MERUN] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 127 insertions(+)\n",
     "error": null
+  },
+  {
+    "timestamp": "2026-08-30T01:41:41.562Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [VEBIT, GERSA, SOSON, ODINA, ENOBA, ASBOP, BORDI] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "VEBIT",
+        "name": "VEBIT (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 47.112633,
+          "lon": 8.426948
+        },
+        "corrected_coords": {
+          "lat": 47.093442,
+          "lon": 8.42022
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "GERSA",
+        "name": "GERSA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 46.728829,
+          "lon": 8.292384
+        },
+        "corrected_coords": {
+          "lat": 46.719234,
+          "lon": 8.28902
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "SOSON",
+        "name": "SOSON (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 46.345025,
+          "lon": 8.15782
+        },
+        "corrected_coords": {
+          "lat": 46.340228,
+          "lon": 8.156138
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "ODINA",
+        "name": "ODINA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 45.961222,
+          "lon": 8.023256
+        },
+        "corrected_coords": {
+          "lat": 45.958824,
+          "lon": 8.022415
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "ENOBA",
+        "name": "ENOBA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 45.577419,
+          "lon": 7.888692
+        },
+        "corrected_coords": {
+          "lat": 45.528244,
+          "lon": 7.87145
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "ASBOP",
+        "name": "ASBOP (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 45.097665,
+          "lon": 7.720486
+        },
+        "corrected_coords": {
+          "lat": 44.953139,
+          "lon": 7.669814
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "BORDI",
+        "name": "BORDI (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 44.378033,
+          "lon": 7.468178
+        },
+        "corrected_coords": {
+          "lat": 44.30577,
+          "lon": 7.442842
+        },
+        "distance_saved_nm": 0
+      }
+    ],
+    "idents": [
+      "VEBIT",
+      "GERSA",
+      "SOSON",
+      "ODINA",
+      "ENOBA",
+      "ASBOP",
+      "BORDI"
+    ],
+    "status": "PUSHED",
+    "output": "[main 4e5ddc3] fix(navdata): auto-calibrate waypoints [VEBIT, GERSA, SOSON, ODINA, ENOBA, ASBOP, BORDI] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 175 insertions(+)\n",
+    "error": null
+  },
+  {
+    "timestamp": "2026-08-30T01:42:52.160Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [EPKOS, SAGOR] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "EPKOS",
+        "name": "EPKOS (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 16.041049,
+          "lon": 76.519299
+        },
+        "corrected_coords": {
+          "lat": 16.041049,
+          "lon": 76.519299
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "SAGOR",
+        "name": "SAGOR (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 10.08708,
+          "lon": 80.027401
+        },
+        "corrected_coords": {
+          "lat": 10.08708,
+          "lon": 80.027401
+        },
+        "distance_saved_nm": 0
+      }
+    ],
+    "idents": [
+      "EPKOS",
+      "SAGOR"
+    ],
+    "status": "PUSHED",
+    "output": "[main 4b07b92] fix(navdata): auto-calibrate waypoints [EPKOS, SAGOR] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 84 insertions(+), 34 deletions(-)\n",
+    "error": null
+  },
+  {
+    "timestamp": "2026-08-30T01:43:12.848Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [DALOL, ENVAR, MUKEP, OVSUN, IGMIS, POROT] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "DALOL",
+        "name": "DALOL (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 26.292231,
+          "lon": 121.230351
+        },
+        "corrected_coords": {
+          "lat": 26.292231,
+          "lon": 121.230351
+        },
+        "distance_saved_nm": 1
+      },
+      {
+        "ident": "ENVAR",
+        "name": "ENVAR (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 30.272622,
+          "lon": 128.54584
+        },
+        "corrected_coords": {
+          "lat": 30.272622,
+          "lon": 128.54584
+        },
+        "distance_saved_nm": 1
+      },
+      {
+        "ident": "MUKEP",
+        "name": "MUKEP (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 34.253013,
+          "lon": 135.861329
+        },
+        "corrected_coords": {
+          "lat": 34.253013,
+          "lon": 135.861329
+        },
+        "distance_saved_nm": 1
+      },
+      {
+        "ident": "OVSUN",
+        "name": "OVSUN (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 38.233404,
+          "lon": 143.176817
+        },
+        "corrected_coords": {
+          "lat": 38.233404,
+          "lon": 143.176818
+        },
+        "distance_saved_nm": 1
+      },
+      {
+        "ident": "IGMIS",
+        "name": "IGMIS (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 42.213794,
+          "lon": 150.492306
+        },
+        "corrected_coords": {
+          "lat": 42.213794,
+          "lon": 150.492306
+        },
+        "distance_saved_nm": 1
+      },
+      {
+        "ident": "POROT",
+        "name": "POROT (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 46.194184,
+          "lon": 157.807794
+        },
+        "corrected_coords": {
+          "lat": 46.194184,
+          "lon": 157.807794
+        },
+        "distance_saved_nm": 2
+      }
+    ],
+    "idents": [
+      "DALOL",
+      "ENVAR",
+      "MUKEP",
+      "OVSUN",
+      "IGMIS",
+      "POROT"
+    ],
+    "status": "PUSHED",
+    "output": "[main 08ba78a] fix(navdata): auto-calibrate waypoints [DALOL, ENVAR, MUKEP, OVSUN, IGMIS, POROT] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 155 insertions(+), 5 deletions(-)\n",
+    "error": null
+  },
+  {
+    "timestamp": "2026-08-30T01:43:17.297Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [OVSUN] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "OVSUN",
+        "name": "OVSUN (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 38.233404,
+          "lon": 143.176817
+        },
+        "corrected_coords": {
+          "lat": 38.233404,
+          "lon": 143.176818
+        },
+        "distance_saved_nm": 1
+      }
+    ],
+    "idents": [
+      "OVSUN"
+    ],
+    "status": "PUSHED",
+    "output": "[main 5eb71b9] fix(navdata): auto-calibrate waypoints [OVSUN] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 20 insertions(+), 20 deletions(-)\n",
+    "error": null
+  },
+  {
+    "timestamp": "2026-08-30T01:43:19.154Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [OVSUN] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "OVSUN",
+        "name": "OVSUN (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 38.233404,
+          "lon": 143.176817
+        },
+        "corrected_coords": {
+          "lat": 38.233404,
+          "lon": 143.176818
+        },
+        "distance_saved_nm": 1
+      }
+    ],
+    "idents": [
+      "OVSUN"
+    ],
+    "status": "PUSHED",
+    "output": "[main 6d72995] fix(navdata): auto-calibrate waypoints [OVSUN] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 2 insertions(+), 2 deletions(-)\n",
+    "error": null
+  },
+  {
+    "timestamp": "2026-08-30T01:43:58.573Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [VEBIT, GERSA, ENOBA, ASBOP, BORDI] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "VEBIT",
+        "name": "VEBIT (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 47.112633,
+          "lon": 8.426948
+        },
+        "corrected_coords": {
+          "lat": 47.093442,
+          "lon": 8.42022
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "GERSA",
+        "name": "GERSA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 46.728829,
+          "lon": 8.292384
+        },
+        "corrected_coords": {
+          "lat": 46.716835,
+          "lon": 8.288179
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "ENOBA",
+        "name": "ENOBA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 45.577419,
+          "lon": 7.888692
+        },
+        "corrected_coords": {
+          "lat": 45.528244,
+          "lon": 7.87145
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "ASBOP",
+        "name": "ASBOP (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 45.097665,
+          "lon": 7.720486
+        },
+        "corrected_coords": {
+          "lat": 44.953139,
+          "lon": 7.669814
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "BORDI",
+        "name": "BORDI (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 44.378033,
+          "lon": 7.468178
+        },
+        "corrected_coords": {
+          "lat": 44.30577,
+          "lon": 7.442842
+        },
+        "distance_saved_nm": 0
+      }
+    ],
+    "idents": [
+      "VEBIT",
+      "GERSA",
+      "ENOBA",
+      "ASBOP",
+      "BORDI"
+    ],
+    "status": "PUSHED",
+    "output": "[main 9e618a5] fix(navdata): auto-calibrate waypoints [VEBIT, GERSA, ENOBA, ASBOP, BORDI] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 8 insertions(+), 8 deletions(-)\n",
+    "error": null
+  },
+  {
+    "timestamp": "2026-08-30T01:44:01.138Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [VEBIT, GERSA, ENOBA, ASBOP, BORDI] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "VEBIT",
+        "name": "VEBIT (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 47.112633,
+          "lon": 8.426948
+        },
+        "corrected_coords": {
+          "lat": 47.093442,
+          "lon": 8.42022
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "GERSA",
+        "name": "GERSA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 46.728829,
+          "lon": 8.292384
+        },
+        "corrected_coords": {
+          "lat": 46.716835,
+          "lon": 8.288179
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "ENOBA",
+        "name": "ENOBA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 45.577419,
+          "lon": 7.888692
+        },
+        "corrected_coords": {
+          "lat": 45.528244,
+          "lon": 7.87145
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "ASBOP",
+        "name": "ASBOP (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 45.097665,
+          "lon": 7.720486
+        },
+        "corrected_coords": {
+          "lat": 44.953139,
+          "lon": 7.669814
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "BORDI",
+        "name": "BORDI (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 44.378033,
+          "lon": 7.468178
+        },
+        "corrected_coords": {
+          "lat": 44.30577,
+          "lon": 7.442842
+        },
+        "distance_saved_nm": 0
+      }
+    ],
+    "idents": [
+      "VEBIT",
+      "GERSA",
+      "ENOBA",
+      "ASBOP",
+      "BORDI"
+    ],
+    "status": "PUSHED",
+    "output": "[main 0525917] fix(navdata): auto-calibrate waypoints [VEBIT, GERSA, ENOBA, ASBOP, BORDI] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 12 insertions(+), 12 deletions(-)\n",
+    "error": null
+  },
+  {
+    "timestamp": "2026-08-30T01:44:20.459Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [VEBIT, GERSA, ENOBA, ASBOP, BORDI] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "VEBIT",
+        "name": "VEBIT (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 47.112633,
+          "lon": 8.426948
+        },
+        "corrected_coords": {
+          "lat": 47.093442,
+          "lon": 8.42022
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "GERSA",
+        "name": "GERSA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 46.728829,
+          "lon": 8.292384
+        },
+        "corrected_coords": {
+          "lat": 46.716835,
+          "lon": 8.288179
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "ENOBA",
+        "name": "ENOBA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 45.577419,
+          "lon": 7.888692
+        },
+        "corrected_coords": {
+          "lat": 45.528244,
+          "lon": 7.87145
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "ASBOP",
+        "name": "ASBOP (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 45.097665,
+          "lon": 7.720486
+        },
+        "corrected_coords": {
+          "lat": 44.953139,
+          "lon": 7.669814
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "BORDI",
+        "name": "BORDI (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 44.378033,
+          "lon": 7.468178
+        },
+        "corrected_coords": {
+          "lat": 44.30577,
+          "lon": 7.442842
+        },
+        "distance_saved_nm": 0
+      }
+    ],
+    "idents": [
+      "VEBIT",
+      "GERSA",
+      "ENOBA",
+      "ASBOP",
+      "BORDI"
+    ],
+    "status": "PUSHED",
+    "output": "[main bfa1ad6] fix(navdata): auto-calibrate waypoints [VEBIT, GERSA, ENOBA, ASBOP, BORDI] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 1 file changed, 5 insertions(+), 5 deletions(-)\n",
+    "error": null
   }
 ]
