@@ -1372,7 +1372,7 @@
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:43:56.940Z"
+    "updated_at": "2026-08-30T01:43:59.640Z"
   },
   "GERSA": {
     "ident": "GERSA",
@@ -1384,7 +1384,7 @@
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:43:56.948Z"
+    "updated_at": "2026-08-30T01:43:59.647Z"
   },
   "SOSON": {
     "ident": "SOSON",
@@ -1420,7 +1420,7 @@
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:43:56.954Z"
+    "updated_at": "2026-08-30T01:43:59.652Z"
   },
   "ASBOP": {
     "ident": "ASBOP",
@@ -1432,7 +1432,7 @@
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:43:56.960Z"
+    "updated_at": "2026-08-30T01:43:59.657Z"
   },
   "BORDI": {
     "ident": "BORDI",
@@ -1444,7 +1444,7 @@
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:43:56.968Z"
+    "updated_at": "2026-08-30T01:43:59.662Z"
   },
   "EPKOS": {
     "ident": "EPKOS",

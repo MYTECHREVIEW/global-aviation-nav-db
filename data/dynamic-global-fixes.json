@@ -75,20 +75,20 @@
     "country_code": null,
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-08-30T01:41:39.875Z"
+    "updated_at": "2026-08-30T01:43:56.948Z"
   },
   "GERSA": {
     "id": "DYNAMIC_GERSA",
     "ident": "GERSA",
     "name": "GERSA (Enroute Fix)",
     "type": "WAYPOINT",
-    "latitude": 46.719234,
-    "longitude": 8.28902,
+    "latitude": 46.716835,
+    "longitude": 8.288179,
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-08-30T01:41:39.881Z"
+    "updated_at": "2026-08-30T01:43:56.954Z"
   },
   "SOSON": {
     "id": "DYNAMIC_SOSON",
@@ -127,7 +127,7 @@
     "country_code": null,
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-08-30T01:41:39.900Z"
+    "updated_at": "2026-08-30T01:43:56.960Z"
   },
   "ASBOP": {
     "id": "DYNAMIC_ASBOP",
@@ -140,7 +140,7 @@
     "country_code": null,
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-08-30T01:41:39.906Z"
+    "updated_at": "2026-08-30T01:43:56.968Z"
   },
   "BORDI": {
     "id": "DYNAMIC_BORDI",
@@ -153,7 +153,7 @@
     "country_code": null,
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-08-30T01:41:39.912Z"
+    "updated_at": "2026-08-30T01:43:56.974Z"
   },
   "EPKOS": {
     "id": "DYNAMIC_EPKOS",
