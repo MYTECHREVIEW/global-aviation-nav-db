@@ -1372,19 +1372,19 @@
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:41:39.867Z"
+    "updated_at": "2026-08-30T01:43:56.940Z"
   },
   "GERSA": {
     "ident": "GERSA",
     "name": "GERSA (Enroute Fix)",
     "type": "WAYPOINT",
-    "latitude": 46.719234,
-    "longitude": 8.28902,
+    "latitude": 46.716835,
+    "longitude": 8.288179,
     "country_code": null,
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:41:39.875Z"
+    "updated_at": "2026-08-30T01:43:56.948Z"
   },
   "SOSON": {
     "ident": "SOSON",
@@ -1420,7 +1420,7 @@
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:41:39.894Z"
+    "updated_at": "2026-08-30T01:43:56.954Z"
   },
   "ASBOP": {
     "ident": "ASBOP",
@@ -1432,7 +1432,7 @@
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:41:39.900Z"
+    "updated_at": "2026-08-30T01:43:56.960Z"
   },
   "BORDI": {
     "ident": "BORDI",
@@ -1444,7 +1444,7 @@
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:41:39.906Z"
+    "updated_at": "2026-08-30T01:43:56.968Z"
   },
   "EPKOS": {
     "ident": "EPKOS",
