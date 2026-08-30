@@ -1361,5 +1361,89 @@
     "elevation_ft": null,
     "frequency_mhz": null,
     "updated_at": "2026-08-30T01:27:31.876Z"
+  },
+  "VEBIT": {
+    "ident": "VEBIT",
+    "name": "VEBIT (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 47.093442,
+    "longitude": 8.42022,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T01:41:39.867Z"
+  },
+  "GERSA": {
+    "ident": "GERSA",
+    "name": "GERSA (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 46.719234,
+    "longitude": 8.28902,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T01:41:39.875Z"
+  },
+  "SOSON": {
+    "ident": "SOSON",
+    "name": "SOSON (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 46.340228,
+    "longitude": 8.156138,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T01:41:39.881Z"
+  },
+  "ODINA": {
+    "ident": "ODINA",
+    "name": "ODINA (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 45.958824,
+    "longitude": 8.022415,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T01:41:39.887Z"
+  },
+  "ENOBA": {
+    "ident": "ENOBA",
+    "name": "ENOBA (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 45.528244,
+    "longitude": 7.87145,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T01:41:39.894Z"
+  },
+  "ASBOP": {
+    "ident": "ASBOP",
+    "name": "ASBOP (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 44.953139,
+    "longitude": 7.669814,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T01:41:39.900Z"
+  },
+  "BORDI": {
+    "ident": "BORDI",
+    "name": "BORDI (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 44.30577,
+    "longitude": 7.442842,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T01:41:39.906Z"
   }
 }
