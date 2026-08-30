@@ -156,7 +156,7 @@
     "updated_at": "2026-08-30T01:41:39.912Z"
   },
   "EPKOS": {
-    "id": "INTERP_EPKOS",
+    "id": "DYNAMIC_EPKOS",
     "ident": "EPKOS",
     "name": "EPKOS (Enroute Fix)",
     "type": "WAYPOINT",
@@ -165,11 +165,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T01:42:47.246Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T01:42:50.656Z"
   },
   "SAGOR": {
-    "id": "INTERP_SAGOR",
+    "id": "DYNAMIC_SAGOR",
     "ident": "SAGOR",
     "name": "SAGOR (Enroute Fix)",
     "type": "WAYPOINT",
@@ -178,7 +178,85 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-08-30T01:42:50.662Z"
+  },
+  "DALOL": {
+    "id": "INTERP_DALOL",
+    "ident": "DALOL",
+    "name": "DALOL (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 26.292231,
+    "longitude": 121.230351,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
     "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T01:42:47.252Z"
+    "updated_at": "2026-08-30T01:43:09.352Z"
+  },
+  "ENVAR": {
+    "id": "INTERP_ENVAR",
+    "ident": "ENVAR",
+    "name": "ENVAR (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 30.272622,
+    "longitude": 128.54584,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T01:43:09.354Z"
+  },
+  "MUKEP": {
+    "id": "INTERP_MUKEP",
+    "ident": "MUKEP",
+    "name": "MUKEP (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 34.253013,
+    "longitude": 135.861329,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T01:43:09.356Z"
+  },
+  "OVSUN": {
+    "id": "INTERP_OVSUN",
+    "ident": "OVSUN",
+    "name": "OVSUN (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 38.233404,
+    "longitude": 143.176817,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T01:43:09.358Z"
+  },
+  "IGMIS": {
+    "id": "INTERP_IGMIS",
+    "ident": "IGMIS",
+    "name": "IGMIS (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 42.213794,
+    "longitude": 150.492306,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T01:43:09.360Z"
+  },
+  "POROT": {
+    "id": "INTERP_POROT",
+    "ident": "POROT",
+    "name": "POROT (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 46.194184,
+    "longitude": 157.807794,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T01:43:09.361Z"
   }
 }
