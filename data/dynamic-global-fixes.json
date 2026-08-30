@@ -1,0 +1,67 @@
+{
+  "IVURO": {
+    "id": "INTERP_IVURO",
+    "ident": "IVURO",
+    "name": "IVURO (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 25.872952,
+    "longitude": 58.351434,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T01:23:46.496Z"
+  },
+  "LALDO": {
+    "id": "INTERP_LALDO",
+    "ident": "LALDO",
+    "name": "LALDO (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 26.496114,
+    "longitude": 61.331876,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T01:23:46.501Z"
+  },
+  "EGTAL": {
+    "id": "INTERP_EGTAL",
+    "ident": "EGTAL",
+    "name": "EGTAL (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 27.119276,
+    "longitude": 64.312318,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T01:23:46.502Z"
+  },
+  "BIVIN": {
+    "id": "INTERP_BIVIN",
+    "ident": "BIVIN",
+    "name": "BIVIN (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 27.742438,
+    "longitude": 67.292759,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T01:23:46.503Z"
+  },
+  "MERUN": {
+    "id": "INTERP_MERUN",
+    "ident": "MERUN",
+    "name": "MERUN (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 28.272551,
+    "longitude": 72.1912,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-08-30T01:23:46.505Z"
+  }
+}

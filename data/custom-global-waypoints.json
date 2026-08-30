@@ -1301,5 +1301,65 @@
     "longitude": 2.994444,
     "country_code": "NL",
     "region": "Europe"
+  },
+  "IVURO": {
+    "ident": "IVURO",
+    "name": "IVURO (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 25.872952,
+    "longitude": 58.351434,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T01:27:31.843Z"
+  },
+  "LALDO": {
+    "ident": "LALDO",
+    "name": "LALDO (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 26.496114,
+    "longitude": 61.331876,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T01:27:31.853Z"
+  },
+  "EGTAL": {
+    "ident": "EGTAL",
+    "name": "EGTAL (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 27.119276,
+    "longitude": 64.312318,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T01:27:31.859Z"
+  },
+  "BIVIN": {
+    "ident": "BIVIN",
+    "name": "BIVIN (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 27.742438,
+    "longitude": 67.292759,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T01:27:31.868Z"
+  },
+  "MERUN": {
+    "ident": "MERUN",
+    "name": "MERUN (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 28.272551,
+    "longitude": 72.1912,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-08-30T01:27:31.876Z"
   }
 }
