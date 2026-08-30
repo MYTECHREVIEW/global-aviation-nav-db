@@ -607,34 +607,41 @@ app.post('/api/v1/route/trace', async (req, res) => {
         return res.json(routeTraceMemoryCache.get(cacheKey));
     }
 
-    const result = await routeParser.parseRouteAsync(
-        normalizedRoute,
-        normDep || null,
-        normArr || null,
-        alt_ft,
-        speed_kts,
-        { include_labels }
-    );
+    try {
+        const result = await routeParser.parseRouteAsync(
+            normalizedRoute,
+            normDep || null,
+            normArr || null,
+            alt_ft,
+            speed_kts,
+            { include_labels }
+        );
 
-    // Build Static Map URL with GeoJSON overlay (Mapbox dark-v11 black view)
-    let staticMapUrl = null;
-    if (result.route_coordinates.length >= 2 && MAPBOX_ACCESS_TOKEN) {
-        const geojsonFeature = encodeURIComponent(JSON.stringify(result.geojson.features[0]));
-        staticMapUrl = `https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/geojson(${geojsonFeature})/auto/1000x500@2x?padding=60&access_token=${MAPBOX_ACCESS_TOKEN}`;
+        // Build Static Map URL with GeoJSON overlay (Mapbox dark-v11 black view)
+        let staticMapUrl = null;
+        if (result.route_coordinates && result.route_coordinates.length >= 2 && MAPBOX_ACCESS_TOKEN) {
+            try {
+                const geojsonFeature = encodeURIComponent(JSON.stringify(result.geojson.features[0]));
+                staticMapUrl = `https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/geojson(${geojsonFeature})/auto/1000x500@2x?padding=60&access_token=${MAPBOX_ACCESS_TOKEN}`;
+            } catch (_) {}
+        }
+
+        const payload = {
+            ...result,
+            static_map_url: staticMapUrl
+        };
+
+        if (routeTraceMemoryCache.size >= MAX_ROUTE_TRACE_CACHE) {
+            const firstKey = routeTraceMemoryCache.keys().next().value;
+            routeTraceMemoryCache.delete(firstKey);
+        }
+        routeTraceMemoryCache.set(cacheKey, payload);
+
+        res.json(payload);
+    } catch (e) {
+        console.error('[RouteTrace] Error:', e.message);
+        res.status(500).json({ error: 'Route trace failed: ' + e.message });
     }
-
-    const payload = {
-        ...result,
-        static_map_url: staticMapUrl
-    };
-
-    if (routeTraceMemoryCache.size >= MAX_ROUTE_TRACE_CACHE) {
-        const firstKey = routeTraceMemoryCache.keys().next().value;
-        routeTraceMemoryCache.delete(firstKey);
-    }
-    routeTraceMemoryCache.set(cacheKey, payload);
-
-    res.json(payload);
 });
 
 /**
