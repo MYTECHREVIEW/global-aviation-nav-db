@@ -75,7 +75,7 @@
     "country_code": null,
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-08-30T01:43:56.948Z"
+    "updated_at": "2026-08-30T01:43:59.647Z"
   },
   "GERSA": {
     "id": "DYNAMIC_GERSA",
@@ -88,7 +88,7 @@
     "country_code": null,
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-08-30T01:43:56.954Z"
+    "updated_at": "2026-08-30T01:43:59.652Z"
   },
   "SOSON": {
     "id": "DYNAMIC_SOSON",
@@ -127,7 +127,7 @@
     "country_code": null,
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-08-30T01:43:56.960Z"
+    "updated_at": "2026-08-30T01:43:59.657Z"
   },
   "ASBOP": {
     "id": "DYNAMIC_ASBOP",
@@ -140,7 +140,7 @@
     "country_code": null,
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-08-30T01:43:56.968Z"
+    "updated_at": "2026-08-30T01:43:59.662Z"
   },
   "BORDI": {
     "id": "DYNAMIC_BORDI",
@@ -153,7 +153,7 @@
     "country_code": null,
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-08-30T01:43:56.974Z"
+    "updated_at": "2026-08-30T01:43:59.668Z"
   },
   "EPKOS": {
     "id": "DYNAMIC_EPKOS",
