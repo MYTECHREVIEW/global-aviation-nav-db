@@ -1047,16 +1047,22 @@ app.post('/api/v1/live/track', async (req, res) => {
 });
 
 // ── Global Crash Guards — prevent silent server death ─────────────────────────
+let isHandlingUncaught = false;
 process.on('uncaughtException', (err) => {
-    console.error('[CRASH] Uncaught Exception:', err.message);
-    console.error(err.stack);
-    // Do NOT exit — keep server alive for other requests
+    if (isHandlingUncaught) return;
+    isHandlingUncaught = true;
+    try {
+        const msg = err && err.message ? err.message : String(err);
+        console.error('[CRASH] Uncaught Exception:', msg);
+    } catch (_) {}
+    setTimeout(() => { isHandlingUncaught = false; }, 1000);
 });
 
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('[CRASH] Unhandled Promise Rejection at:', promise);
-    console.error('[CRASH] Reason:', reason);
-    // Do NOT exit — keep server alive for other requests
+process.on('unhandledRejection', (reason) => {
+    try {
+        const msg = reason && reason.message ? reason.message : String(reason);
+        console.error('[CRASH] Unhandled Promise Rejection:', msg);
+    } catch (_) {}
 });
 
 app.listen(PORT, () => {

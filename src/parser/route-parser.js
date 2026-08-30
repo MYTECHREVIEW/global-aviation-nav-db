@@ -169,7 +169,35 @@ function parseLatLonCoordinate(token) {
         };
     }
 
-    // Format 3: ARINC 424 Shorthand (e.g. 5140N, 4970E)
+    // Format 3: ARINC 424 Shorthand with Letter at END (e.g. 5320N, 5430N, 5440N, 5350N, 5220E, 4530S, 4530W)
+    // N = North Lat, West Lon (e.g. 5320N = 53°N 020°W)
+    // E = North Lat, East Lon (e.g. 5320E = 53°N 020°E)
+    // S = South Lat, West Lon (e.g. 5320S = 53°S 020°W)
+    // W = South Lat, East Lon (e.g. 5320W = 53°S 020°E)
+    m = clean.match(/^(\d{2})(\d{2})([NSEW])$/i);
+    if (m) {
+        const latVal = parseInt(m[1], 10);
+        const lonVal = parseInt(m[2], 10);
+        const code = m[3].toUpperCase();
+        let lat = latVal;
+        let lon = lonVal;
+        if (code === 'N') { lon = -lon; }
+        else if (code === 'E') { lon = lon; }
+        else if (code === 'S') { lat = -lat; lon = -lon; }
+        else if (code === 'W') { lat = -lat; lon = lon; }
+        return {
+            id: `COORD_${clean}`,
+            ident: clean,
+            name: `${latVal}°${lat >= 0 ? 'N' : 'S'} 0${lonVal}°${lon < 0 ? 'W' : 'E'}`,
+            type: 'WAYPOINT',
+            latitude: lat,
+            longitude: lon,
+            elevation_ft: null,
+            country_code: null
+        };
+    }
+
+    // Format 4: ARINC 424 Shorthand with Letter in MIDDLE (e.g. 51N40 = 51N 140W, 49E70 = 49N 170E)
     m = clean.match(/^(\d{2})([NSEW])(\d{2})$/i);
     if (m) {
         const latVal = parseInt(m[1], 10);
@@ -972,15 +1000,15 @@ class RouteParser {
         const NON_AIRPORT_STATUSES = ['ENROUTE', 'RAMP', '???', 'STANDBY', 'DIRECT'];
 
         if (depIcao && !NON_AIRPORT_STATUSES.includes(depIcao.toUpperCase())) {
-            depPoint = await this.resolvePointAsync(depIcao, null, null, true);
+            depPoint = await this.resolvePointAsync(depIcao, null, null, true, null, null, 0.5, options);
         } else if (firstToken && firstToken.length === 4 && this.airports[firstToken]) {
-            depPoint = await this.resolvePointAsync(firstToken, null, null, true);
+            depPoint = await this.resolvePointAsync(firstToken, null, null, true, null, null, 0.5, options);
         }
 
         if (arrIcao && !NON_AIRPORT_STATUSES.includes(arrIcao.toUpperCase())) {
-            arrPoint = await this.resolvePointAsync(arrIcao, null, null, true);
+            arrPoint = await this.resolvePointAsync(arrIcao, null, null, true, null, null, 0.5, options);
         } else if (lastToken && lastToken.length === 4 && this.airports[lastToken]) {
-            arrPoint = await this.resolvePointAsync(lastToken, null, null, true);
+            arrPoint = await this.resolvePointAsync(lastToken, null, null, true, null, null, 0.5, options);
         }
 
         const resolvedPoints = [];
@@ -1037,7 +1065,7 @@ class RouteParser {
                 sidFixes.forEach(f => { if (!uniqueFixes.includes(f)) uniqueFixes.push(f); });
 
                 for (const fixName of uniqueFixes) {
-                    const pt = await this.resolvePointAsync(fixName, currentRefLat, currentRefLon);
+                    const pt = await this.resolvePointAsync(fixName, currentRefLat, currentRefLon, false, null, null, 0.5, options);
                     if (pt) {
                         pt.via_procedure = `SID: ${token}${depRwy ? ` (RW${depRwy})` : ''}`;
                         resolvedPoints.push(pt);
@@ -1111,7 +1139,7 @@ class RouteParser {
                 starFixes.forEach(f => { if (!uniqueFixes.includes(f) && (!prevPoint || f !== prevPoint.ident)) uniqueFixes.push(f); });
 
                 for (const fixName of uniqueFixes) {
-                    const pt = await this.resolvePointAsync(fixName, currentRefLat, currentRefLon);
+                    const pt = await this.resolvePointAsync(fixName, currentRefLat, currentRefLon, false, null, null, 0.5, options);
                     if (pt) {
                         pt.via_procedure = `STAR: ${token}${arrRwy ? ` (RW${arrRwy})` : ''}`;
                         resolvedPoints.push(pt);
@@ -1126,7 +1154,7 @@ class RouteParser {
             if ((this.airways[token] || isAirwayDesignator(token)) && resolvedPoints.length > 0 && i + 1 < cleanTokens.length) {
                 const prevPoint = resolvedPoints[resolvedPoints.length - 1];
                 const nextToken = cleanTokens[i + 1];
-                const nextPointCandidate = await this.resolvePointAsync(nextToken, prevPoint.latitude, prevPoint.longitude);
+                const nextPointCandidate = await this.resolvePointAsync(nextToken, prevPoint.latitude, prevPoint.longitude, false, null, null, 0.5, options);
 
                 if (nextPointCandidate) {
                     const airwayLegs = this.airways[token];
@@ -1137,7 +1165,7 @@ class RouteParser {
                         if (prevIdx !== -1 && nextIdx !== -1 && prevIdx !== nextIdx) {
                             const step = prevIdx < nextIdx ? 1 : -1;
                             for (let k = prevIdx + step; k !== nextIdx; k += step) {
-                                const intermediateFix = await this.resolvePointAsync(airwayLegs[k].fixIdent, prevPoint.latitude, prevPoint.longitude);
+                                const intermediateFix = await this.resolvePointAsync(airwayLegs[k].fixIdent, prevPoint.latitude, prevPoint.longitude, false, null, null, 0.5, options);
                                 if (intermediateFix) {
                                     intermediateFix.via_airway = token;
                                     resolvedPoints.push(intermediateFix);
@@ -1175,7 +1203,7 @@ class RouteParser {
                 if (prevPoint && prevPoint.ident === baseFix) {
                     continue; // Skip procedure suffix as prev point is the fix
                 }
-                const basePt = await this.resolvePointAsync(baseFix, currentRefLat, currentRefLon);
+                const basePt = await this.resolvePointAsync(baseFix, currentRefLat, currentRefLon, false, null, null, 0.5, options);
                 if (basePt) {
                     basePt.via_procedure = token;
                     resolvedPoints.push(basePt);
