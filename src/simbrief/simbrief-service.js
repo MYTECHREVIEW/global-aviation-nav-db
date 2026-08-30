@@ -12,7 +12,7 @@ function fetchSimbriefOfp(identifier) {
         const queryParam = isNumeric ? `userid=${clean}` : `username=${encodeURIComponent(clean)}`;
         const url = `https://www.simbrief.com/api/xml.fetcher.php?${queryParam}&json=1`;
 
-        https.get(url, (res) => {
+        const req = https.get(url, { timeout: 3500 }, (res) => {
             let body = '';
             res.on('data', chunk => body += chunk);
             res.on('end', () => {
@@ -86,8 +86,14 @@ function fetchSimbriefOfp(identifier) {
                     reject(new Error('Invalid response received from SimBrief API.'));
                 }
             });
-        }).on('error', (err) => {
+        });
+
+        req.on('error', (err) => {
             reject(new Error(`SimBrief network error: ${err.message}`));
+        });
+        req.on('timeout', () => {
+            req.destroy();
+            reject(new Error('SimBrief API request timed out (3.5s limit).'));
         });
     });
 }

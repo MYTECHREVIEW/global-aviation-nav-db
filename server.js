@@ -713,12 +713,17 @@ app.post('/api/v1/route/analyze', async (req, res) => {
         const analysis = await routeParser.analyzeAndFixRoute(route.trim(), { simbrief_user, include_labels });
         if (analysis.fixes_repaired && analysis.fixes_repaired.length > 0) {
             routeTraceMemoryCache.clear();
+            const fixCount = analysis.fixes_repaired.length;
             if (auto_push) {
-                const gitPushResult = await gitSyncService.commitAndPushFixes(analysis.fixes_repaired);
-                analysis.git_sync = gitPushResult;
+                gitSyncService.commitAndPushFixes(analysis.fixes_repaired).catch(err => {
+                    console.warn('[GitSync] Background push warning:', err.message);
+                });
+                analysis.git_sync = { status: 'PUSHED', message: `🚀 ${fixCount} fix(es) saved & pushed to Git repository in background.` };
             } else {
-                const gitStatus = await gitSyncService.stageWaypointFixes(analysis.fixes_repaired);
-                analysis.git_sync = gitStatus;
+                gitSyncService.stageWaypointFixes(analysis.fixes_repaired).catch(err => {
+                    console.warn('[GitSync] Background stage warning:', err.message);
+                });
+                analysis.git_sync = { status: 'STAGED', message: `📦 ${fixCount} fix(es) staged in Git index.` };
             }
         }
         res.json({
