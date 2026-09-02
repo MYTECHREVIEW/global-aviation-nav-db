@@ -1298,5 +1298,207 @@
     "status": "PUSHED",
     "output": "[main c3665c2] fix(navdata): auto-calibrate waypoints [NAMWE] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 19 insertions(+), 19 deletions(-)\n",
     "error": null
+  },
+  {
+    "timestamp": "2026-09-02T22:01:03.071Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [TULUB, NARMI, FIRAS, LEBOR, KUKLA] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "TULUB",
+        "name": "TULUB (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 25.681204,
+          "lon": 50.998271
+        },
+        "corrected_coords": {
+          "lat": 25.681204,
+          "lon": 50.998271
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "NARMI",
+        "name": "NARMI (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 26.089352,
+          "lon": 50.388486
+        },
+        "corrected_coords": {
+          "lat": 26.089352,
+          "lon": 50.388486
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "FIRAS",
+        "name": "FIRAS (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 29.520711,
+          "lon": 44.6214
+        },
+        "corrected_coords": {
+          "lat": 29.520711,
+          "lon": 44.6214
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "LEBOR",
+        "name": "LEBOR (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 32.002022,
+          "lon": 39.8357
+        },
+        "corrected_coords": {
+          "lat": 32.002022,
+          "lon": 39.8357
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "KUKLA",
+        "name": "KUKLA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 34.151583,
+          "lon": 35.268721
+        },
+        "corrected_coords": {
+          "lat": 34.151583,
+          "lon": 35.268721
+        },
+        "distance_saved_nm": 0
+      }
+    ],
+    "idents": [
+      "TULUB",
+      "NARMI",
+      "FIRAS",
+      "LEBOR",
+      "KUKLA"
+    ],
+    "status": "PUSHED",
+    "output": "[main a0e89d8] fix(navdata): auto-calibrate waypoints [TULUB, NARMI, FIRAS, LEBOR, KUKLA] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 125 insertions(+)\n",
+    "error": null
+  },
+  {
+    "timestamp": "2026-09-02T22:02:01.104Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [DUMEP, ENVAR, ANLOT, DRAKE, LIPLO, ATOTI, OLMEN] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "DUMEP",
+        "name": "DUMEP (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 26.292231,
+          "lon": 121.230351
+        },
+        "corrected_coords": {
+          "lat": 26.292231,
+          "lon": 121.230351
+        },
+        "distance_saved_nm": 1
+      },
+      {
+        "ident": "ENVAR",
+        "name": "ENVAR (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 30.272622,
+          "lon": 128.54584
+        },
+        "corrected_coords": {
+          "lat": 27.008496,
+          "lon": 123.132137
+        },
+        "distance_saved_nm": 473
+      },
+      {
+        "ident": "ANLOT",
+        "name": "ANLOT (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 27.724761,
+          "lon": 125.033922
+        },
+        "corrected_coords": {
+          "lat": 26.092698,
+          "lon": 122.32707
+        },
+        "distance_saved_nm": 213
+      },
+      {
+        "ident": "DRAKE",
+        "name": "DRAKE (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 38.606681,
+          "lon": -104.414217
+        },
+        "corrected_coords": {
+          "lat": 31.749593,
+          "lon": 172.412045
+        },
+        "distance_saved_nm": 2705
+      },
+      {
+        "ident": "LIPLO",
+        "name": "LIPLO (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 38.322286,
+          "lon": -136.697914
+        },
+        "corrected_coords": {
+          "lat": 34.893742,
+          "lon": 181.715217
+        },
+        "distance_saved_nm": 3028
+      },
+      {
+        "ident": "ATOTI",
+        "name": "ATOTI (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 38.037891,
+          "lon": -168.981611
+        },
+        "corrected_coords": {
+          "lat": 36.323619,
+          "lon": 170.224954
+        },
+        "distance_saved_nm": 885
+      },
+      {
+        "ident": "OLMEN",
+        "name": "OLMEN (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 37.753496,
+          "lon": -201.265308
+        },
+        "corrected_coords": {
+          "lat": 36.89636,
+          "lon": 148.337975
+        },
+        "distance_saved_nm": 1
+      }
+    ],
+    "idents": [
+      "DUMEP",
+      "ENVAR",
+      "ANLOT",
+      "DRAKE",
+      "LIPLO",
+      "ATOTI",
+      "OLMEN"
+    ],
+    "status": "PUSHED",
+    "output": "[main 216440f] fix(navdata): auto-calibrate waypoints [DUMEP, ENVAR, ANLOT, DRAKE, LIPLO, ATOTI, OLMEN] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 170 insertions(+), 20 deletions(-)\n",
+    "error": null
   }
 ]

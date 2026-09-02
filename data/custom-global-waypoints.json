@@ -1484,15 +1484,13 @@
   },
   "ENVAR": {
     "ident": "ENVAR",
-    "name": "ENVAR (Enroute Fix)",
+    "name": "ENVAR (Hong Kong / Taipei FIR)",
     "type": "WAYPOINT",
-    "latitude": 27.008496,
-    "longitude": 123.132137,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T22:01:54.424Z"
+    "latitude": 21.991667,
+    "longitude": 117.5,
+    "country_code": "HK",
+    "region": "Hong Kong",
+    "updated_at": "2026-09-02T22:04:25.195Z"
   },
   "MUKEP": {
     "ident": "MUKEP",
@@ -1774,74 +1772,62 @@
   },
   "DUMEP": {
     "ident": "DUMEP",
-    "name": "DUMEP (Enroute Fix)",
+    "name": "DUMEP (Hong Kong SID)",
     "type": "WAYPOINT",
-    "latitude": 26.292231,
-    "longitude": 121.230351,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T22:01:54.415Z"
+    "latitude": 21.743417,
+    "longitude": 115.213853,
+    "country_code": "HK",
+    "region": "Hong Kong",
+    "updated_at": "2026-09-02T22:04:25.194Z"
   },
   "ANLOT": {
     "ident": "ANLOT",
-    "name": "ANLOT (Enroute Fix)",
+    "name": "ANLOT (Taipei FIR M750)",
     "type": "WAYPOINT",
-    "latitude": 26.092698,
-    "longitude": 122.32707,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T22:01:54.430Z"
+    "latitude": 23.907222,
+    "longitude": 120.486944,
+    "country_code": "TW",
+    "region": "Taiwan",
+    "updated_at": "2026-09-02T22:04:25.195Z"
   },
   "DRAKE": {
     "ident": "DRAKE",
-    "name": "DRAKE (Enroute Fix)",
+    "name": "DRAKE (Taipei FIR Q11)",
     "type": "WAYPOINT",
-    "latitude": 31.749593,
-    "longitude": 172.412045,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T22:01:55.637Z"
+    "latitude": 25.615561,
+    "longitude": 122.077947,
+    "country_code": "TW",
+    "region": "Taiwan",
+    "updated_at": "2026-09-02T22:04:25.195Z"
   },
   "LIPLO": {
     "ident": "LIPLO",
-    "name": "LIPLO (Enroute Fix)",
+    "name": "LIPLO (Taipei / Fukuoka FIR)",
     "type": "WAYPOINT",
-    "latitude": 34.893742,
-    "longitude": 181.715217,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T22:01:56.848Z"
+    "latitude": 27.991389,
+    "longitude": 123.999444,
+    "country_code": "TW",
+    "region": "Taiwan",
+    "updated_at": "2026-09-02T22:04:25.195Z"
   },
   "ATOTI": {
     "ident": "ATOTI",
-    "name": "ATOTI (Enroute Fix)",
+    "name": "ATOTI (East China Sea Y741)",
     "type": "WAYPOINT",
-    "latitude": 36.323619,
-    "longitude": 170.224954,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T22:01:57.660Z"
+    "latitude": 30.003583,
+    "longitude": 125.198208,
+    "country_code": "KR",
+    "region": "Korea",
+    "updated_at": "2026-09-02T22:04:25.195Z"
   },
   "OLMEN": {
     "ident": "OLMEN",
-    "name": "OLMEN (Enroute Fix)",
+    "name": "OLMEN (Incheon STAR Arrival)",
     "type": "WAYPOINT",
-    "latitude": 36.89636,
-    "longitude": 148.337975,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T22:01:58.474Z"
+    "latitude": 36.736944,
+    "longitude": 126.991111,
+    "country_code": "KR",
+    "region": "Korea",
+    "updated_at": "2026-09-02T22:04:25.195Z"
   }
 }

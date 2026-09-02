@@ -277,6 +277,14 @@ const GLOBAL_WAYPOINTS_CATALOG = {
     'DADGA': { ident: 'DADGA', name: 'DADGA', type: 'WAYPOINT', latitude: 30.001389, longitude: 115.027778, country_code: 'CN' },
     'OMBEB': { ident: 'OMBEB', name: 'OMBEB', type: 'WAYPOINT', latitude: 31.631111, longitude: 113.656944, country_code: 'CN' },
     'SIERA': { ident: 'SIERA', name: 'SIERA (Hong Kong STAR)', type: 'WAYPOINT', latitude: 21.986667, longitude: 113.553333, country_code: 'HK' },
+    // East Asia & Taiwan-Korea Corridor Waypoints (VHHH to RKSI)
+    'DUMEP': { ident: 'DUMEP', name: 'DUMEP (Hong Kong SID)', type: 'WAYPOINT', latitude: 21.743417, longitude: 115.213853, country_code: 'HK' },
+    'ENVAR': { ident: 'ENVAR', name: 'ENVAR (Hong Kong / Taipei FIR)', type: 'WAYPOINT', latitude: 21.991667, longitude: 117.500000, country_code: 'HK' },
+    'ANLOT': { ident: 'ANLOT', name: 'ANLOT (Taipei FIR M750)', type: 'WAYPOINT', latitude: 23.907222, longitude: 120.486944, country_code: 'TW' },
+    'DRAKE': { ident: 'DRAKE', name: 'DRAKE (Taipei FIR Q11)', type: 'WAYPOINT', latitude: 25.615561, longitude: 122.077947, country_code: 'TW' },
+    'LIPLO': { ident: 'LIPLO', name: 'LIPLO (Taipei / Fukuoka FIR)', type: 'WAYPOINT', latitude: 27.991389, longitude: 123.999444, country_code: 'TW' },
+    'ATOTI': { ident: 'ATOTI', name: 'ATOTI (East China Sea Y741)', type: 'WAYPOINT', latitude: 30.003583, longitude: 125.198208, country_code: 'KR' },
+    'OLMEN': { ident: 'OLMEN', name: 'OLMEN (Incheon STAR Arrival)', type: 'WAYPOINT', latitude: 36.736944, longitude: 126.991111, country_code: 'KR' },
     // North Atlantic & Europe Waypoints
     'RATKA': { ident: 'RATKA', name: 'RATKA', type: 'WAYPOINT', latitude: 49.500000, longitude: -8.000000, country_code: 'IE' },
     'ATSUR': { ident: 'ATSUR', name: 'ATSUR', type: 'WAYPOINT', latitude: 50.000000, longitude: -14.000000, country_code: 'IE' },

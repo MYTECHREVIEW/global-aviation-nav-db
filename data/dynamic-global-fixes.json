@@ -194,19 +194,6 @@
     "source": "AUTO_CORRIDOR_REPAIR",
     "updated_at": "2026-08-30T01:43:11.269Z"
   },
-  "ENVAR": {
-    "id": "DYNAMIC_ENVAR",
-    "ident": "ENVAR",
-    "name": "ENVAR (Enroute Fix)",
-    "type": "WAYPOINT",
-    "latitude": 27.008496,
-    "longitude": 123.132137,
-    "elevation_ft": null,
-    "country_code": null,
-    "frequency_mhz": null,
-    "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-09-02T22:01:54.430Z"
-  },
   "MUKEP": {
     "id": "DYNAMIC_MUKEP",
     "ident": "MUKEP",
@@ -596,83 +583,5 @@
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
     "updated_at": "2026-09-02T22:01:00.620Z"
-  },
-  "DUMEP": {
-    "id": "DYNAMIC_DUMEP",
-    "ident": "DUMEP",
-    "name": "DUMEP (Enroute Fix)",
-    "type": "WAYPOINT",
-    "latitude": 26.292231,
-    "longitude": 121.230351,
-    "elevation_ft": null,
-    "country_code": null,
-    "frequency_mhz": null,
-    "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-09-02T22:01:54.423Z"
-  },
-  "ANLOT": {
-    "id": "DYNAMIC_ANLOT",
-    "ident": "ANLOT",
-    "name": "ANLOT (Enroute Fix)",
-    "type": "WAYPOINT",
-    "latitude": 26.092698,
-    "longitude": 122.32707,
-    "elevation_ft": null,
-    "country_code": null,
-    "frequency_mhz": null,
-    "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-09-02T22:01:54.436Z"
-  },
-  "LIPLO": {
-    "id": "INTERP_LIPLO",
-    "ident": "LIPLO",
-    "name": "LIPLO (Enroute Fix)",
-    "type": "WAYPOINT",
-    "latitude": 34.893742,
-    "longitude": 181.715217,
-    "elevation_ft": null,
-    "country_code": null,
-    "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-02T22:01:57.281Z"
-  },
-  "ATOTI": {
-    "id": "INTERP_ATOTI",
-    "ident": "ATOTI",
-    "name": "ATOTI (Enroute Fix)",
-    "type": "WAYPOINT",
-    "latitude": 36.323619,
-    "longitude": 170.224954,
-    "elevation_ft": null,
-    "country_code": null,
-    "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-02T22:01:57.668Z"
-  },
-  "OLMEN": {
-    "id": "INTERP_OLMEN",
-    "ident": "OLMEN",
-    "name": "OLMEN (Enroute Fix)",
-    "type": "WAYPOINT",
-    "latitude": 37.753496,
-    "longitude": -201.265308,
-    "elevation_ft": null,
-    "country_code": null,
-    "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-02T22:01:51.421Z"
-  },
-  "DRAKE": {
-    "id": "INTERP_DRAKE",
-    "ident": "DRAKE",
-    "name": "DRAKE (Enroute Fix)",
-    "type": "WAYPOINT",
-    "latitude": 31.749593,
-    "longitude": 172.412045,
-    "elevation_ft": null,
-    "country_code": null,
-    "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-02T22:01:56.165Z"
   }
 }
