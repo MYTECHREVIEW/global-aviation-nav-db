@@ -1486,13 +1486,13 @@
     "ident": "ENVAR",
     "name": "ENVAR (Enroute Fix)",
     "type": "WAYPOINT",
-    "latitude": 30.272622,
-    "longitude": 128.54584,
+    "latitude": 27.008496,
+    "longitude": 123.132137,
     "country_code": null,
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:43:11.269Z"
+    "updated_at": "2026-09-02T22:01:54.424Z"
   },
   "MUKEP": {
     "ident": "MUKEP",
@@ -1771,5 +1771,77 @@
     "elevation_ft": null,
     "frequency_mhz": null,
     "updated_at": "2026-09-02T22:01:00.613Z"
+  },
+  "DUMEP": {
+    "ident": "DUMEP",
+    "name": "DUMEP (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 26.292231,
+    "longitude": 121.230351,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-02T22:01:54.415Z"
+  },
+  "ANLOT": {
+    "ident": "ANLOT",
+    "name": "ANLOT (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 26.092698,
+    "longitude": 122.32707,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-02T22:01:54.430Z"
+  },
+  "DRAKE": {
+    "ident": "DRAKE",
+    "name": "DRAKE (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 31.749593,
+    "longitude": 172.412045,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-02T22:01:55.637Z"
+  },
+  "LIPLO": {
+    "ident": "LIPLO",
+    "name": "LIPLO (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 34.893742,
+    "longitude": 181.715217,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-02T22:01:56.848Z"
+  },
+  "ATOTI": {
+    "ident": "ATOTI",
+    "name": "ATOTI (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 36.323619,
+    "longitude": 170.224954,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-02T22:01:57.660Z"
+  },
+  "OLMEN": {
+    "ident": "OLMEN",
+    "name": "OLMEN (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 36.89636,
+    "longitude": 148.337975,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-02T22:01:58.474Z"
   }
 }
