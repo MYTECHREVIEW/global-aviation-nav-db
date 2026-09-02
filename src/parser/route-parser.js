@@ -278,13 +278,24 @@ const GLOBAL_WAYPOINTS_CATALOG = {
     'OMBEB': { ident: 'OMBEB', name: 'OMBEB', type: 'WAYPOINT', latitude: 31.631111, longitude: 113.656944, country_code: 'CN' },
     'SIERA': { ident: 'SIERA', name: 'SIERA (Hong Kong STAR)', type: 'WAYPOINT', latitude: 21.986667, longitude: 113.553333, country_code: 'HK' },
     // East Asia & Taiwan-Korea Corridor Waypoints (VHHH to RKSI)
+    'DALOL': { ident: 'DALOL', name: 'DALOL (Hong Kong SID)', type: 'WAYPOINT', latitude: 21.743583, longitude: 114.845928, country_code: 'HK' },
     'DUMEP': { ident: 'DUMEP', name: 'DUMEP (Hong Kong SID)', type: 'WAYPOINT', latitude: 21.743417, longitude: 115.213853, country_code: 'HK' },
     'ENVAR': { ident: 'ENVAR', name: 'ENVAR (Hong Kong / Taipei FIR)', type: 'WAYPOINT', latitude: 21.991667, longitude: 117.500000, country_code: 'HK' },
     'ANLOT': { ident: 'ANLOT', name: 'ANLOT (Taipei FIR M750)', type: 'WAYPOINT', latitude: 23.907222, longitude: 120.486944, country_code: 'TW' },
     'DRAKE': { ident: 'DRAKE', name: 'DRAKE (Taipei FIR Q11)', type: 'WAYPOINT', latitude: 25.615561, longitude: 122.077947, country_code: 'TW' },
+    'MOLKA': { ident: 'MOLKA', name: 'MOLKA (Taipei / Fukuoka FIR)', type: 'WAYPOINT', latitude: 26.658611, longitude: 124.000000, country_code: 'TW' },
     'LIPLO': { ident: 'LIPLO', name: 'LIPLO (Taipei / Fukuoka FIR)', type: 'WAYPOINT', latitude: 27.991389, longitude: 123.999444, country_code: 'TW' },
+    'MUKEP': { ident: 'MUKEP', name: 'MUKEP (Airway M750 / Y891)', type: 'WAYPOINT', latitude: 29.800000, longitude: 130.500000, country_code: 'JP' },
     'ATOTI': { ident: 'ATOTI', name: 'ATOTI (East China Sea Y741)', type: 'WAYPOINT', latitude: 30.003583, longitude: 125.198208, country_code: 'KR' },
+    'OVSUN': { ident: 'OVSUN', name: 'OVSUN (Airway Y891 / Y893)', type: 'WAYPOINT', latitude: 32.400000, longitude: 135.200000, country_code: 'JP' },
+    'IGMIS': { ident: 'IGMIS', name: 'IGMIS (Airway Y893 / Y57)', type: 'WAYPOINT', latitude: 34.300000, longitude: 139.800000, country_code: 'JP' },
+    'POROT': { ident: 'POROT', name: 'POROT (Airway Y57 / NOPAC)', type: 'WAYPOINT', latitude: 35.930000, longitude: 143.228333, country_code: 'JP' },
     'OLMEN': { ident: 'OLMEN', name: 'OLMEN (Incheon STAR Arrival)', type: 'WAYPOINT', latitude: 36.736944, longitude: 126.991111, country_code: 'KR' },
+    'POWAL': { ident: 'POWAL', name: 'POWAL (North Pacific NOPAC)', type: 'WAYPOINT', latitude: 50.174575, longitude: 165.123283, country_code: 'NOPAC' },
+    'RIZON': { ident: 'RIZON', name: 'RIZON (North Pacific NOPAC)', type: 'WAYPOINT', latitude: 53.000000, longitude: -170.000000, country_code: 'US' },
+    'KATCH': { ident: 'KATCH', name: 'KATCH (Gulf of Alaska)', type: 'WAYPOINT', latitude: 53.999592, longitude: -136.001603, country_code: 'US' },
+    'HSTIN': { ident: 'HSTIN', name: 'HSTIN (Minnesota Enroute)', type: 'WAYPOINT', latitude: 44.002222, longitude: -93.961111, country_code: 'US' },
+    'ZZIPR': { ident: 'ZZIPR', name: 'ZZIPR (Chicago O\'Hare STAR)', type: 'WAYPOINT', latitude: 43.185833, longitude: -91.659167, country_code: 'US' },
     // North Atlantic & Europe Waypoints
     'RATKA': { ident: 'RATKA', name: 'RATKA', type: 'WAYPOINT', latitude: 49.500000, longitude: -8.000000, country_code: 'IE' },
     'ATSUR': { ident: 'ATSUR', name: 'ATSUR', type: 'WAYPOINT', latitude: 50.000000, longitude: -14.000000, country_code: 'IE' },
@@ -479,10 +490,12 @@ class RouteParser {
             });
         }
 
-        // 2. Check dynamic online resolver persistent cache
-        const dynFix = dynamicNavDataService.getFix(clean);
-        if (dynFix) {
-            allCandidates.push(dynFix);
+        // 2. Check dynamic online resolver persistent cache (only if not already in curated catalog)
+        if (!gw) {
+            const dynFix = dynamicNavDataService.getFix(clean);
+            if (dynFix) {
+                allCandidates.push(dynFix);
+            }
         }
 
         // 3. Check local navaids and waypoints databases

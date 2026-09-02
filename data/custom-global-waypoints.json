@@ -1473,15 +1473,13 @@
   },
   "DALOL": {
     "ident": "DALOL",
-    "name": "DALOL (Enroute Fix)",
+    "name": "DALOL (Hong Kong SID)",
     "type": "WAYPOINT",
-    "latitude": 26.292231,
-    "longitude": 121.230351,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:43:11.262Z"
+    "latitude": 21.743583,
+    "longitude": 114.845928,
+    "country_code": "HK",
+    "region": "Hong Kong",
+    "updated_at": "2026-09-02T23:16:15.793Z"
   },
   "ENVAR": {
     "ident": "ENVAR",
@@ -1491,55 +1489,47 @@
     "longitude": 117.5,
     "country_code": "HK",
     "region": "Hong Kong",
-    "updated_at": "2026-09-02T22:04:25.195Z"
+    "updated_at": "2026-09-02T23:16:15.803Z"
   },
   "MUKEP": {
     "ident": "MUKEP",
-    "name": "MUKEP (Enroute Fix)",
+    "name": "MUKEP (Airway M750 / Y891)",
     "type": "WAYPOINT",
-    "latitude": 34.253013,
-    "longitude": 135.861329,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:43:11.275Z"
+    "latitude": 29.8,
+    "longitude": 130.5,
+    "country_code": "JP",
+    "region": "Japan",
+    "updated_at": "2026-09-02T23:16:15.803Z"
   },
   "OVSUN": {
     "ident": "OVSUN",
-    "name": "OVSUN (Enroute Fix)",
+    "name": "OVSUN (Airway Y891 / Y893)",
     "type": "WAYPOINT",
-    "latitude": 38.233404,
-    "longitude": 143.176818,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:43:17.741Z"
+    "latitude": 32.4,
+    "longitude": 135.2,
+    "country_code": "JP",
+    "region": "Japan",
+    "updated_at": "2026-09-02T23:16:15.803Z"
   },
   "IGMIS": {
     "ident": "IGMIS",
-    "name": "IGMIS (Enroute Fix)",
+    "name": "IGMIS (Airway Y893 / Y57)",
     "type": "WAYPOINT",
-    "latitude": 42.213794,
-    "longitude": 150.492306,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:43:11.287Z"
+    "latitude": 34.3,
+    "longitude": 139.8,
+    "country_code": "JP",
+    "region": "Japan",
+    "updated_at": "2026-09-02T23:16:15.803Z"
   },
   "POROT": {
     "ident": "POROT",
-    "name": "POROT (Enroute Fix)",
+    "name": "POROT (Airway Y57 / NOPAC)",
     "type": "WAYPOINT",
-    "latitude": 46.194184,
-    "longitude": 157.807794,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-08-30T01:43:11.292Z"
+    "latitude": 35.93,
+    "longitude": 143.228333,
+    "country_code": "JP",
+    "region": "Japan",
+    "updated_at": "2026-09-02T23:16:15.803Z"
   },
   "ISDAK": {
     "ident": "ISDAK",
@@ -1820,5 +1810,65 @@
     "country_code": "KR",
     "region": "Korea",
     "updated_at": "2026-09-02T22:04:25.195Z"
+  },
+  "MOLKA": {
+    "ident": "MOLKA",
+    "name": "MOLKA (Taipei / Fukuoka FIR)",
+    "type": "WAYPOINT",
+    "latitude": 26.658611,
+    "longitude": 124,
+    "country_code": "TW",
+    "region": "Taiwan",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "POWAL": {
+    "ident": "POWAL",
+    "name": "POWAL (North Pacific NOPAC)",
+    "type": "WAYPOINT",
+    "latitude": 50.174575,
+    "longitude": 165.123283,
+    "country_code": "NOPAC",
+    "region": "North Pacific",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "RIZON": {
+    "ident": "RIZON",
+    "name": "RIZON (North Pacific NOPAC)",
+    "type": "WAYPOINT",
+    "latitude": 53,
+    "longitude": -170,
+    "country_code": "US",
+    "region": "Alaska",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "KATCH": {
+    "ident": "KATCH",
+    "name": "KATCH (Gulf of Alaska)",
+    "type": "WAYPOINT",
+    "latitude": 53.999592,
+    "longitude": -136.001603,
+    "country_code": "US",
+    "region": "Alaska",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "HSTIN": {
+    "ident": "HSTIN",
+    "name": "HSTIN (Minnesota Enroute)",
+    "type": "WAYPOINT",
+    "latitude": 44.002222,
+    "longitude": -93.961111,
+    "country_code": "US",
+    "region": "Minnesota",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "ZZIPR": {
+    "ident": "ZZIPR",
+    "name": "ZZIPR (Chicago O'Hare STAR)",
+    "type": "WAYPOINT",
+    "latitude": 43.185833,
+    "longitude": -91.659167,
+    "country_code": "US",
+    "region": "Illinois",
+    "updated_at": "2026-09-02T23:16:15.803Z"
   }
 }
