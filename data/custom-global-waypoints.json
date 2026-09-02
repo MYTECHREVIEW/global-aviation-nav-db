@@ -399,10 +399,11 @@
     "ident": "BALMA",
     "name": "BALMA",
     "type": "WAYPOINT",
-    "latitude": 34.483333,
+    "latitude": 34.481667,
     "longitude": 35.05,
     "country_code": "LB",
-    "region": "Middle East"
+    "region": "Lebanon",
+    "updated_at": "2026-09-02T22:13:50.442Z"
   },
   "CAK": {
     "ident": "CAK",
@@ -1712,63 +1713,53 @@
   },
   "TULUB": {
     "ident": "TULUB",
-    "name": "TULUB (Enroute Fix)",
+    "name": "TULUB (Doha SID)",
     "type": "WAYPOINT",
-    "latitude": 25.681204,
-    "longitude": 50.998271,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T22:01:00.580Z"
+    "latitude": 26.112222,
+    "longitude": 51.011389,
+    "country_code": "QA",
+    "region": "Qatar",
+    "updated_at": "2026-09-02T22:13:50.441Z"
   },
   "NARMI": {
     "ident": "NARMI",
-    "name": "NARMI (Enroute Fix)",
+    "name": "NARMI (Bahrain / Saudi FIR)",
     "type": "WAYPOINT",
-    "latitude": 26.089352,
-    "longitude": 50.388486,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T22:01:00.589Z"
+    "latitude": 26.300647,
+    "longitude": 50.327503,
+    "country_code": "BH",
+    "region": "Bahrain",
+    "updated_at": "2026-09-02T22:13:50.442Z"
   },
   "FIRAS": {
     "ident": "FIRAS",
-    "name": "FIRAS (Enroute Fix)",
+    "name": "FIRAS (Airway R655)",
     "type": "WAYPOINT",
-    "latitude": 29.520711,
-    "longitude": 44.6214,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T22:01:00.595Z"
+    "latitude": 33.871944,
+    "longitude": 37.92,
+    "country_code": "SY",
+    "region": "Syria",
+    "updated_at": "2026-09-02T22:13:50.442Z"
   },
   "LEBOR": {
     "ident": "LEBOR",
-    "name": "LEBOR (Enroute Fix)",
+    "name": "LEBOR (Syria / Lebanon FIR)",
     "type": "WAYPOINT",
-    "latitude": 32.002022,
-    "longitude": 39.8357,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T22:01:00.603Z"
+    "latitude": 34.265556,
+    "longitude": 36.583056,
+    "country_code": "LB",
+    "region": "Lebanon",
+    "updated_at": "2026-09-02T22:13:50.442Z"
   },
   "KUKLA": {
     "ident": "KUKLA",
-    "name": "KUKLA (Enroute Fix)",
+    "name": "KUKLA (Beirut STAR)",
     "type": "WAYPOINT",
-    "latitude": 34.151583,
-    "longitude": 35.268721,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T22:01:00.613Z"
+    "latitude": 34.245,
+    "longitude": 34.746667,
+    "country_code": "LB",
+    "region": "Lebanon",
+    "updated_at": "2026-09-02T22:13:50.442Z"
   },
   "DUMEP": {
     "ident": "DUMEP",
