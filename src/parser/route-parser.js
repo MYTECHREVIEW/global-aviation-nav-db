@@ -274,8 +274,8 @@ const GLOBAL_WAYPOINTS_CATALOG = {
     'ARTUN': { ident: 'ARTUN', name: 'ARTUN', type: 'WAYPOINT', latitude: 55.021000, longitude: 122.062000, country_code: 'RU' },
     'SULOK': { ident: 'SULOK', name: 'SULOK', type: 'WAYPOINT', latitude: 49.900364, longitude: 115.750436, country_code: 'RU' },
     'POLHO': { ident: 'POLHO', name: 'POLHO', type: 'WAYPOINT', latitude: 44.783333, longitude: 113.250000, country_code: 'MN' },
-    'DADGA': { ident: 'DADGA', name: 'DADGA', type: 'WAYPOINT', latitude: 30.001389, longitude: 115.027778, country_code: 'CN' },
-    'OMBEB': { ident: 'OMBEB', name: 'OMBEB', type: 'WAYPOINT', latitude: 31.631111, longitude: 113.656944, country_code: 'CN' },
+    'DADGA': { ident: 'DADGA', name: 'DADGA (Airway B458)', type: 'WAYPOINT', latitude: 36.012234, longitude: 113.470668, country_code: 'CN' },
+    'OMBEB': { ident: 'OMBEB', name: 'OMBEB (Airway W37)', type: 'WAYPOINT', latitude: 31.631111, longitude: 113.656944, country_code: 'CN' },
     'SIERA': { ident: 'SIERA', name: 'SIERA (Hong Kong STAR)', type: 'WAYPOINT', latitude: 21.986667, longitude: 113.553333, country_code: 'HK' },
     // East Asia & Taiwan-Korea Corridor Waypoints (VHHH to RKSI)
     'DALOL': { ident: 'DALOL', name: 'DALOL (Hong Kong SID)', type: 'WAYPOINT', latitude: 21.743583, longitude: 114.845928, country_code: 'HK' },
