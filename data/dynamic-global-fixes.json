@@ -364,17 +364,17 @@
     "updated_at": "2026-08-30T02:37:29.153Z"
   },
   "CORRS": {
-    "id": "INTERP_CORRS",
+    "id": "ONLINE_CORRS",
     "ident": "CORRS",
-    "name": "CORRS (Enroute Fix)",
+    "name": "CORRS",
     "type": "WAYPOINT",
-    "latitude": -0.171102,
-    "longitude": -170.619417,
+    "latitude": -37.925,
+    "longitude": 145.613333,
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-08-30T02:37:29.155Z"
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-09-02T23:56:50.823Z"
   },
   "TBD": {
     "id": "INTERP_TBD",
@@ -459,25 +459,25 @@
     "ident": "DADAD",
     "name": "DADAD (Enroute Fix)",
     "type": "WAYPOINT",
-    "latitude": -15.12047,
-    "longitude": -177.497485,
+    "latitude": -33.997418,
+    "longitude": 160.61889,
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
     "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-02T23:56:29.152Z"
+    "updated_at": "2026-09-02T23:56:51.342Z"
   },
   "ADKOS": {
-    "id": "INTERP_ADKOS",
+    "id": "ONLINE_ADKOS",
     "ident": "ADKOS",
-    "name": "ADKOS (Enroute Fix)",
+    "name": "ADKOS",
     "type": "WAYPOINT",
-    "latitude": -30.069837,
-    "longitude": -184.375553,
+    "latitude": -44.617117,
+    "longitude": 166.880431,
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-02T23:56:29.154Z"
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-09-02T23:56:52.166Z"
   }
 }
