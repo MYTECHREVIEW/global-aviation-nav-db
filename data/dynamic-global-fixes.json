@@ -453,5 +453,31 @@
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
     "updated_at": "2026-08-30T02:40:31.249Z"
+  },
+  "DADAD": {
+    "id": "INTERP_DADAD",
+    "ident": "DADAD",
+    "name": "DADAD (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": -15.12047,
+    "longitude": -177.497485,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-09-02T23:56:29.152Z"
+  },
+  "ADKOS": {
+    "id": "INTERP_ADKOS",
+    "ident": "ADKOS",
+    "name": "ADKOS (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": -30.069837,
+    "longitude": -184.375553,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-09-02T23:56:29.154Z"
   }
 }

@@ -1870,5 +1870,41 @@
     "country_code": "US",
     "region": "Illinois",
     "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "CORRS": {
+    "ident": "CORRS",
+    "name": "CORRS",
+    "type": "WAYPOINT",
+    "latitude": -37.925,
+    "longitude": 145.613333,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-02T23:56:50.810Z"
+  },
+  "DADAD": {
+    "ident": "DADAD",
+    "name": "DADAD (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": -33.997418,
+    "longitude": 160.61889,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-02T23:56:51.333Z"
+  },
+  "ADKOS": {
+    "ident": "ADKOS",
+    "name": "ADKOS",
+    "type": "WAYPOINT",
+    "latitude": -44.617117,
+    "longitude": 166.880431,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-02T23:56:52.157Z"
   }
 }
