@@ -1711,5 +1711,65 @@
     "country_code": "US",
     "region": "Arctic",
     "updated_at": "2026-09-02T21:56:31.196Z"
+  },
+  "TULUB": {
+    "ident": "TULUB",
+    "name": "TULUB (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 25.681204,
+    "longitude": 50.998271,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-02T22:01:00.580Z"
+  },
+  "NARMI": {
+    "ident": "NARMI",
+    "name": "NARMI (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 26.089352,
+    "longitude": 50.388486,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-02T22:01:00.589Z"
+  },
+  "FIRAS": {
+    "ident": "FIRAS",
+    "name": "FIRAS (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 29.520711,
+    "longitude": 44.6214,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-02T22:01:00.595Z"
+  },
+  "LEBOR": {
+    "ident": "LEBOR",
+    "name": "LEBOR (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 32.002022,
+    "longitude": 39.8357,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-02T22:01:00.603Z"
+  },
+  "KUKLA": {
+    "ident": "KUKLA",
+    "name": "KUKLA (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 34.151583,
+    "longitude": 35.268721,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-02T22:01:00.613Z"
   }
 }

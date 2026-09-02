@@ -531,5 +531,70 @@
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
     "updated_at": "2026-08-30T02:40:31.249Z"
+  },
+  "TULUB": {
+    "id": "INTERP_TULUB",
+    "ident": "TULUB",
+    "name": "TULUB (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 25.681204,
+    "longitude": 50.998271,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-09-02T22:00:57.732Z"
+  },
+  "NARMI": {
+    "id": "INTERP_NARMI",
+    "ident": "NARMI",
+    "name": "NARMI (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 26.089352,
+    "longitude": 50.388486,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-09-02T22:00:57.734Z"
+  },
+  "FIRAS": {
+    "id": "INTERP_FIRAS",
+    "ident": "FIRAS",
+    "name": "FIRAS (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 29.520711,
+    "longitude": 44.6214,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-09-02T22:00:57.737Z"
+  },
+  "LEBOR": {
+    "id": "INTERP_LEBOR",
+    "ident": "LEBOR",
+    "name": "LEBOR (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 32.002022,
+    "longitude": 39.8357,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-09-02T22:00:57.738Z"
+  },
+  "KUKLA": {
+    "id": "INTERP_KUKLA",
+    "ident": "KUKLA",
+    "name": "KUKLA (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 34.151583,
+    "longitude": 35.268721,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-09-02T22:00:57.740Z"
   }
 }
