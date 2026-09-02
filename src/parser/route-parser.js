@@ -265,6 +265,18 @@ const GLOBAL_WAYPOINTS_CATALOG = {
     'GTC': { ident: 'GTC', name: 'Daigo VORTAC', type: 'VOR-DME', frequency_mhz: '115.30', latitude: 36.744367, longitude: 140.349850, country_code: 'JP' },
     'NRE': { ident: 'NRE', name: 'Narita VORTAC', type: 'VOR-DME', frequency_mhz: '117.90', latitude: 35.781667, longitude: 140.386111, country_code: 'JP' },
     'HND': { ident: 'HND', name: 'Haneda VOR-DME', type: 'VOR-DME', frequency_mhz: '112.20', latitude: 35.553333, longitude: 139.781667, country_code: 'JP' },
+    // Polar & Trans-Siberian / East Asia Corridor Waypoints
+    'NAMWE': { ident: 'NAMWE', name: 'NAMWE', type: 'WAYPOINT', latitude: 81.000000, longitude: -141.000000, country_code: 'CA' },
+    'NARAL': { ident: 'NARAL', name: 'NARAL', type: 'WAYPOINT', latitude: 81.500000, longitude: -168.973333, country_code: 'US' },
+    'RUTIN': { ident: 'RUTIN', name: 'RUTIN', type: 'WAYPOINT', latitude: 73.570667, longitude: 140.595950, country_code: 'RU' },
+    'BALOM': { ident: 'BALOM', name: 'BALOM', type: 'WAYPOINT', latitude: 65.263908, longitude: 134.698197, country_code: 'RU' },
+    'PANAR': { ident: 'PANAR', name: 'PANAR', type: 'WAYPOINT', latitude: 60.142000, longitude: 128.384000, country_code: 'RU' },
+    'ARTUN': { ident: 'ARTUN', name: 'ARTUN', type: 'WAYPOINT', latitude: 55.021000, longitude: 122.062000, country_code: 'RU' },
+    'SULOK': { ident: 'SULOK', name: 'SULOK', type: 'WAYPOINT', latitude: 49.900364, longitude: 115.750436, country_code: 'RU' },
+    'POLHO': { ident: 'POLHO', name: 'POLHO', type: 'WAYPOINT', latitude: 44.783333, longitude: 113.250000, country_code: 'MN' },
+    'DADGA': { ident: 'DADGA', name: 'DADGA', type: 'WAYPOINT', latitude: 30.001389, longitude: 115.027778, country_code: 'CN' },
+    'OMBEB': { ident: 'OMBEB', name: 'OMBEB', type: 'WAYPOINT', latitude: 31.631111, longitude: 113.656944, country_code: 'CN' },
+    'SIERA': { ident: 'SIERA', name: 'SIERA (Hong Kong STAR)', type: 'WAYPOINT', latitude: 21.986667, longitude: 113.553333, country_code: 'HK' },
     // North Atlantic & Europe Waypoints
     'RATKA': { ident: 'RATKA', name: 'RATKA', type: 'WAYPOINT', latitude: 49.500000, longitude: -8.000000, country_code: 'IE' },
     'ATSUR': { ident: 'ATSUR', name: 'ATSUR', type: 'WAYPOINT', latitude: 50.000000, longitude: -14.000000, country_code: 'IE' },
@@ -539,21 +551,29 @@ class RouteParser {
 
         const local = this.resolvePoint(token, refLat, refLon, isExplicitAirport, nextLat, nextLon);
         
-        // If local candidate exists, verify proximity before querying external resolvers
+        // If local candidate exists:
         if (local) {
+            // Curated global catalog fixes, airports, and raw coordinates must always be preserved
+            if (local.id && (local.id.startsWith('INTL_') || local.id.startsWith('APT_') || local.id.startsWith('COORD_'))) {
+                return local;
+            }
             if (refLat === null || refLon === null) return local;
             const distNm = haversineDistanceM(refLat, refLon, local.latitude, local.longitude) / 1852;
-            if (distNm <= 1800) {
+            // Allow long-haul/polar legs up to 4,000 NM without discarding surveyed candidate
+            if (distNm <= 4000) {
                 return local;
             }
         }
 
+        // Only query external resolvers if token has no valid candidate
         const enableScraper = options.enable_online_scrape === true;
-        const online = await dynamicNavDataService.resolveOnline(clean, refLat, refLon, nextLat, nextLon, fraction, enableScraper);
-        if (online) {
-            if (!this.waypointsByIdent[clean]) this.waypointsByIdent[clean] = [];
-            this.waypointsByIdent[clean].push(online);
-            return online;
+        if (!local || enableScraper) {
+            const online = await dynamicNavDataService.resolveOnline(clean, refLat, refLon, nextLat, nextLon, fraction, enableScraper);
+            if (online) {
+                if (!this.waypointsByIdent[clean]) this.waypointsByIdent[clean] = [];
+                this.waypointsByIdent[clean].push(online);
+                return online;
+            }
         }
         return local || null;
     }

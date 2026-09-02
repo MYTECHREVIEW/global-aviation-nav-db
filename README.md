@@ -76,8 +76,24 @@ docker run -d \
   -e PORT=3510 \
   -e NODE_ENV=production \
   -v aeronav_api_keys:/app/data/keys \
-  -v aeronav_custom_data:/app/data \
-  ghcr.io/mytechreview/global-aviation-nav-db:latest
+  -v aeronav_custom_data:/app/data
+```
+
+---
+
+## 💻 Local Development Launchers
+
+You can launch and stop the local development server with single-click launchers without typing terminal commands:
+
+- **🎨 Visual GUI Launcher:** Double-click [`Launch-GUI.bat`](file:///Z:/global-aviation-nav-db/Launch-GUI.bat) or [`Launch-GUI.vbs`](file:///Z:/global-aviation-nav-db/Launch-GUI.vbs) to open the dark-themed desktop controller with real-time status (Port 3510), Start/Stop/Restart, and Open UI buttons.
+- **⚡ Quick Start:** Double-click [`start-server.bat`](file:///Z:/global-aviation-nav-db/start-server.bat) to launch the Node server and open your browser at `http://localhost:3510`.
+- **🛑 Quick Stop:** Double-click [`stop-server.bat`](file:///Z:/global-aviation-nav-db/stop-server.bat) to cleanly terminate the server on port 3510.
+- **📋 Interactive Console Menu:** Double-click [`launcher.bat`](file:///Z:/global-aviation-nav-db/launcher.bat) for an interactive terminal menu.
+- **📌 Desktop Shortcuts:** Double-click [`create-desktop-shortcut.bat`](file:///Z:/global-aviation-nav-db/create-desktop-shortcut.bat) to place shortcuts directly on your Windows Desktop.
+
+```bash
+# Or manual terminal command:
+npm start
 ```
 
 ---

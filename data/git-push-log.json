@@ -1111,5 +1111,192 @@
     "status": "PUSHED",
     "output": "[main 20678c7] fix(navdata): auto-calibrate waypoints [ISDAK, MENED, ANRUG, ONEBA, BUPMI] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 125 insertions(+)\n",
     "error": null
+  },
+  {
+    "timestamp": "2026-09-02T21:44:14.120Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [NAMWE, RUTIN, BALOM, PANAR, ARTUN, SULOK, POLHO, DADGA, OMBEB, SIERA] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "NAMWE",
+        "name": "NAMWE",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 62.040523,
+          "lon": -121.121905
+        },
+        "corrected_coords": {
+          "lat": 81,
+          "lon": -141
+        },
+        "distance_saved_nm": 491
+      },
+      {
+        "ident": "RUTIN",
+        "name": "RUTIN (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 75.835,
+          "lon": -180.098571
+        },
+        "corrected_coords": {
+          "lat": 75.835,
+          "lon": -180.098571
+        },
+        "distance_saved_nm": 11
+      },
+      {
+        "ident": "BALOM",
+        "name": "BALOM (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 70.17,
+          "lon": -191.223809
+        },
+        "corrected_coords": {
+          "lat": 70.17,
+          "lon": -191.223809
+        },
+        "distance_saved_nm": 10
+      },
+      {
+        "ident": "PANAR",
+        "name": "PANAR (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 64.505,
+          "lon": -202.349047
+        },
+        "corrected_coords": {
+          "lat": 64.505,
+          "lon": -202.349047
+        },
+        "distance_saved_nm": 9
+      },
+      {
+        "ident": "ARTUN",
+        "name": "ARTUN (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 58.84,
+          "lon": -213.474285
+        },
+        "corrected_coords": {
+          "lat": 58.84,
+          "lon": -213.474285
+        },
+        "distance_saved_nm": 7
+      },
+      {
+        "ident": "SULOK",
+        "name": "SULOK (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 53.175,
+          "lon": -224.599523
+        },
+        "corrected_coords": {
+          "lat": 53.175001,
+          "lon": -224.599523
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "POLHO",
+        "name": "POLHO (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 47.510001,
+          "lon": -235.724761
+        },
+        "corrected_coords": {
+          "lat": 47.510001,
+          "lon": -235.724761
+        },
+        "distance_saved_nm": 5
+      },
+      {
+        "ident": "DADGA",
+        "name": "DADGA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 36.012234,
+          "lon": 113.470668
+        },
+        "corrected_coords": {
+          "lat": 36.012234,
+          "lon": 113.470668
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "OMBEB",
+        "name": "OMBEB (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 30.179467,
+          "lon": 113.791334
+        },
+        "corrected_coords": {
+          "lat": 30.179467,
+          "lon": 113.791334
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "SIERA",
+        "name": "SIERA (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 22.26677,
+          "lon": 113.690932
+        },
+        "corrected_coords": {
+          "lat": 22.26677,
+          "lon": 113.690932
+        },
+        "distance_saved_nm": 0
+      }
+    ],
+    "idents": [
+      "NAMWE",
+      "RUTIN",
+      "BALOM",
+      "PANAR",
+      "ARTUN",
+      "SULOK",
+      "POLHO",
+      "DADGA",
+      "OMBEB",
+      "SIERA"
+    ],
+    "status": "PUSHED",
+    "output": "[main 2cfc043] fix(navdata): auto-calibrate waypoints [NAMWE, RUTIN, BALOM, PANAR, ARTUN, SULOK, POLHO, DADGA, OMBEB, SIERA] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 250 insertions(+)\n",
+    "error": null
+  },
+  {
+    "timestamp": "2026-09-02T21:44:37.253Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [NAMWE] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "NAMWE",
+        "name": "NAMWE",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 62.040523,
+          "lon": -121.121905
+        },
+        "corrected_coords": {
+          "lat": 81,
+          "lon": -141
+        },
+        "distance_saved_nm": 491
+      }
+    ],
+    "idents": [
+      "NAMWE"
+    ],
+    "status": "PUSHED",
+    "output": "[main c3665c2] fix(navdata): auto-calibrate waypoints [NAMWE] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 19 insertions(+), 19 deletions(-)\n",
+    "error": null
   }
 ]
