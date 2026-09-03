@@ -1873,38 +1873,32 @@
   },
   "CORRS": {
     "ident": "CORRS",
-    "name": "CORRS",
+    "name": "CORRS (Melbourne SID)",
     "type": "WAYPOINT",
     "latitude": -37.925,
     "longitude": 145.613333,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T23:56:50.810Z"
+    "country_code": "AU",
+    "region": "Australia",
+    "updated_at": "2026-09-03T00:01:04.590Z"
   },
   "DADAD": {
     "ident": "DADAD",
-    "name": "DADAD (Enroute Fix)",
+    "name": "DADAD (Airway P753)",
     "type": "WAYPOINT",
-    "latitude": -33.997418,
-    "longitude": 160.61889,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T23:56:51.333Z"
+    "latitude": -40.145,
+    "longitude": 150.585,
+    "country_code": "AU",
+    "region": "Australia",
+    "updated_at": "2026-09-03T00:01:04.589Z"
   },
   "ADKOS": {
     "ident": "ADKOS",
-    "name": "ADKOS",
+    "name": "ADKOS (New Zealand FIR)",
     "type": "WAYPOINT",
     "latitude": -44.617117,
     "longitude": 166.880431,
-    "country_code": null,
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-02T23:56:52.157Z"
+    "country_code": "NZ",
+    "region": "New Zealand",
+    "updated_at": "2026-09-03T00:01:04.590Z"
   }
 }

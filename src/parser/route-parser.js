@@ -337,6 +337,10 @@ const GLOBAL_WAYPOINTS_CATALOG = {
     'TOSNA': { ident: 'TOSNA', name: 'TOSNA', type: 'WAYPOINT', latitude: 25.270000, longitude: 52.687778, country_code: 'QA' },
     'UMEVU': { ident: 'UMEVU', name: 'UMEVU', type: 'WAYPOINT', latitude: 24.855483, longitude: 53.668508, country_code: 'AE' },
     'UKILI': { ident: 'UKILI', name: 'UKILI', type: 'WAYPOINT', latitude: 24.648224, longitude: 54.158873, country_code: 'AE' },
+    // Australia, New Zealand & Tasman Sea Corridor Waypoints (YMML to NZQN)
+    'CORRS': { ident: 'CORRS', name: 'CORRS (Melbourne RNAV SID)', type: 'WAYPOINT', latitude: -37.925000, longitude: 145.613333, country_code: 'AU' },
+    'DADAD': { ident: 'DADAD', name: 'DADAD (Airway P753)', type: 'WAYPOINT', latitude: -40.145000, longitude: 150.585000, country_code: 'AU' },
+    'ADKOS': { ident: 'ADKOS', name: 'ADKOS (New Zealand FIR Entry)', type: 'WAYPOINT', latitude: -44.617117, longitude: 166.880431, country_code: 'NZ' },
     'TUDBU': { ident: 'TUDBU', name: 'TUDBU', type: 'WAYPOINT', latitude: 43.550909, longitude: 25.522318, country_code: 'BG' },
     'ETUBA': { ident: 'ETUBA', name: 'ETUBA', type: 'WAYPOINT', latitude: 44.608333, longitude: 21.652778, country_code: 'RO' },
     'NAVOD': { ident: 'NAVOD', name: 'NAVOD', type: 'WAYPOINT', latitude: 45.968056, longitude: 20.088889, country_code: 'RS' },

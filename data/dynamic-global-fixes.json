@@ -454,19 +454,6 @@
     "source": "AUTO_CORRIDOR_REPAIR",
     "updated_at": "2026-08-30T02:40:31.249Z"
   },
-  "DADAD": {
-    "id": "INTERP_DADAD",
-    "ident": "DADAD",
-    "name": "DADAD (Enroute Fix)",
-    "type": "WAYPOINT",
-    "latitude": -33.997418,
-    "longitude": 160.61889,
-    "elevation_ft": null,
-    "country_code": null,
-    "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-02T23:56:51.342Z"
-  },
   "ADKOS": {
     "id": "ONLINE_ADKOS",
     "ident": "ADKOS",
