@@ -2031,19 +2031,19 @@
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-03T23:11:40.711Z"
+    "updated_at": "2026-09-03T23:15:51.391Z"
   },
   "GASTU": {
     "ident": "GASTU",
     "name": "GASTU (Enroute Fix)",
     "type": "WAYPOINT",
-    "latitude": 36.570273,
-    "longitude": -100.774698,
+    "latitude": 39.751483,
+    "longitude": -80.773383,
     "country_code": null,
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-03T23:11:41.525Z"
+    "updated_at": "2026-09-03T23:15:52.207Z"
   },
   "OSTOR": {
     "ident": "OSTOR",
@@ -2067,6 +2067,6 @@
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-03T23:11:43.147Z"
+    "updated_at": "2026-09-03T23:15:53.017Z"
   }
 }
