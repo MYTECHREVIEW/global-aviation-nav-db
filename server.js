@@ -10,6 +10,7 @@ const apiKeyManager = require('./src/auth/api-key-manager');
 const liveTrackerService = require('./src/tracking/live-tracker-service');
 const { loadSttApiConfig } = require('./src/config/stt-config');
 const gitSyncService = require('./src/services/git-sync-service');
+const gristWaypointsService = require('./src/services/grist-waypoints-service');
 
 apiKeyManager.initializeKeys();
 const sttConfig = loadSttApiConfig();
@@ -544,15 +545,56 @@ app.get('/api/v1/waypoints/nearby', (req, res) => {
 });
 
 /**
- * Fetch Airway Fix Sequence
+ * List Airways Database Catalog
+ * GET /api/v1/airways?search=Q480&limit=50&offset=0
+ */
+app.get('/api/v1/airways', (req, res) => {
+    const search = req.query.search ? String(req.query.search).trim().toUpperCase() : '';
+    const limit = Math.min(parseInt(req.query.limit, 10) || 100, 500);
+    const offset = Math.max(parseInt(req.query.offset, 10) || 0, 0);
+
+    const allAirways = routeParser.airways || airways;
+    let keys = Object.keys(allAirways);
+
+    if (search) {
+        keys = keys.filter(k => k.includes(search));
+    }
+
+    const total = keys.length;
+    const paginatedKeys = keys.slice(offset, offset + limit);
+
+    const results = paginatedKeys.map(ident => {
+        const legs = allAirways[ident] || [];
+        const firstFix = legs.length > 0 ? legs[0].fixIdent : null;
+        const lastFix = legs.length > 0 ? legs[legs.length - 1].fixIdent : null;
+        return {
+            ident,
+            total_fixes: legs.length,
+            entry_fix: firstFix,
+            exit_fix: lastFix
+        };
+    });
+
+    res.json({
+        total,
+        count: results.length,
+        offset,
+        limit,
+        airways: results
+    });
+});
+
+/**
+ * Fetch Airway Fix Sequence with Detailed Nav Metadata
  * GET /api/v1/airways/:ident
  */
 app.get('/api/v1/airways/:ident', (req, res) => {
     const ident = req.params.ident.trim().toUpperCase();
-    const airway = airways[ident];
+    const allAirways = routeParser.airways || airways;
+    const airway = allAirways[ident];
 
     if (!airway) {
-        return res.status(404).json({ error: `Airway "${ident}" not found.` });
+        return res.status(404).json({ error: `Airway "${ident}" not found in airways database.` });
     }
 
     const resolvedLegs = airway.map(leg => {
@@ -563,15 +605,55 @@ app.get('/api/v1/airways/:ident', (req, res) => {
             name: pt ? pt.name : leg.fixIdent,
             type: pt ? pt.type : 'WAYPOINT',
             latitude: pt ? pt.latitude : null,
-            longitude: pt ? pt.longitude : null
+            longitude: pt ? pt.longitude : null,
+            country_code: pt ? pt.country_code : null,
+            frequency_mhz: pt ? pt.frequency_mhz : null
         };
     });
 
     res.json({
         airway: ident,
         total_fixes: resolvedLegs.length,
+        entry_fix: resolvedLegs.length > 0 ? resolvedLegs[0].ident : null,
+        exit_fix: resolvedLegs.length > 0 ? resolvedLegs[resolvedLegs.length - 1].ident : null,
         fixes: resolvedLegs
     });
+});
+
+/**
+ * Create or Update a Custom Airway in Database & Grist Cloud
+ * POST /api/v1/airways
+ * Body: { "ident": "B458", "legs": [{ "seq": 10, "fixIdent": "TMR" }, { "seq": 20, "fixIdent": "DADGA" }] }
+ */
+app.post('/api/v1/airways', async (req, res) => {
+    const { ident, legs } = req.body || {};
+    const airwayIdent = String(ident || '').trim().toUpperCase();
+
+    if (!airwayIdent || !Array.isArray(legs) || legs.length === 0) {
+        return res.status(400).json({
+            error: 'Invalid request: "ident" string and "legs" array with at least one fix are required.'
+        });
+    }
+
+    try {
+        const savedAirway = routeParser.saveCustomAirway(airwayIdent, legs);
+        
+        // Sync to Grist in the background
+        gristWaypointsService.upsertAirway(airwayIdent, savedAirway, (fixId) => routeParser.resolvePoint(fixId)).catch(e => {
+            console.warn(`[AirwaysAPI] Grist background sync notice for ${airwayIdent}:`, e.message);
+        });
+
+        res.status(201).json({
+            success: true,
+            message: `Airway "${airwayIdent}" saved successfully with ${savedAirway.length} fixes.`,
+            airway: airwayIdent,
+            total_fixes: savedAirway.length,
+            legs: savedAirway
+        });
+    } catch (e) {
+        console.error('[AirwaysAPI] Error saving airway:', e.message);
+        res.status(500).json({ error: 'Failed to save airway: ' + e.message });
+    }
 });
 
 /**
@@ -600,9 +682,10 @@ app.post('/api/v1/route/trace', async (req, res) => {
     const normDep = departure ? departure.trim().toUpperCase() : '';
     const normArr = arrival ? arrival.trim().toUpperCase() : '';
     const include_labels = req.body?.include_labels ?? req.body?.show_labels ?? true;
-    const cacheKey = `${normDep}|${normArr}|${normalizedRoute}|${alt_ft}|${speed_kts}|${include_labels}`;
+    const infer_airways = req.body?.infer_airways !== false;
+    const cacheKey = `${normDep}|${normArr}|${normalizedRoute}|${alt_ft}|${speed_kts}|${include_labels}|${infer_airways}`;
 
-    res.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=86400');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
 
     if (routeTraceMemoryCache.has(cacheKey)) {
         console.log('[RouteTrace] Returning cached result for key:', cacheKey);
@@ -618,7 +701,7 @@ app.post('/api/v1/route/trace', async (req, res) => {
             normArr || null,
             alt_ft,
             speed_kts,
-            { include_labels }
+            { include_labels, infer_airways }
         );
         console.log(`[RouteTrace] parseRouteAsync finished in ${Date.now() - t0}ms. Waypoints: ${result.waypoints?.length}`);
 
@@ -715,14 +798,18 @@ app.get('/api/v1/map/static', async (req, res) => {
  * Body: { "route": "FACT KODES UDLUM FVRG", "simbrief_user": "mytekreview", "auto_push": true, "include_labels": true }
  */
 app.post('/api/v1/route/analyze', async (req, res) => {
-    const { route, simbrief_user, auto_push = true, include_labels = true } = req.body || {};
+    const { route, simbrief_user, auto_push = true, include_labels = true, infer_airways = true } = req.body || {};
 
     if (!route || typeof route !== 'string' || !route.trim()) {
         return res.status(400).json({ error: 'Route string is required for route analysis.' });
     }
 
     try {
-        const analysis = await routeParser.analyzeAndFixRoute(route.trim(), { simbrief_user, include_labels });
+        const analysis = await routeParser.analyzeAndFixRoute(route.trim(), {
+            simbrief_user,
+            include_labels,
+            infer_airways: infer_airways !== false
+        });
         if (analysis.fixes_repaired && analysis.fixes_repaired.length > 0) {
             routeTraceMemoryCache.clear();
             const fixCount = analysis.fixes_repaired.length;

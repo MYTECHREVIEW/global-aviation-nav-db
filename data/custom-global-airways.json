@@ -1,0 +1,98 @@
+{
+  "B458": [
+    {
+      "seq": 10,
+      "fixIdent": "LHT"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "TMR"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "TZH"
+    },
+    {
+      "seq": 40,
+      "fixIdent": "DADGA"
+    }
+  ],
+  "W37": [
+    {
+      "seq": 10,
+      "fixIdent": "DADGA"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "OMBEB"
+    }
+  ],
+  "R473": [
+    {
+      "seq": 10,
+      "fixIdent": "OMBEB"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "WYN"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "SIERA"
+    }
+  ],
+  "P753": [
+    {
+      "seq": 10,
+      "fixIdent": "DADAD"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "ADKOS"
+    }
+  ],
+  "M750": [
+    {
+      "seq": 10,
+      "fixIdent": "ENVAR"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "ANLOT"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "MUKEP"
+    }
+  ],
+  "Y891": [
+    {
+      "seq": 10,
+      "fixIdent": "MUKEP"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "OVSUN"
+    }
+  ],
+  "Y893": [
+    {
+      "seq": 10,
+      "fixIdent": "OVSUN"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "IGMIS"
+    }
+  ],
+  "Y57": [
+    {
+      "seq": 10,
+      "fixIdent": "IGMIS"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "POROT"
+    }
+  ]
+}

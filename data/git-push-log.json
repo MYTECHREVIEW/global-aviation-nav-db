@@ -1556,5 +1556,371 @@
     "status": "PUSHED",
     "output": "[main 684f683] fix(navdata): auto-calibrate waypoints [CORRS, DADAD, ADKOS] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 68 insertions(+), 6 deletions(-)\n",
     "error": null
+  },
+  {
+    "timestamp": "2026-09-03T23:10:07.384Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [UMLAT, WELIN, RIBEL, ASLIB, BALIX, OTLUR] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "UMLAT",
+        "name": "UMLAT (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 51.998466,
+          "lon": -0.863273
+        },
+        "corrected_coords": {
+          "lat": 51.998466,
+          "lon": -0.863273
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "WELIN",
+        "name": "WELIN (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 52.526184,
+          "lon": -1.266636
+        },
+        "corrected_coords": {
+          "lat": 52.526184,
+          "lon": -1.266636
+        },
+        "distance_saved_nm": 0
+      },
+      {
+        "ident": "RIBEL",
+        "name": "RIBEL (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 55.924592,
+          "lon": -16.077497
+        },
+        "corrected_coords": {
+          "lat": 55.924592,
+          "lon": -16.077497
+        },
+        "distance_saved_nm": 6
+      },
+      {
+        "ident": "ASLIB",
+        "name": "ASLIB (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 58.105284,
+          "lon": -30.051665
+        },
+        "corrected_coords": {
+          "lat": 58.105283,
+          "lon": -30.051665
+        },
+        "distance_saved_nm": 6
+      },
+      {
+        "ident": "BALIX",
+        "name": "BALIX (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 60.285975,
+          "lon": -44.025832
+        },
+        "corrected_coords": {
+          "lat": 60.285975,
+          "lon": -44.025832
+        },
+        "distance_saved_nm": 6
+      },
+      {
+        "ident": "OTLUR",
+        "name": "OTLUR (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 48.662349,
+          "lon": -90.271999
+        },
+        "corrected_coords": {
+          "lat": 48.662349,
+          "lon": -90.271999
+        },
+        "distance_saved_nm": 58
+      }
+    ],
+    "idents": [
+      "UMLAT",
+      "WELIN",
+      "RIBEL",
+      "ASLIB",
+      "BALIX",
+      "OTLUR"
+    ],
+    "status": "PUSHED",
+    "output": "[main ec8bca0] fix(navdata): auto-calibrate waypoints [UMLAT, WELIN, RIBEL, ASLIB, BALIX, OTLUR] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 150 insertions(+)\n",
+    "error": null
+  },
+  {
+    "timestamp": "2026-09-03T23:10:10.590Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [ASLIB] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "ASLIB",
+        "name": "ASLIB (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 58.105284,
+          "lon": -30.051665
+        },
+        "corrected_coords": {
+          "lat": 58.105283,
+          "lon": -30.051665
+        },
+        "distance_saved_nm": 6
+      }
+    ],
+    "idents": [
+      "ASLIB"
+    ],
+    "status": "PUSHED",
+    "output": "[main 7151f11] fix(navdata): auto-calibrate waypoints [ASLIB] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 1 file changed, 3 insertions(+), 3 deletions(-)\n",
+    "error": null
+  },
+  {
+    "timestamp": "2026-09-03T23:10:11.897Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [ASLIB] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "ASLIB",
+        "name": "ASLIB (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 58.105284,
+          "lon": -30.051665
+        },
+        "corrected_coords": {
+          "lat": 58.105283,
+          "lon": -30.051665
+        },
+        "distance_saved_nm": 6
+      }
+    ],
+    "idents": [
+      "ASLIB"
+    ],
+    "status": "ERROR",
+    "output": "On branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n\tmodified:   API_DOCUMENTATION.md\n\tmodified:   data/git-push-log.json\n\tmodified:   server.js\n\tmodified:   src/parser/route-parser.js\n\tmodified:   src/services/git-sync-service.js\n\tmodified:   src/services/grist-waypoints-service.js\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n\tdata/custom-global-airways.json\n\tscripts/sync-airways-to-grist.js\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n",
+    "error": "Command failed: git add data/custom-global-waypoints.json data/dynamic-global-fixes.json data/airports.json && git commit -m \"fix(navdata): auto-calibrate waypoints [ASLIB] via Analyze & Auto-Fix\" && git push origin main\n"
+  },
+  {
+    "timestamp": "2026-09-03T23:10:18.380Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [ASLIB] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "ASLIB",
+        "name": "ASLIB (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 58.105284,
+          "lon": -30.051665
+        },
+        "corrected_coords": {
+          "lat": 58.105283,
+          "lon": -30.051665
+        },
+        "distance_saved_nm": 6
+      }
+    ],
+    "idents": [
+      "ASLIB"
+    ],
+    "status": "ERROR",
+    "output": "On branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n\tmodified:   API_DOCUMENTATION.md\n\tmodified:   data/git-push-log.json\n\tmodified:   server.js\n\tmodified:   src/parser/route-parser.js\n\tmodified:   src/services/git-sync-service.js\n\tmodified:   src/services/grist-waypoints-service.js\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n\tdata/custom-global-airways.json\n\tscripts/sync-airways-to-grist.js\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n",
+    "error": "Command failed: git add data/custom-global-waypoints.json data/dynamic-global-fixes.json data/airports.json && git commit -m \"fix(navdata): auto-calibrate waypoints [ASLIB] via Analyze & Auto-Fix\" && git push origin main\n"
+  },
+  {
+    "timestamp": "2026-09-03T23:11:45.609Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [SONEX, DESIG, LAMIX, LIBSO, RENEQ, GASTU, OSTOR, RIBSO] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "SONEX",
+        "name": "SONEX (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 50.552858,
+          "lon": -18.695384
+        },
+        "corrected_coords": {
+          "lat": 50.552858,
+          "lon": -18.695384
+        },
+        "distance_saved_nm": 9
+      },
+      {
+        "ident": "DESIG",
+        "name": "DESIG (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 47.756341,
+          "lon": -35.111247
+        },
+        "corrected_coords": {
+          "lat": 47.756341,
+          "lon": -35.111247
+        },
+        "distance_saved_nm": 9
+      },
+      {
+        "ident": "LAMIX",
+        "name": "LAMIX (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 44.959824,
+          "lon": -51.52711
+        },
+        "corrected_coords": {
+          "lat": 44.959824,
+          "lon": -51.52711
+        },
+        "distance_saved_nm": 8
+      },
+      {
+        "ident": "LIBSO",
+        "name": "LIBSO (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 42.163307,
+          "lon": -67.942973
+        },
+        "corrected_coords": {
+          "lat": 42.163307,
+          "lon": -67.942973
+        },
+        "distance_saved_nm": 8
+      },
+      {
+        "ident": "RENEQ",
+        "name": "RENEQ (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 39.36679,
+          "lon": -84.358836
+        },
+        "corrected_coords": {
+          "lat": 39.36679,
+          "lon": -84.358835
+        },
+        "distance_saved_nm": 7
+      },
+      {
+        "ident": "GASTU",
+        "name": "GASTU (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 36.570273,
+          "lon": -100.774698
+        },
+        "corrected_coords": {
+          "lat": 36.570273,
+          "lon": -100.774698
+        },
+        "distance_saved_nm": 7
+      },
+      {
+        "ident": "OSTOR",
+        "name": "OSTOR (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 33.773756,
+          "lon": -117.190561
+        },
+        "corrected_coords": {
+          "lat": 40.136176,
+          "lon": -77.187932
+        },
+        "distance_saved_nm": 1586
+      },
+      {
+        "ident": "RIBSO",
+        "name": "RIBSO (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 43.702079,
+          "lon": -53.601166
+        },
+        "corrected_coords": {
+          "lat": 46.883289,
+          "lon": -33.599851
+        },
+        "distance_saved_nm": 138
+      }
+    ],
+    "idents": [
+      "SONEX",
+      "DESIG",
+      "LAMIX",
+      "LIBSO",
+      "RENEQ",
+      "GASTU",
+      "OSTOR",
+      "RIBSO"
+    ],
+    "status": "PUSHED",
+    "output": "[main 9e18312] fix(navdata): auto-calibrate waypoints [SONEX, DESIG, LAMIX, LIBSO, RENEQ, GASTU, OSTOR, RIBSO] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 189 insertions(+), 2 deletions(-)\n",
+    "error": null
+  },
+  {
+    "timestamp": "2026-09-03T23:15:55.387Z",
+    "commit_message": "fix(navdata): auto-calibrate waypoints [RENEQ, GASTU, RIBSO] via Analyze & Auto-Fix",
+    "fixes": [
+      {
+        "ident": "RENEQ",
+        "name": "RENEQ (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 39.36679,
+          "lon": -84.358836
+        },
+        "corrected_coords": {
+          "lat": 39.36679,
+          "lon": -84.358835
+        },
+        "distance_saved_nm": 7
+      },
+      {
+        "ident": "GASTU",
+        "name": "GASTU (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 36.570273,
+          "lon": -100.774698
+        },
+        "corrected_coords": {
+          "lat": 39.751483,
+          "lon": -80.773383
+        },
+        "distance_saved_nm": 1587
+      },
+      {
+        "ident": "RIBSO",
+        "name": "RIBSO (Enroute Fix)",
+        "country_code": null,
+        "previous_coords": {
+          "lat": 43.702079,
+          "lon": -53.601166
+        },
+        "corrected_coords": {
+          "lat": 46.883289,
+          "lon": -33.599851
+        },
+        "distance_saved_nm": 138
+      }
+    ],
+    "idents": [
+      "RENEQ",
+      "GASTU",
+      "RIBSO"
+    ],
+    "status": "PUSHED",
+    "output": "[main 68c2d2c] fix(navdata): auto-calibrate waypoints [RENEQ, GASTU, RIBSO] via Analyze & Auto-Fix\n Committer: Rolando Nieves <mytekreview@macmini.local>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 30 insertions(+), 17 deletions(-)\n",
+    "error": null
   }
 ]

@@ -108,14 +108,26 @@ class GristWaypointsService {
                 { id: 'DateUpdated', fields: { label: 'DateUpdated', type: 'DateTime' } }
             ];
 
-            const requiredTables = ['Fixes', 'VORs', 'VORTACs_TACANs', 'NDBs', 'Airports'];
+            const airwayColumns = [
+                { id: 'AirwayIdent', fields: { label: 'AirwayIdent', type: 'Text' } },
+                { id: 'Sequence', fields: { label: 'Sequence', type: 'Numeric' } },
+                { id: 'FixIdent', fields: { label: 'FixIdent', type: 'Text' } },
+                { id: 'FixType', fields: { label: 'FixType', type: 'Text' } },
+                { id: 'Latitude', fields: { label: 'Latitude', type: 'Numeric' } },
+                { id: 'Longitude', fields: { label: 'Longitude', type: 'Numeric' } },
+                { id: 'CountryCode', fields: { label: 'CountryCode', type: 'Text' } },
+                { id: 'Source', fields: { label: 'Source', type: 'Text' } },
+                { id: 'DateUpdated', fields: { label: 'DateUpdated', type: 'DateTime' } }
+            ];
+
+            const requiredTables = ['Fixes', 'VORs', 'VORTACs_TACANs', 'NDBs', 'Airports', 'Airways'];
             const tablesToCreate = [];
 
             for (const tableId of requiredTables) {
                 if (!existingTableIds.includes(tableId)) {
                     tablesToCreate.push({
                         id: tableId,
-                        columns: standardColumns
+                        columns: tableId === 'Airways' ? airwayColumns : standardColumns
                     });
                 }
             }
@@ -238,6 +250,148 @@ class GristWaypointsService {
 
         console.log(`[GristWaypoints] 🎉 Bulk sync completed: ${syncedCount}/${entries.length} waypoints synced to Grist.`);
         return { success: true, total: entries.length, synced: syncedCount };
+    }
+
+    /**
+     * Upsert an Airway and its ordered leg waypoints into Grist Airways table
+     */
+    async upsertAirway(airwayIdent, legs, resolver = null) {
+        if (!this.initialized) {
+            await this.initializeSchema();
+        }
+
+        const ident = String(airwayIdent || '').trim().toUpperCase();
+        if (!ident || !Array.isArray(legs) || legs.length === 0) {
+            return { success: false, error: 'Invalid airway ident or legs array' };
+        }
+
+        try {
+            // Find existing records for this airway
+            const searchRes = await this.request(`/tables/Airways/records?filter=${encodeURIComponent(JSON.stringify({ AirwayIdent: [ident] }))}`);
+            const existingRecords = searchRes?.records || [];
+            const existingByFix = {};
+            for (const r of existingRecords) {
+                if (r.fields?.FixIdent) {
+                    existingByFix[r.fields.FixIdent] = r.id;
+                }
+            }
+
+            const now = new Date().toISOString();
+            const recordsToAdd = [];
+            const recordsToUpdate = [];
+
+            for (let idx = 0; idx < legs.length; idx++) {
+                const leg = legs[idx];
+                const fixIdent = String(leg.fixIdent || leg.ident || '').trim().toUpperCase();
+                const seq = leg.seq !== undefined ? leg.seq : (idx + 1) * 10;
+                let lat = leg.latitude ?? null;
+                let lon = leg.longitude ?? null;
+                let fixType = leg.type ?? 'WAYPOINT';
+                let country = leg.country_code ?? null;
+
+                if ((lat === null || lon === null) && resolver && typeof resolver === 'function') {
+                    const resolved = resolver(fixIdent);
+                    if (resolved) {
+                        lat = resolved.latitude;
+                        lon = resolved.longitude;
+                        fixType = resolved.type || fixType;
+                        country = resolved.country_code || country;
+                    }
+                }
+
+                const fields = {
+                    AirwayIdent: ident,
+                    Sequence: seq,
+                    FixIdent: fixIdent,
+                    FixType: fixType,
+                    Latitude: lat,
+                    Longitude: lon,
+                    CountryCode: country,
+                    Source: leg.source || 'Curated',
+                    DateUpdated: now
+                };
+
+                if (existingByFix[fixIdent]) {
+                    recordsToUpdate.push({ id: existingByFix[fixIdent], fields });
+                } else {
+                    recordsToAdd.push({ fields });
+                }
+            }
+
+            if (recordsToAdd.length > 0) {
+                await this.request('/tables/Airways/records', 'POST', { records: recordsToAdd });
+            }
+            if (recordsToUpdate.length > 0) {
+                await this.request('/tables/Airways/records', 'PATCH', { records: recordsToUpdate });
+            }
+
+            console.log(`[GristWaypoints] ✈️ Synced Airway ${ident} to Grist (${recordsToAdd.length} added, ${recordsToUpdate.length} updated).`);
+            return {
+                success: true,
+                ident,
+                added: recordsToAdd.length,
+                updated: recordsToUpdate.length,
+                total: legs.length
+            };
+        } catch (err) {
+            console.warn(`[GristWaypoints] Failed to sync airway ${ident} to Grist:`, err.message);
+            return { success: false, error: err.message };
+        }
+    }
+
+    /**
+     * Fetch records from Grist Airways table (optionally filtered by AirwayIdent)
+     */
+    async fetchAirways(airwayIdent = null) {
+        try {
+            let endpoint = '/tables/Airways/records';
+            if (airwayIdent) {
+                const filter = encodeURIComponent(JSON.stringify({ AirwayIdent: [airwayIdent.toUpperCase()] }));
+                endpoint += `?filter=${filter}`;
+            }
+            const res = await this.request(endpoint);
+            return res?.records || [];
+        } catch (err) {
+            console.warn('[GristWaypoints] Failed to fetch airways from Grist:', err.message);
+            return [];
+        }
+    }
+
+    /**
+     * Delete records by ID from a table
+     */
+    async deleteRecords(table, ids = []) {
+        if (!Array.isArray(ids) || ids.length === 0) return { success: true, deleted: 0 };
+        try {
+            const chunkSize = 500;
+            let deleted = 0;
+            for (let i = 0; i < ids.length; i += chunkSize) {
+                const chunk = ids.slice(i, i + chunkSize);
+                await this.request(`/tables/${table}/data/delete`, 'POST', chunk);
+                deleted += chunk.length;
+            }
+            return { success: true, deleted };
+        } catch (err) {
+            console.warn(`[GristWaypoints] Failed to delete records from ${table}:`, err.message);
+            return { success: false, error: err.message };
+        }
+    }
+
+    /**
+     * Clear all records in a table
+     */
+    async clearTable(table) {
+        try {
+            const res = await this.request(`/tables/${table}/records`);
+            const ids = (res.records || []).map(r => r.id);
+            if (ids.length > 0) {
+                return await this.deleteRecords(table, ids);
+            }
+            return { success: true, deleted: 0 };
+        } catch (err) {
+            console.warn(`[GristWaypoints] Failed to clear table ${table}:`, err.message);
+            return { success: false, error: err.message };
+        }
     }
 }
 

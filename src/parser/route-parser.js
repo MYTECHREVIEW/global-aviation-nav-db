@@ -400,6 +400,249 @@ class RouteParser {
         this.parsedRouteCache = new Map();
         this.customWaypointsDbPath = path.join(__dirname, '../../data/custom-global-waypoints.json');
         this.customWaypoints = this.loadCustomWaypoints();
+        this.customAirwaysDbPath = path.join(__dirname, '../../data/custom-global-airways.json');
+        this.loadCustomAirways();
+        this.rebuildAirwayIndex();
+    }
+
+    rebuildAirwayIndex() {
+        this.fixToAirways = new Map();
+        for (const [airway, legs] of Object.entries(this.airways || {})) {
+            if (!Array.isArray(legs)) continue;
+            for (const leg of legs) {
+                const fix = String(leg.fixIdent || leg.ident || '').trim().toUpperCase();
+                if (!fix) continue;
+                if (!this.fixToAirways.has(fix)) {
+                    this.fixToAirways.set(fix, []);
+                }
+                this.fixToAirways.get(fix).push(airway);
+            }
+        }
+    }
+
+    loadCustomAirways() {
+        try {
+            if (fs.existsSync(this.customAirwaysDbPath)) {
+                const data = JSON.parse(fs.readFileSync(this.customAirwaysDbPath, 'utf8'));
+                let count = 0;
+                for (const [ident, legs] of Object.entries(data)) {
+                    this.airways[ident] = legs;
+                    count++;
+                }
+                console.log(`[RouteParser] Loaded ${count} custom airways from custom-global-airways.json`);
+                return data;
+            }
+        } catch (e) {
+            console.warn('[RouteParser] Error loading custom airways database:', e.message);
+        }
+        return {};
+    }
+
+    saveCustomAirway(ident, legs) {
+        if (!ident || !Array.isArray(legs) || legs.length === 0) {
+            throw new Error('Invalid airway: ident and legs array are required');
+        }
+        const airwayIdent = String(ident).trim().toUpperCase();
+        let customAirways = {};
+        try {
+            if (fs.existsSync(this.customAirwaysDbPath)) {
+                customAirways = JSON.parse(fs.readFileSync(this.customAirwaysDbPath, 'utf8'));
+            }
+        } catch (_) {}
+
+        customAirways[airwayIdent] = legs.map((l, i) => ({
+            seq: l.seq !== undefined ? l.seq : (i + 1) * 10,
+            fixIdent: String(l.fixIdent || l.ident || '').trim().toUpperCase()
+        }));
+
+        this.airways[airwayIdent] = customAirways[airwayIdent];
+        this.rebuildAirwayIndex();
+
+        try {
+            fs.writeFileSync(this.customAirwaysDbPath, JSON.stringify(customAirways, null, 2));
+            if (this.parsedRouteCache) this.parsedRouteCache.clear();
+            console.log(`[RouteParser] Saved custom airway ${airwayIdent} with ${legs.length} legs to custom-global-airways.json`);
+
+            // Asynchronously sync airway to Grist redundancy cloud database
+            gristWaypointsService.upsertAirway(airwayIdent, customAirways[airwayIdent], (fixId) => this.resolvePoint(fixId)).catch(err => {
+                console.warn(`[RouteParser] Background Grist sync notice for airway ${airwayIdent}:`, err.message);
+            });
+        } catch (e) {
+            console.error('[RouteParser] Failed to persist custom airway:', e.message);
+        }
+        return customAirways[airwayIdent];
+    }
+
+    /**
+     * Find connecting published airway between two consecutive waypoints
+     * @param {Object|string} pt1 - First point or fix ident
+     * @param {Object|string} pt2 - Second point or fix ident
+     * @returns {Object|null} Connecting airway information or null
+     */
+    findConnectingAirway(pt1, pt2) {
+        if (!this.fixToAirways) this.rebuildAirwayIndex();
+
+        const fix1 = (typeof pt1 === 'string' ? pt1 : (pt1.ident || '')).trim().toUpperCase();
+        const fix2 = (typeof pt2 === 'string' ? pt2 : (pt2.ident || '')).trim().toUpperCase();
+        if (!fix1 || !fix2 || fix1 === fix2) return null;
+
+        const a1 = this.fixToAirways.get(fix1) || [];
+        const a2 = this.fixToAirways.get(fix2) || [];
+        if (a1.length === 0 || a2.length === 0) return null;
+
+        const commonAirways = a1.filter(a => a2.includes(a));
+        if (commonAirways.length === 0) return null;
+
+        const lat1 = typeof pt1 === 'object' && pt1.latitude != null ? pt1.latitude : null;
+        const lon1 = typeof pt1 === 'object' && pt1.longitude != null ? pt1.longitude : null;
+        const lat2 = typeof pt2 === 'object' && pt2.latitude != null ? pt2.latitude : null;
+        const lon2 = typeof pt2 === 'object' && pt2.longitude != null ? pt2.longitude : null;
+
+        const directDistNm = (lat1 !== null && lon1 !== null && lat2 !== null && lon2 !== null)
+            ? haversineDistanceM(lat1, lon1, lat2, lon2) / 1852
+            : null;
+
+        let bestCandidate = null;
+        let minDetour = Infinity;
+
+        for (const airway of commonAirways) {
+            const legs = this.airways[airway];
+            if (!Array.isArray(legs)) continue;
+
+            const idx1 = legs.findIndex(l => (l.fixIdent || l.ident) === fix1);
+            const idx2 = legs.findIndex(l => (l.fixIdent || l.ident) === fix2);
+            if (idx1 === -1 || idx2 === -1 || idx1 === idx2) continue;
+
+            const step = idx1 < idx2 ? 1 : -1;
+            const intermediateFixes = [];
+            for (let k = idx1 + step; k !== idx2; k += step) {
+                const legFix = legs[k].fixIdent || legs[k].ident;
+                if (legFix && legFix !== fix1 && legFix !== fix2) {
+                    intermediateFixes.push(legFix);
+                }
+            }
+
+            if (directDistNm !== null && directDistNm > 0 && intermediateFixes.length > 0) {
+                let prevLat = lat1;
+                let prevLon = lon1;
+                let airwayDistM = 0;
+                let validPath = true;
+
+                for (const fId of intermediateFixes) {
+                    const resolved = this.resolvePoint(fId, prevLat, prevLon);
+                    if (resolved && resolved.latitude != null && resolved.longitude != null) {
+                        airwayDistM += haversineDistanceM(prevLat, prevLon, resolved.latitude, resolved.longitude);
+                        prevLat = resolved.latitude;
+                        prevLon = resolved.longitude;
+                    } else {
+                        validPath = false;
+                        break;
+                    }
+                }
+                airwayDistM += haversineDistanceM(prevLat, prevLon, lat2, lon2);
+
+                if (validPath) {
+                    const airwayDistNm = airwayDistM / 1852;
+                    const detourRatio = airwayDistNm / directDistNm;
+
+                    // Detour must be within 35% of direct great-circle
+                    if (detourRatio <= 1.35 && detourRatio < minDetour) {
+                        minDetour = detourRatio;
+                        bestCandidate = {
+                            airway,
+                            from: fix1,
+                            to: fix2,
+                            intermediateFixes,
+                            airwayDistNm: Math.round(airwayDistNm * 10) / 10,
+                            directDistNm: Math.round(directDistNm * 10) / 10,
+                            detourRatio
+                        };
+                    }
+                }
+            } else {
+                if (!bestCandidate) {
+                    bestCandidate = {
+                        airway,
+                        from: fix1,
+                        to: fix2,
+                        intermediateFixes,
+                        airwayDistNm: directDistNm || 0,
+                        directDistNm: directDistNm || 0,
+                        detourRatio: 1.0
+                    };
+                }
+            }
+        }
+
+        return bestCandidate;
+    }
+
+    /**
+     * Inspect consecutive resolved points and expand implicit missing airway corridors
+     * @param {Array} points - Array of resolved waypoint objects
+     * @param {Object} options - { infer_airways: true }
+     * @returns {Object} { points, inferredAirways }
+     */
+    expandImplicitAirways(points, options = {}) {
+        if (!points || points.length < 2) return { points: points || [], inferredAirways: [] };
+        if (options.infer_airways === false) return { points, inferredAirways: [] };
+
+        const expanded = [];
+        const inferredAirways = [];
+        let i = 0;
+
+        while (i < points.length) {
+            const current = points[i];
+            expanded.push(current);
+
+            if (i < points.length - 1) {
+                const next = points[i + 1];
+
+                const currentIsAirport = current.type === 'AIRPORT' || current.is_airport;
+                const nextIsAirport = next.type === 'AIRPORT' || next.is_airport;
+                const alreadyOnAirway = next.via_airway && !next.inferred_airway;
+                const alreadyOnProcedure = next.via_procedure;
+
+                if (!currentIsAirport && !nextIsAirport && !alreadyOnAirway && !alreadyOnProcedure) {
+                    const conn = this.findConnectingAirway(current, next);
+                    if (conn && conn.airway) {
+                        next.via_airway = conn.airway;
+                        next.inferred_airway = true;
+
+                        const insertedFixes = [];
+                        if (conn.intermediateFixes && conn.intermediateFixes.length > 0) {
+                            let refLat = current.latitude;
+                            let refLon = current.longitude;
+
+                            for (const fId of conn.intermediateFixes) {
+                                const interPt = this.resolvePoint(fId, refLat, refLon);
+                                if (interPt) {
+                                    interPt.via_airway = conn.airway;
+                                    interPt.inferred_airway = true;
+                                    expanded.push(interPt);
+                                    insertedFixes.push(interPt.ident);
+                                    refLat = interPt.latitude;
+                                    refLon = interPt.longitude;
+                                }
+                            }
+                        }
+
+                        inferredAirways.push({
+                            airway: conn.airway,
+                            from: conn.from,
+                            to: conn.to,
+                            intermediate_fixes_count: insertedFixes.length,
+                            intermediate_fixes: insertedFixes,
+                            direct_distance_nm: conn.directDistNm,
+                            airway_distance_nm: conn.airwayDistNm
+                        });
+                    }
+                }
+            }
+            i++;
+        }
+
+        return { points: expanded, inferredAirways };
     }
 
     loadCustomWaypoints() {
@@ -609,7 +852,7 @@ class RouteParser {
     }
 
     parseRoute(routeStr, depIcao = null, arrIcao = null, cruisingAltFt = 35000, speedKts = 450, options = {}) {
-        const cacheKey = `${depIcao || ''}:${arrIcao || ''}:${routeStr}:${cruisingAltFt}:${speedKts}:${options.include_labels !== false}`;
+        const cacheKey = `${depIcao || ''}:${arrIcao || ''}:${routeStr}:${cruisingAltFt}:${speedKts}:${options.include_labels !== false}:${options.infer_airways !== false}`;
         if (this.parsedRouteCache && this.parsedRouteCache.has(cacheKey)) {
             return this.parsedRouteCache.get(cacheKey);
         }
@@ -651,7 +894,7 @@ class RouteParser {
             arrPoint = this.resolvePoint(lastToken, null, null, true);
         }
 
-        const resolvedPoints = [];
+        let resolvedPoints = [];
         let currentRefLat = depPoint ? depPoint.latitude : null;
         let currentRefLon = depPoint ? depPoint.longitude : null;
 
@@ -841,6 +1084,11 @@ class RouteParser {
             // ═══════════════════════════════════════════════════════════════════
             // 4. STANDARD RESOLUTION & PROCEDURE TOKEN HANDLING
             // ═══════════════════════════════════════════════════════════════════
+            // Skip immediate duplicate sequential tokens
+            if (resolvedPoints.length > 0 && resolvedPoints[resolvedPoints.length - 1].ident === token) {
+                continue;
+            }
+
             // Do not resolve standalone airway designators as points
             if (isAirwayDesignator(token)) {
                 continue;
@@ -894,6 +1142,11 @@ class RouteParser {
             resolvedPoints.push(arrPoint);
         }
 
+        // Expand implicit missing airway corridors if consecutive points share a published airway
+        const airwayExpansion = this.expandImplicitAirways(resolvedPoints, options);
+        resolvedPoints = airwayExpansion.points;
+        const inferredAirways = airwayExpansion.inferredAirways;
+
         let totalDistanceM = 0;
         const processedWaypoints = [];
         const fullCoordinates = [];
@@ -944,6 +1197,7 @@ class RouteParser {
                 country_code: pt.country_code || null,
                 via_airway: pt.via_airway || null,
                 via_procedure: pt.via_procedure || null,
+                inferred_airway: pt.inferred_airway || false,
                 segment_distance_nm: segmentDistanceNm,
                 segment_bearing_deg: segmentBearingDeg,
                 cumulative_distance_nm: cumulativeDistanceNm,
@@ -981,6 +1235,7 @@ class RouteParser {
                         name: w.name,
                         type: w.type,
                         via: w.via_procedure || w.via_airway || null,
+                        inferred_airway: w.inferred_airway || false,
                         elevation_ft: w.elevation_ft,
                         frequency_mhz: w.frequency_mhz,
                         segment_bearing_deg: w.segment_bearing_deg,
@@ -1007,6 +1262,7 @@ class RouteParser {
             total_distance_km: totalDistanceKm,
             estimated_time_enroute_minutes: totalEteMinutes,
             estimated_time_enroute_formatted: `${Math.floor(totalEteMinutes / 60)}h ${totalEteMinutes % 60}m`,
+            inferred_airways: inferredAirways,
             waypoints: processedWaypoints,
             route_coordinates: fullCoordinates,
             geojson
@@ -1020,7 +1276,7 @@ class RouteParser {
     }
 
     async parseRouteAsync(routeStr, depIcao = null, arrIcao = null, cruisingAltFt = 35000, speedKts = 450, options = {}) {
-        const cacheKey = `${depIcao || ''}:${arrIcao || ''}:${routeStr}:${cruisingAltFt}:${speedKts}:${options.include_labels !== false}`;
+        const cacheKey = `${depIcao || ''}:${arrIcao || ''}:${routeStr}:${cruisingAltFt}:${speedKts}:${options.include_labels !== false}:${options.infer_airways !== false}`;
         if (this.parsedRouteCache && this.parsedRouteCache.has(cacheKey)) {
             return this.parsedRouteCache.get(cacheKey);
         }
@@ -1061,7 +1317,7 @@ class RouteParser {
             arrPoint = await this.resolvePointAsync(lastToken, null, null, true, null, null, 0.5, options);
         }
 
-        const resolvedPoints = [];
+        let resolvedPoints = [];
         let currentRefLat = depPoint ? depPoint.latitude : null;
         let currentRefLon = depPoint ? depPoint.longitude : null;
 
@@ -1236,6 +1492,11 @@ class RouteParser {
             }
 
             // 4. STANDARD RESOLUTION WITH AUTONOMOUS ONLINE RESOLVER
+            // Skip immediate duplicate sequential tokens
+            if (resolvedPoints.length > 0 && resolvedPoints[resolvedPoints.length - 1].ident === token) {
+                continue;
+            }
+
             if (isAirwayDesignator(token)) {
                 continue;
             }
@@ -1292,6 +1553,11 @@ class RouteParser {
             resolvedPoints.push(arrPoint);
         }
 
+        // Expand implicit missing airway corridors if consecutive points share a published airway
+        const airwayExpansion = this.expandImplicitAirways(resolvedPoints, options);
+        resolvedPoints = airwayExpansion.points;
+        const inferredAirways = airwayExpansion.inferredAirways;
+
         let totalDistanceM = 0;
         const processedWaypoints = [];
         const fullCoordinates = [];
@@ -1340,6 +1606,7 @@ class RouteParser {
                 frequency_mhz: pt.frequency_mhz,
                 via_procedure: pt.via_procedure,
                 via_airway: pt.via_airway,
+                inferred_airway: pt.inferred_airway || false,
                 country_code: pt.country_code,
                 segment_distance_nm: segmentDistanceNm,
                 segment_bearing_deg: segmentBearingDeg,
@@ -1376,6 +1643,7 @@ class RouteParser {
                         name: w.name,
                         type: w.type,
                         via: w.via_procedure || w.via_airway || null,
+                        inferred_airway: w.inferred_airway || false,
                         elevation_ft: w.elevation_ft,
                         frequency_mhz: w.frequency_mhz,
                         segment_bearing_deg: w.segment_bearing_deg,
@@ -1402,6 +1670,7 @@ class RouteParser {
             total_distance_km: totalDistanceKm,
             estimated_time_enroute_minutes: totalEteMinutes,
             estimated_time_enroute_formatted: `${Math.floor(totalEteMinutes / 60)}h ${totalEteMinutes % 60}m`,
+            inferred_airways: inferredAirways,
             waypoints: processedWaypoints,
             route_coordinates: fullCoordinates,
             geojson
@@ -1603,8 +1872,17 @@ class RouteParser {
         const finalResult = await this.parseRouteAsync(routeStr, null, null, 35000, 450, options);
         const distanceSaved = Math.max(0, Math.round((initial.total_distance_nm - finalResult.total_distance_nm) * 10) / 10);
 
+        let explicitRoute = routeStr;
+        if (finalResult.inferred_airways && finalResult.inferred_airways.length > 0) {
+            for (const inf of finalResult.inferred_airways) {
+                const regex = new RegExp(`\\b${inf.from}\\s+${inf.to}\\b`, 'i');
+                explicitRoute = explicitRoute.replace(regex, `${inf.from} ${inf.airway} ${inf.to}`);
+            }
+        }
+
         return {
             ...finalResult,
+            explicit_route: explicitRoute !== routeStr ? explicitRoute : null,
             original_distance_nm: initial.total_distance_nm,
             distance_saved_nm: distanceSaved,
             issues_found: issuesFound,

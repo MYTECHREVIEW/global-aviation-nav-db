@@ -22,6 +22,7 @@ class GitSyncService {
         const idents = fixesRepaired.map(f => f.ident || f.name).filter(Boolean);
         const filesToStage = [
             'data/custom-global-waypoints.json',
+            'data/custom-global-airways.json',
             'data/dynamic-global-fixes.json',
             'data/airports.json'
         ];
@@ -57,6 +58,7 @@ class GitSyncService {
         const commitMsg = customMessage || `fix(navdata): auto-calibrate waypoints [${idents.join(', ')}] via Analyze & Auto-Fix`;
         const files = [
             'data/custom-global-waypoints.json',
+            'data/custom-global-airways.json',
             'data/dynamic-global-fixes.json',
             'data/airports.json'
         ];

@@ -433,8 +433,9 @@ All verified waypoints and navaids are automatically categorized and synchronize
 | **`VORTACs_TACANs`** | `VORTAC`, `TACAN`, `DME` | Military and co-located tactical air navigation beacons. |
 | **`NDBs`** | `NDB` | Non-Directional radio beacons. |
 | **`Airports`** | `AIRPORT` | Global ICAO aerodromes and landing facilities. |
+| **`Airways`** | `AIRWAY` | High/Low altitude enroute airway corridors, sequential leg fixes, and coordinates. |
 
-#### Complete Field Schema (Every Table):
+#### Standard NavAid & Waypoint Field Schema (`Fixes`, `VORs`, `VORTACs_TACANs`, `NDBs`, `Airports`):
 - **`Ident`** *(Text)*: ICAO/IATA identifier (e.g. `POS`, `GERTU`, `OKSAW`).
 - **`Name`** *(Text)*: Official aeronautical facility name.
 - **`Type`** *(Text)*: Classification (`WAYPOINT`, `VOR`, `VORTAC`, `NDB`, `AIRPORT`).
@@ -447,6 +448,17 @@ All verified waypoints and navaids are automatically categorized and synchronize
 - **`Source`** *(Text)*: Authoritative source (e.g. `DECEA_AIP`, `TTCAA_AIP`, `OPENNAV_ONLINE`).
 - **`DateUploaded`** *(DateTime)*: Timestamp when the record was initially ingested.
 - **`DateUpdated`** *(DateTime)*: Timestamp when the record was last verified or repaired.
+
+#### Dedicated `Airways` Table Schema:
+- **`AirwayIdent`** *(Text)*: Airway corridor designator (e.g. `B458`, `W37`, `Q87`, `J79`).
+- **`Sequence`** *(Numeric)*: Sequential order index of the fix along the airway (e.g. `10`, `20`, `30`).
+- **`FixIdent`** *(Text)*: Fix or NavAid identifier at this leg (e.g. `LHT`, `TMR`, `DADGA`).
+- **`FixType`** *(Text)*: Fix classification (`WAYPOINT`, `VOR`, `VORTAC`, `NDB`).
+- **`Latitude`** *(Numeric)*: Decimal WGS-84 latitude of the waypoint.
+- **`Longitude`** *(Numeric)*: Decimal WGS-84 longitude of the waypoint.
+- **`CountryCode`** *(Text)*: 2-letter ISO country code of the waypoint.
+- **`Source`** *(Text)*: Provenance (e.g. `Curated`, `GLOBAL_NAV_DB`, `AERONAV_AIRWAY_FIX`).
+- **`DateUpdated`** *(DateTime)*: Timestamp when this airway leg was synchronized.
 
 ---
 
@@ -472,16 +484,178 @@ Add or update a waypoint in the persistent database and automatically sync to Gr
 
 ---
 
-## 🛫 6. Flight Plan Route Tracing Engine
+### `GET /api/v1/airways`
+List all global and custom airways with search and pagination:
+```http
+GET /api/v1/airways?search=Q480&limit=50&offset=0
+```
+
+#### Response (JSON)
+```json
+{
+  "total": 1,
+  "count": 1,
+  "offset": 0,
+  "limit": 50,
+  "airways": [
+    {
+      "ident": "Q480",
+      "total_fixes": 8,
+      "entry_fix": "CUGGR",
+      "exit_fix": "ZANDR"
+    }
+  ]
+}
+```
+
+### `GET /api/v1/airways/:ident`
+Fetch ordered fix sequence along an airway with resolved coordinates and navigation metadata:
+```http
+GET /api/v1/airways/B458
+```
+
+#### Response (JSON)
+```json
+{
+  "airway": "B458",
+  "total_fixes": 4,
+  "entry_fix": "LHT",
+  "exit_fix": "DADGA",
+  "fixes": [
+    {
+      "seq": 10,
+      "ident": "LHT",
+      "name": "Hamamatsu",
+      "type": "TACAN",
+      "latitude": 34.747200,
+      "longitude": 137.710006,
+      "country_code": "JP",
+      "frequency_mhz": "114.70"
+    },
+    {
+      "seq": 20,
+      "ident": "TMR",
+      "name": "Thumrait",
+      "type": "VORTAC",
+      "latitude": 17.668199,
+      "longitude": 54.025699,
+      "country_code": "OM",
+      "frequency_mhz": "115.30"
+    },
+    {
+      "seq": 30,
+      "ident": "TZH",
+      "name": "Tianzhen",
+      "type": "VOR-DME",
+      "latitude": 40.411701,
+      "longitude": 114.050003,
+      "country_code": "CN",
+      "frequency_mhz": "116.60"
+    },
+    {
+      "seq": 40,
+      "ident": "DADGA",
+      "name": "DADGA (Airway B458)",
+      "type": "WAYPOINT",
+      "latitude": 36.012234,
+      "longitude": 113.470668,
+      "country_code": "CN",
+      "frequency_mhz": null
+    }
+  ]
+}
+```
+
+### `POST /api/v1/airways`
+Create or update a custom airway. Persists to `data/custom-global-airways.json` and automatically synchronizes all legs with resolved coordinates to the Grist **`Airways`** table in the Waypoints Database (`wj7bUFrVUiV7`):
+```json
+{
+  "ident": "B458",
+  "legs": [
+    { "seq": 10, "fixIdent": "LHT" },
+    { "seq": 20, "fixIdent": "TMR" },
+    { "seq": 30, "fixIdent": "TZH" },
+    { "seq": 40, "fixIdent": "DADGA" }
+  ]
+}
+```
+
+#### Response (JSON)
+```json
+{
+  "success": true,
+  "message": "Airway \"B458\" saved successfully with 4 fixes.",
+  "airway": "B458",
+  "total_fixes": 4,
+  "legs": [
+    { "seq": 10, "fixIdent": "LHT" },
+    { "seq": 20, "fixIdent": "TMR" },
+    { "seq": 30, "fixIdent": "TZH" },
+    { "seq": 40, "fixIdent": "DADGA" }
+  ]
+}
+```
+
+---
 
 ### `POST /api/v1/route/trace`
 High-speed route tracing engine with multi-layer in-memory LRU caching (`<0.2ms` repeated response times) and parallel dynamic online waypoint resolution. Traces flight plan route strings with SIDs, Airways, STARs, and international fixes. Returns sequential waypoints, bearings, distances, and GeoJSON.
 
+#### ⚡ Automatic Missing Airway Detection & Corridor Expansion
+When consecutive filed waypoints share a published enroute airway corridor but the airway designator was omitted (e.g., filed as `DIYAP OAL` instead of `DIYAP Q136 OAL`), the engine **automatically detects the connecting airway, infers the designator, and expands all intermediate waypoints** along the corridor with exact geodetic coordinates.
+
+- **`infer_airways`** *(Boolean, optional, default: `true`)*: Enables automatic airway inference. Set to `false` for strict direct waypoint-to-waypoint navigation.
+
 #### Request Body
 ```json
 {
-  "route": "GCRR VASTO NIDEB TIGGI PINEK KORUL KOLEK EBOMO RUSIB SHIRI TOJAQ EGGD",
+  "route": "KORD PEKUE PIPPN ROTTN DIYAP OAL INYOE KSFO",
+  "departure": "KORD",
+  "arrival": "KSFO",
+  "infer_airways": true,
   "include_labels": true
+}
+```
+
+#### Response Payload (Sample)
+```json
+{
+  "total_waypoints": 27,
+  "total_distance_nm": 1614.8,
+  "inferred_airways": [
+    {
+      "airway": "Q136",
+      "from": "DIYAP",
+      "to": "OAL",
+      "intermediate_fixes_count": 19,
+      "intermediate_fixes": [
+        "HIBAV", "BVEEE", "WRNCH", "TURCK", "AYEGI", "SYTHH", "KAWWA",
+        "ZIRKL", "BBULL", "COUGH", "VOAXA", "ELLFF", "WEEMN", "MANRD",
+        "TRALP", "GDGET", "CRLES", "KATTS", "RUMPS"
+      ],
+      "direct_distance_nm": 1121.7,
+      "airway_distance_nm": 1123.4
+    }
+  ],
+  "waypoints": [
+    {
+      "sequence": 5,
+      "ident": "DIYAP",
+      "type": "WAYPOINT",
+      "latitude": 40.974733,
+      "longitude": -93.790497
+    },
+    {
+      "sequence": 6,
+      "ident": "HIBAV",
+      "type": "WAYPOINT",
+      "via_airway": "Q136",
+      "inferred_airway": true,
+      "latitude": 40.930700,
+      "longitude": -94.331500
+    },
+    ...
+  ]
 }
 ```
 
