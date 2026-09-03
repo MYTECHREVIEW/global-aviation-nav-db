@@ -1947,7 +1947,7 @@
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-03T23:10:03.095Z"
+    "updated_at": "2026-09-03T23:10:18.267Z"
   },
   "BALIX": {
     "ident": "BALIX",
@@ -1972,5 +1972,101 @@
     "elevation_ft": null,
     "frequency_mhz": null,
     "updated_at": "2026-09-03T23:10:04.720Z"
+  },
+  "SONEX": {
+    "ident": "SONEX",
+    "name": "SONEX (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 50.552858,
+    "longitude": -18.695384,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-03T23:11:37.050Z"
+  },
+  "DESIG": {
+    "ident": "DESIG",
+    "name": "DESIG (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 47.756341,
+    "longitude": -35.111247,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-03T23:11:37.870Z"
+  },
+  "LAMIX": {
+    "ident": "LAMIX",
+    "name": "LAMIX (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 44.959824,
+    "longitude": -51.52711,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-03T23:11:38.689Z"
+  },
+  "LIBSO": {
+    "ident": "LIBSO",
+    "name": "LIBSO (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 42.163307,
+    "longitude": -67.942973,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-03T23:11:39.503Z"
+  },
+  "RENEQ": {
+    "ident": "RENEQ",
+    "name": "RENEQ (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 39.36679,
+    "longitude": -84.358835,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-03T23:11:40.711Z"
+  },
+  "GASTU": {
+    "ident": "GASTU",
+    "name": "GASTU (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 36.570273,
+    "longitude": -100.774698,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-03T23:11:41.525Z"
+  },
+  "OSTOR": {
+    "ident": "OSTOR",
+    "name": "OSTOR (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 40.136176,
+    "longitude": -77.187932,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-03T23:11:42.337Z"
+  },
+  "RIBSO": {
+    "ident": "RIBSO",
+    "name": "RIBSO (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 46.883289,
+    "longitude": -33.599851,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-03T23:11:43.147Z"
   }
 }

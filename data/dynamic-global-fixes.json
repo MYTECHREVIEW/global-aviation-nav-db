@@ -517,7 +517,7 @@
     "country_code": null,
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-09-03T23:10:03.101Z"
+    "updated_at": "2026-09-03T23:10:18.276Z"
   },
   "BALIX": {
     "id": "DYNAMIC_BALIX",
@@ -544,5 +544,96 @@
     "frequency_mhz": null,
     "source": "AUTO_CORRIDOR_REPAIR",
     "updated_at": "2026-09-03T23:10:04.727Z"
+  },
+  "SONEX": {
+    "id": "INTERP_SONEX",
+    "ident": "SONEX",
+    "name": "SONEX (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 50.552858,
+    "longitude": -18.695384,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-09-03T23:11:37.481Z"
+  },
+  "DESIG": {
+    "id": "DYNAMIC_DESIG",
+    "ident": "DESIG",
+    "name": "DESIG (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 47.756341,
+    "longitude": -35.111247,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-03T23:11:37.886Z"
+  },
+  "LAMIX": {
+    "id": "DYNAMIC_LAMIX",
+    "ident": "LAMIX",
+    "name": "LAMIX (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 44.959824,
+    "longitude": -51.52711,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-03T23:11:38.699Z"
+  },
+  "LIBSO": {
+    "id": "DYNAMIC_LIBSO",
+    "ident": "LIBSO",
+    "name": "LIBSO (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 42.163307,
+    "longitude": -67.942973,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-03T23:11:39.510Z"
+  },
+  "RENEQ": {
+    "id": "INTERP_RENEQ",
+    "ident": "RENEQ",
+    "name": "RENEQ (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 39.36679,
+    "longitude": -84.358835,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-09-03T23:11:41.148Z"
+  },
+  "GASTU": {
+    "id": "DYNAMIC_GASTU",
+    "ident": "GASTU",
+    "name": "GASTU (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 36.570273,
+    "longitude": -100.774698,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-03T23:11:41.533Z"
+  },
+  "RIBSO": {
+    "id": "INTERP_RIBSO",
+    "ident": "RIBSO",
+    "name": "RIBSO (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 43.702079,
+    "longitude": -53.601166,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-09-03T23:11:34.188Z"
   }
 }
