@@ -533,7 +533,7 @@
     "updated_at": "2026-09-03T23:10:03.915Z"
   },
   "OTLUR": {
-    "id": "INTERP_OTLUR",
+    "id": "DYNAMIC_OTLUR",
     "ident": "OTLUR",
     "name": "OTLUR (Enroute Fix)",
     "type": "WAYPOINT",
@@ -542,7 +542,7 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-03T23:09:59.600Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-03T23:10:04.727Z"
   }
 }
