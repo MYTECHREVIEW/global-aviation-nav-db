@@ -1900,5 +1900,77 @@
     "country_code": "NZ",
     "region": "New Zealand",
     "updated_at": "2026-09-03T00:01:04.590Z"
+  },
+  "UMLAT": {
+    "ident": "UMLAT",
+    "name": "UMLAT (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 51.998466,
+    "longitude": -0.863273,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-03T23:10:01.368Z"
+  },
+  "WELIN": {
+    "ident": "WELIN",
+    "name": "WELIN (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 52.526184,
+    "longitude": -1.266636,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-03T23:10:01.379Z"
+  },
+  "RIBEL": {
+    "ident": "RIBEL",
+    "name": "RIBEL (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 55.924592,
+    "longitude": -16.077497,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-03T23:10:02.282Z"
+  },
+  "ASLIB": {
+    "ident": "ASLIB",
+    "name": "ASLIB (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 58.105283,
+    "longitude": -30.051665,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-03T23:10:03.095Z"
+  },
+  "BALIX": {
+    "ident": "BALIX",
+    "name": "BALIX (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 60.285975,
+    "longitude": -44.025832,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-03T23:10:03.907Z"
+  },
+  "OTLUR": {
+    "ident": "OTLUR",
+    "name": "OTLUR (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 48.662349,
+    "longitude": -90.271999,
+    "country_code": null,
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-03T23:10:04.720Z"
   }
 }

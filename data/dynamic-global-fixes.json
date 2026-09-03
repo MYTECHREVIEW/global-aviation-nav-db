@@ -466,5 +466,83 @@
     "frequency_mhz": null,
     "source": "OPENNAV_ONLINE",
     "updated_at": "2026-09-02T23:56:52.166Z"
+  },
+  "UMLAT": {
+    "id": "DYNAMIC_UMLAT",
+    "ident": "UMLAT",
+    "name": "UMLAT (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 51.998466,
+    "longitude": -0.863273,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-03T23:10:01.379Z"
+  },
+  "WELIN": {
+    "id": "DYNAMIC_WELIN",
+    "ident": "WELIN",
+    "name": "WELIN (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 52.526184,
+    "longitude": -1.266636,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-03T23:10:01.385Z"
+  },
+  "RIBEL": {
+    "id": "DYNAMIC_RIBEL",
+    "ident": "RIBEL",
+    "name": "RIBEL (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 55.924592,
+    "longitude": -16.077497,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-03T23:10:02.288Z"
+  },
+  "ASLIB": {
+    "id": "DYNAMIC_ASLIB",
+    "ident": "ASLIB",
+    "name": "ASLIB (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 58.105283,
+    "longitude": -30.051665,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-03T23:10:03.101Z"
+  },
+  "BALIX": {
+    "id": "DYNAMIC_BALIX",
+    "ident": "BALIX",
+    "name": "BALIX (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 60.285975,
+    "longitude": -44.025832,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-03T23:10:03.915Z"
+  },
+  "OTLUR": {
+    "id": "INTERP_OTLUR",
+    "ident": "OTLUR",
+    "name": "OTLUR (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 48.662349,
+    "longitude": -90.271999,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-09-03T23:09:59.600Z"
   }
 }
