@@ -434,5 +434,25 @@
       "seq": 40,
       "fixIdent": "BECKY"
     }
+  ],
+  "L10": [
+    {
+      "seq": 10,
+      "fixIdent": "KELLY"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "WAL"
+    }
+  ],
+  "UY53": [
+    {
+      "seq": 10,
+      "fixIdent": "WAL"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "NUGRA"
+    }
   ]
 }

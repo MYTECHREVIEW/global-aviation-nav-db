@@ -2692,5 +2692,45 @@
     "country_code": "JP",
     "region": "Japan",
     "updated_at": "2026-09-04T20:19:11.245Z"
+  },
+  "GOMUP": {
+    "ident": "GOMUP",
+    "name": "GOMUP (Shanwick Oceanic Entry/Exit)",
+    "type": "WAYPOINT",
+    "latitude": 57,
+    "longitude": -10,
+    "country_code": "GB",
+    "region": "United Kingdom",
+    "updated_at": "2026-09-04T20:27:39.779Z"
+  },
+  "GINGA": {
+    "ident": "GINGA",
+    "name": "GINGA (Shanwick / Scottish FIR)",
+    "type": "WAYPOINT",
+    "latitude": 56.925042,
+    "longitude": -9.5,
+    "country_code": "GB",
+    "region": "United Kingdom",
+    "updated_at": "2026-09-04T20:27:39.780Z"
+  },
+  "KELLY": {
+    "ident": "KELLY",
+    "name": "KELLY (Irish Sea / Airway L10)",
+    "type": "WAYPOINT",
+    "latitude": 53.905278,
+    "longitude": -4.364167,
+    "country_code": "GB",
+    "region": "United Kingdom",
+    "updated_at": "2026-09-04T20:27:39.780Z"
+  },
+  "NUGRA": {
+    "ident": "NUGRA",
+    "name": "NUGRA (London Heathrow Arrival STAR)",
+    "type": "WAYPOINT",
+    "latitude": 53.029444,
+    "longitude": -2.303889,
+    "country_code": "GB",
+    "region": "United Kingdom",
+    "updated_at": "2026-09-04T20:30:37.617Z"
   }
 }
