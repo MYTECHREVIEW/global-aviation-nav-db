@@ -308,5 +308,51 @@
       "seq": 20,
       "fixIdent": "RIBSO"
     }
+  ],
+  "UN733": [
+    {
+      "seq": 10,
+      "fixIdent": "CDP"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "OLUTO"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "AKAMU"
+    },
+    {
+      "seq": 40,
+      "fixIdent": "EPAMA"
+    },
+    {
+      "seq": 50,
+      "fixIdent": "IXUPA"
+    },
+    {
+      "seq": 60,
+      "fixIdent": "ARGOR"
+    },
+    {
+      "seq": 70,
+      "fixIdent": "VLC"
+    },
+    {
+      "seq": 80,
+      "fixIdent": "CLS"
+    },
+    {
+      "seq": 90,
+      "fixIdent": "CATON"
+    },
+    {
+      "seq": 100,
+      "fixIdent": "CENTA"
+    },
+    {
+      "seq": 110,
+      "fixIdent": "PRADO"
+    }
   ]
 }

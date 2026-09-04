@@ -875,7 +875,7 @@
     "updated_at": "2026-09-03T23:42:09.197Z"
   },
   "DATRI": {
-    "id": "INTERP_DATRI",
+    "id": "DYNAMIC_DATRI",
     "ident": "DATRI",
     "name": "DATRI (Enroute Fix)",
     "type": "WAYPOINT",
@@ -884,11 +884,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.938Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.757Z"
   },
   "MIGMA": {
-    "id": "INTERP_MIGMA",
+    "id": "DYNAMIC_MIGMA",
     "ident": "MIGMA",
     "name": "MIGMA (Enroute Fix)",
     "type": "WAYPOINT",
@@ -897,11 +897,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.941Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.763Z"
   },
   "MEVDO": {
-    "id": "INTERP_MEVDO",
+    "id": "DYNAMIC_MEVDO",
     "ident": "MEVDO",
     "name": "MEVDO (Enroute Fix)",
     "type": "WAYPOINT",
@@ -910,11 +910,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.943Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.769Z"
   },
   "TANSA": {
-    "id": "INTERP_TANSA",
+    "id": "DYNAMIC_TANSA",
     "ident": "TANSA",
     "name": "TANSA (Enroute Fix)",
     "type": "WAYPOINT",
@@ -923,11 +923,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.951Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.777Z"
   },
   "RUTOM": {
-    "id": "INTERP_RUTOM",
+    "id": "DYNAMIC_RUTOM",
     "ident": "RUTOM",
     "name": "RUTOM (Enroute Fix)",
     "type": "WAYPOINT",
@@ -936,11 +936,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.954Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.783Z"
   },
   "TOMGI": {
-    "id": "INTERP_TOMGI",
+    "id": "DYNAMIC_TOMGI",
     "ident": "TOMGI",
     "name": "TOMGI (Enroute Fix)",
     "type": "WAYPOINT",
@@ -949,11 +949,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.955Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.790Z"
   },
   "ADREN": {
-    "id": "INTERP_ADREN",
+    "id": "DYNAMIC_ADREN",
     "ident": "ADREN",
     "name": "ADREN (Enroute Fix)",
     "type": "WAYPOINT",
@@ -962,11 +962,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.956Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.797Z"
   },
   "AGNIS": {
-    "id": "INTERP_AGNIS",
+    "id": "DYNAMIC_AGNIS",
     "ident": "AGNIS",
     "name": "AGNIS (Enroute Fix)",
     "type": "WAYPOINT",
@@ -975,24 +975,24 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.959Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.803Z"
   },
   "ROXAN": {
-    "id": "INTERP_ROXAN",
+    "id": "DYNAMIC_ROXAN",
     "ident": "ROXAN",
     "name": "ROXAN (Enroute Fix)",
     "type": "WAYPOINT",
     "latitude": 39.188856,
-    "longitude": 14.224008,
+    "longitude": 14.224009,
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.962Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.809Z"
   },
   "GOKMI": {
-    "id": "INTERP_GOKMI",
+    "id": "DYNAMIC_GOKMI",
     "ident": "GOKMI",
     "name": "GOKMI (Enroute Fix)",
     "type": "WAYPOINT",
@@ -1001,24 +1001,24 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.965Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.815Z"
   },
   "SUPUX": {
-    "id": "INTERP_SUPUX",
+    "id": "DYNAMIC_SUPUX",
     "ident": "SUPUX",
     "name": "SUPUX (Enroute Fix)",
     "type": "WAYPOINT",
-    "latitude": 39.381611,
-    "longitude": 11.364917,
+    "latitude": 39.381612,
+    "longitude": 11.364918,
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.967Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.820Z"
   },
   "KUPIM": {
-    "id": "INTERP_KUPIM",
+    "id": "DYNAMIC_KUPIM",
     "ident": "KUPIM",
     "name": "KUPIM (Enroute Fix)",
     "type": "WAYPOINT",
@@ -1027,11 +1027,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.969Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.825Z"
   },
   "SUXER": {
-    "id": "INTERP_SUXER",
+    "id": "DYNAMIC_SUXER",
     "ident": "SUXER",
     "name": "SUXER (Enroute Fix)",
     "type": "WAYPOINT",
@@ -1040,11 +1040,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.970Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.831Z"
   },
   "RIPAL": {
-    "id": "INTERP_RIPAL",
+    "id": "DYNAMIC_RIPAL",
     "ident": "RIPAL",
     "name": "RIPAL (Enroute Fix)",
     "type": "WAYPOINT",
@@ -1053,11 +1053,11 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.971Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.836Z"
   },
   "MORSS": {
-    "id": "INTERP_MORSS",
+    "id": "DYNAMIC_MORSS",
     "ident": "MORSS",
     "name": "MORSS (Enroute Fix)",
     "type": "WAYPOINT",
@@ -1066,72 +1066,119 @@
     "elevation_ft": null,
     "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.975Z"
+    "source": "AUTO_CORRIDOR_REPAIR",
+    "updated_at": "2026-09-04T00:45:15.841Z"
   },
   "OLUTO": {
-    "id": "INTERP_OLUTO",
+    "id": "DYNAMIC_OLUTO",
     "ident": "OLUTO",
-    "name": "OLUTO (Enroute Fix)",
+    "name": "OLUTO",
     "type": "WAYPOINT",
-    "latitude": 39.66235,
-    "longitude": 2.781468,
+    "latitude": 39.6625,
+    "longitude": 2.781389,
+    "country_code": "ES",
+    "region": "Europe",
     "elevation_ft": null,
-    "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.984Z"
+    "source": "ENAIRE_AIP_ES",
+    "updated_at": "2026-09-04T00:44:59.203Z"
   },
   "AKAMU": {
-    "id": "INTERP_AKAMU",
+    "id": "DYNAMIC_AKAMU",
     "ident": "AKAMU",
-    "name": "AKAMU (Enroute Fix)",
+    "name": "AKAMU",
     "type": "WAYPOINT",
-    "latitude": 39.627,
-    "longitude": 2.128566,
+    "latitude": 39.626944,
+    "longitude": 2.128611,
+    "country_code": "ES",
+    "region": "Europe",
     "elevation_ft": null,
-    "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.985Z"
+    "source": "ENAIRE_AIP_ES",
+    "updated_at": "2026-09-04T00:44:59.203Z"
   },
   "EPAMA": {
-    "id": "INTERP_EPAMA",
+    "id": "DYNAMIC_EPAMA",
     "ident": "EPAMA",
-    "name": "EPAMA (Enroute Fix)",
+    "name": "EPAMA",
     "type": "WAYPOINT",
-    "latitude": 39.59165,
-    "longitude": 1.475664,
+    "latitude": 39.591667,
+    "longitude": 1.475833,
+    "country_code": "ES",
+    "region": "Europe",
     "elevation_ft": null,
-    "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.987Z"
+    "source": "ENAIRE_AIP_ES",
+    "updated_at": "2026-09-04T00:44:59.203Z"
   },
   "IXUPA": {
-    "id": "INTERP_IXUPA",
+    "id": "DYNAMIC_IXUPA",
     "ident": "IXUPA",
-    "name": "IXUPA (Enroute Fix)",
+    "name": "IXUPA",
     "type": "WAYPOINT",
-    "latitude": 39.5563,
-    "longitude": 0.822761,
+    "latitude": 39.556111,
+    "longitude": 0.822778,
+    "country_code": "ES",
+    "region": "Europe",
     "elevation_ft": null,
-    "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.988Z"
+    "source": "ENAIRE_AIP_ES",
+    "updated_at": "2026-09-04T00:44:59.203Z"
   },
   "ARGOR": {
-    "id": "INTERP_ARGOR",
+    "id": "DYNAMIC_ARGOR",
     "ident": "ARGOR",
-    "name": "ARGOR (Enroute Fix)",
+    "name": "ARGOR",
     "type": "WAYPOINT",
-    "latitude": 39.52095,
-    "longitude": 0.169859,
+    "latitude": 39.520833,
+    "longitude": 0.169722,
+    "country_code": "ES",
+    "region": "Europe",
     "elevation_ft": null,
-    "country_code": null,
     "frequency_mhz": null,
-    "source": "GEODESIC_INTERPOLATION",
-    "updated_at": "2026-09-04T00:42:53.990Z"
+    "source": "ENAIRE_AIP_ES",
+    "updated_at": "2026-09-04T00:44:59.203Z"
+  },
+  "CATON": {
+    "id": "DYNAMIC_CATON",
+    "ident": "CATON",
+    "name": "CATON",
+    "type": "WAYPOINT",
+    "latitude": 39.805278,
+    "longitude": -1.211667,
+    "country_code": "ES",
+    "region": "Europe",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "source": "ENAIRE_AIP_ES",
+    "updated_at": "2026-09-04T00:44:59.203Z"
+  },
+  "CENTA": {
+    "id": "DYNAMIC_CENTA",
+    "ident": "CENTA",
+    "name": "CENTA",
+    "type": "WAYPOINT",
+    "latitude": 39.900556,
+    "longitude": -1.431944,
+    "country_code": "ES",
+    "region": "Europe",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "source": "ENAIRE_AIP_ES",
+    "updated_at": "2026-09-04T00:44:59.203Z"
+  },
+  "PRADO": {
+    "id": "DYNAMIC_PRADO",
+    "ident": "PRADO",
+    "name": "PRADO",
+    "type": "WAYPOINT",
+    "latitude": 40.1475,
+    "longitude": -2.010278,
+    "country_code": "ES",
+    "region": "Europe",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "source": "ENAIRE_AIP_ES",
+    "updated_at": "2026-09-04T00:44:59.203Z"
   }
 }
