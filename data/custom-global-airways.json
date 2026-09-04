@@ -58,11 +58,63 @@
     },
     {
       "seq": 20,
-      "fixIdent": "ANLOT"
+      "fixIdent": "DADON"
     },
     {
       "seq": 30,
-      "fixIdent": "MUKEP"
+      "fixIdent": "EXTRA"
+    },
+    {
+      "seq": 40,
+      "fixIdent": "TONGA"
+    },
+    {
+      "seq": 50,
+      "fixIdent": "TOROX"
+    },
+    {
+      "seq": 60,
+      "fixIdent": "ANLOT"
+    },
+    {
+      "seq": 70,
+      "fixIdent": "PILOX"
+    },
+    {
+      "seq": 80,
+      "fixIdent": "SANAS"
+    },
+    {
+      "seq": 90,
+      "fixIdent": "KUDOS"
+    },
+    {
+      "seq": 100,
+      "fixIdent": "LEKOS"
+    },
+    {
+      "seq": 110,
+      "fixIdent": "MORSU"
+    },
+    {
+      "seq": 120,
+      "fixIdent": "MOLKA"
+    },
+    {
+      "seq": 130,
+      "fixIdent": "MUMBA"
+    },
+    {
+      "seq": 140,
+      "fixIdent": "MELEN"
+    },
+    {
+      "seq": 150,
+      "fixIdent": "MOMPA"
+    },
+    {
+      "seq": 160,
+      "fixIdent": "MADOG"
     }
   ],
   "Y891": [
@@ -353,6 +405,34 @@
     {
       "seq": 110,
       "fixIdent": "PRADO"
+    }
+  ],
+  "V631": [
+    {
+      "seq": 10,
+      "fixIdent": "DALOL"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "ENVAR"
+    }
+  ],
+  "Y53": [
+    {
+      "seq": 10,
+      "fixIdent": "MADOG"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "SUC"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "NIXOV"
+    },
+    {
+      "seq": 40,
+      "fixIdent": "BECKY"
     }
   ]
 }
