@@ -2732,5 +2732,45 @@
     "country_code": "GB",
     "region": "United Kingdom",
     "updated_at": "2026-09-04T20:30:37.617Z"
+  },
+  "SOBRA": {
+    "ident": "SOBRA",
+    "name": "SOBRA (Frankfurt SID Departure Fix)",
+    "type": "WAYPOINT",
+    "latitude": 49.860833,
+    "longitude": 7.7755,
+    "country_code": "DE",
+    "region": "Germany",
+    "updated_at": "2026-09-04T21:21:34.820Z"
+  },
+  "BITBU": {
+    "ident": "BITBU",
+    "name": "BITBU (Bitburg Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 49.98295,
+    "longitude": 6.561628,
+    "country_code": "DE",
+    "region": "Germany",
+    "updated_at": "2026-09-04T21:21:34.826Z"
+  },
+  "DEMUL": {
+    "ident": "DEMUL",
+    "name": "DEMUL (Germany / Belgium FIR Boundary)",
+    "type": "WAYPOINT",
+    "latitude": 49.963056,
+    "longitude": 5.978611,
+    "country_code": "BE",
+    "region": "Belgium",
+    "updated_at": "2026-09-04T21:21:34.826Z"
+  },
+  "LOGAN": {
+    "ident": "LOGAN",
+    "name": "LOGAN (London Heathrow STAR Arrival Gateway)",
+    "type": "WAYPOINT",
+    "latitude": 51.747589,
+    "longitude": 1.611828,
+    "country_code": "GB",
+    "region": "United Kingdom",
+    "updated_at": "2026-09-04T21:21:34.826Z"
   }
 }

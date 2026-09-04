@@ -284,15 +284,11 @@
   "UL608": [
     {
       "seq": 10,
-      "fixIdent": "CPT"
+      "fixIdent": "BUB"
     },
     {
       "seq": 20,
-      "fixIdent": "KENET"
-    },
-    {
-      "seq": 30,
-      "fixIdent": "UMLAT"
+      "fixIdent": "LOGAN"
     }
   ],
   "UL9": [
@@ -453,6 +449,50 @@
     {
       "seq": 20,
       "fixIdent": "NUGRA"
+    }
+  ],
+  "Y180": [
+    {
+      "seq": 10,
+      "fixIdent": "SOBRA"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "BITBU"
+    }
+  ],
+  "Y181": [
+    {
+      "seq": 10,
+      "fixIdent": "BITBU"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "DEMUL"
+    }
+  ],
+  "UM624": [
+    {
+      "seq": 10,
+      "fixIdent": "DEMUL"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "BUB"
+    }
+  ],
+  "L608": [
+    {
+      "seq": 10,
+      "fixIdent": "CPT"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "KENET"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "UMLAT"
     }
   ]
 }
