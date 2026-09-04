@@ -94,5 +94,219 @@
       "seq": 20,
       "fixIdent": "POROT"
     }
+  ],
+  "T418": [
+    {
+      "seq": 10,
+      "fixIdent": "UMLAT"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "WELIN"
+    }
+  ],
+  "T420": [
+    {
+      "seq": 10,
+      "fixIdent": "WELIN"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "TNT"
+    }
+  ],
+  "UN57": [
+    {
+      "seq": 10,
+      "fixIdent": "TNT"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "POL"
+    }
+  ],
+  "UN601": [
+    {
+      "seq": 10,
+      "fixIdent": "POL"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "RIBEL"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "ASLIB"
+    }
+  ],
+  "UN603": [
+    {
+      "seq": 10,
+      "fixIdent": "TNT"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "POL"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "RIBEL"
+    },
+    {
+      "seq": 40,
+      "fixIdent": "NATEB"
+    },
+    {
+      "seq": 50,
+      "fixIdent": "BLACA"
+    }
+  ],
+  "L603": [
+    {
+      "seq": 10,
+      "fixIdent": "TNT"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "POL"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "RIBEL"
+    },
+    {
+      "seq": 40,
+      "fixIdent": "DESIG"
+    },
+    {
+      "seq": 50,
+      "fixIdent": "LAMIX"
+    },
+    {
+      "seq": 60,
+      "fixIdent": "LIBSO"
+    }
+  ],
+  "UP600": [
+    {
+      "seq": 10,
+      "fixIdent": "MCT"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "ROBTU"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "RIBEL"
+    }
+  ],
+  "UT9": [
+    {
+      "seq": 10,
+      "fixIdent": "HON"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "WELIN"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "TNT"
+    }
+  ],
+  "UL607": [
+    {
+      "seq": 10,
+      "fixIdent": "LAM"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "BPK"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "WELIN"
+    }
+  ],
+  "UL608": [
+    {
+      "seq": 10,
+      "fixIdent": "CPT"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "KENET"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "UMLAT"
+    }
+  ],
+  "UL9": [
+    {
+      "seq": 10,
+      "fixIdent": "DVR"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "BIG"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "CPT"
+    },
+    {
+      "seq": 40,
+      "fixIdent": "EXMOR"
+    }
+  ],
+  "UN864": [
+    {
+      "seq": 10,
+      "fixIdent": "LIZAD"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "SKERY"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "UNMET"
+    },
+    {
+      "seq": 40,
+      "fixIdent": "ORTAC"
+    }
+  ],
+  "L975": [
+    {
+      "seq": 10,
+      "fixIdent": "SONEX"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "DESIG"
+    }
+  ],
+  "P39": [
+    {
+      "seq": 10,
+      "fixIdent": "LIBSO"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "RENEQ"
+    }
+  ],
+  "T904": [
+    {
+      "seq": 10,
+      "fixIdent": "OSTOR"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "RIBSO"
+    }
   ]
 }

@@ -426,7 +426,15 @@ class RouteParser {
                 const data = JSON.parse(fs.readFileSync(this.customAirwaysDbPath, 'utf8'));
                 let count = 0;
                 for (const [ident, legs] of Object.entries(data)) {
-                    this.airways[ident] = legs;
+                    if (Array.isArray(this.airways[ident])) {
+                        const existingFixes = new Set(this.airways[ident].map(l => l.fixIdent || l.ident));
+                        const newLegs = legs.filter(l => !existingFixes.has(l.fixIdent || l.ident));
+                        if (newLegs.length > 0) {
+                            this.airways[ident] = [...this.airways[ident], ...newLegs];
+                        }
+                    } else {
+                        this.airways[ident] = legs;
+                    }
                     count++;
                 }
                 console.log(`[RouteParser] Loaded ${count} custom airways from custom-global-airways.json`);
