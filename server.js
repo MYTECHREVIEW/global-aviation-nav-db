@@ -733,6 +733,68 @@ app.post('/api/v1/route/trace', async (req, res) => {
 });
 
 /**
+ * Get All Active Oceanic Tracks (NAT & PACOTS)
+ * GET /api/v1/oceanic/tracks
+ * Query params: ?system=NAT, ?direction=west, ?active=true
+ */
+app.get('/api/v1/oceanic/tracks', async (req, res) => {
+    try {
+        const filter = {
+            system: req.query.system,
+            direction: req.query.direction,
+            active: req.query.active !== undefined ? req.query.active === 'true' : undefined
+        };
+        const tracks = await routeParser.oceanicTracksService.getAllTracks((id) => routeParser.resolvePoint(id), filter);
+        res.json({
+            total_tracks: tracks.length,
+            system: filter.system || 'ALL',
+            tracks: tracks
+        });
+    } catch (e) {
+        console.error('[OceanicTracks] Error listing tracks:', e.message);
+        res.status(500).json({ error: 'Failed to retrieve oceanic tracks: ' + e.message });
+    }
+});
+
+/**
+ * Get Single Oceanic Track by ID (e.g. A, B, NAT-A, NATA)
+ * GET /api/v1/oceanic/tracks/:id
+ */
+app.get('/api/v1/oceanic/tracks/:id', async (req, res) => {
+    try {
+        const trackId = req.params.id;
+        const track = await routeParser.oceanicTracksService.getTrack(trackId, (id) => routeParser.resolvePoint(id));
+        if (!track) {
+            return res.status(404).json({ error: `Oceanic track "${trackId}" not found.` });
+        }
+        res.json(track);
+    } catch (e) {
+        console.error(`[OceanicTracks] Error retrieving track ${req.params.id}:`, e.message);
+        res.status(500).json({ error: 'Failed to retrieve track: ' + e.message });
+    }
+});
+
+/**
+ * Force Sync Oceanic Tracks from Live Network Feed
+ * POST /api/v1/oceanic/tracks/sync
+ */
+app.post('/api/v1/oceanic/tracks/sync', async (req, res) => {
+    try {
+        const ok = await routeParser.oceanicTracksService.fetchLiveNatTracks((id) => routeParser.resolvePoint(id));
+        const tracks = await routeParser.oceanicTracksService.getAllTracks((id) => routeParser.resolvePoint(id));
+        res.json({
+            success: ok,
+            message: ok ? 'Successfully refreshed oceanic tracks from live feed.' : 'Live feed unavailable; kept local snapshot.',
+            total_tracks: tracks.length,
+            tracks: tracks
+        });
+    } catch (e) {
+        console.error('[OceanicTracks] Error syncing tracks:', e.message);
+        res.status(500).json({ error: 'Failed to sync oceanic tracks: ' + e.message });
+    }
+});
+
+/**
  * Mapbox Dark Black View Static Map Snapshot Endpoint
  * GET /api/v1/map/static
  */

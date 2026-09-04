@@ -2,6 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const dynamicNavDataService = require('../services/dynamic-navdata-service');
 const gristWaypointsService = require('../services/grist-waypoints-service');
+const OceanicTracksService = require('../services/oceanic-tracks-service');
+
+const oceanicTracksService = new OceanicTracksService({ dataDir: path.join(__dirname, '../../data') });
 
 function haversineDistanceM(lat1, lon1, lat2, lon2) {
     const R = 6371000;
@@ -119,7 +122,9 @@ function isSpeedLevelToken(token) {
 }
 
 function isNatTrackToken(token) {
-    return /^NAT[A-Z]$/i.test(token);
+    if (!token) return false;
+    const clean = sanitizeToken(token);
+    return /^NAT[A-Z]$/i.test(clean) || /^TRACK[A-Z]$/i.test(clean) || /^NAT-[A-Z]$/i.test(clean);
 }
 
 function isAirwayDesignator(token) {
@@ -132,6 +137,21 @@ function isAirwayDesignator(token) {
 function parseLatLonCoordinate(token) {
     if (!token) return null;
     const clean = sanitizeToken(token);
+
+    // Format 0: Oceanic Slash and Standard Coordinate formats via OceanicTracksService
+    const oc = oceanicTracksService.parseOceanicCoordinate(clean);
+    if (oc) {
+        return {
+            id: `COORD_${oc.ident}`,
+            ident: oc.ident,
+            name: `${oc.ident} Oceanic Fix`,
+            type: 'WAYPOINT',
+            latitude: oc.latitude,
+            longitude: oc.longitude,
+            elevation_ft: null,
+            country_code: null
+        };
+    }
 
     // Format 1: Standard ICAO Oceanic Fixes (e.g. 51N140W, 49N170E, 50S040W, 60N020W, 51N170W)
     let m = clean.match(/^(\d{2})([NS])(\d{2,3})([EW])$/i);
@@ -403,6 +423,7 @@ class RouteParser {
         this.customAirwaysDbPath = path.join(__dirname, '../../data/custom-global-airways.json');
         this.loadCustomAirways();
         this.rebuildAirwayIndex();
+        this.oceanicTracksService = oceanicTracksService;
     }
 
     rebuildAirwayIndex() {
@@ -865,7 +886,10 @@ class RouteParser {
             return this.parsedRouteCache.get(cacheKey);
         }
 
-        const rawStringTokens = (routeStr || '').replace(/[\r\n\t]+/g, ' ').split(' ').filter(t => t.trim());
+        const normalizedRouteStr = (routeStr || '')
+            .replace(/\bNAT\s+([A-Z])\b/gi, 'NAT$1')
+            .replace(/\bTRACK\s+([A-Z])\b/gi, 'TRACK$1');
+        const rawStringTokens = normalizedRouteStr.replace(/[\r\n\t]+/g, ' ').split(' ').filter(t => t.trim());
 
         // Extract departure/arrival runways if present in string (e.g. KEYW/09 or KLGA/04)
         let depRwy = null;
@@ -880,7 +904,7 @@ class RouteParser {
 
         const cleanTokens = rawStringTokens
             .map(t => sanitizeToken(t))
-            .filter(t => t && !isSpeedLevelToken(t) && !isNatTrackToken(t) && t !== 'DCT' && t !== 'DIRECT');
+            .filter(t => t && !isSpeedLevelToken(t) && t !== 'DCT' && t !== 'DIRECT');
 
         let depPoint = null;
         let arrPoint = null;
@@ -1053,6 +1077,53 @@ class RouteParser {
             }
 
             // ═══════════════════════════════════════════════════════════════════
+            // 2.5 OCEANIC TRACK EXPANSION (e.g. NATA, NATB, TRACKC)
+            // ═══════════════════════════════════════════════════════════════════
+            if (isNatTrackToken(token)) {
+                const track = this.oceanicTracksService ? this.oceanicTracksService.getTrackSync(token) : null;
+                if (track && Array.isArray(track.waypoints) && track.waypoints.length > 0) {
+                    const prevPoint = resolvedPoints.length > 0 ? resolvedPoints[resolvedPoints.length - 1] : null;
+                    const nextToken = i + 1 < cleanTokens.length ? cleanTokens[i + 1] : null;
+
+                    let startIdx = 0;
+                    let endIdx = track.waypoints.length - 1;
+
+                    if (prevPoint) {
+                        const pIdx = track.waypoints.findIndex(w => w.ident === prevPoint.ident);
+                        if (pIdx !== -1) {
+                            startIdx = pIdx + 1;
+                        }
+                    }
+
+                    if (nextToken) {
+                        const nIdx = track.waypoints.findIndex(w => w.ident === nextToken);
+                        if (nIdx !== -1) {
+                            endIdx = nIdx;
+                            i++; // consume nextToken as track exit fix
+                        }
+                    }
+
+                    for (let k = startIdx; k <= endIdx; k++) {
+                        const twp = track.waypoints[k];
+                        const resolvedFix = this.resolvePoint(twp.ident, currentRefLat, currentRefLon) || {
+                            id: `OCEANIC_${twp.ident}`,
+                            ident: twp.ident,
+                            name: twp.name || twp.ident,
+                            type: 'WAYPOINT',
+                            latitude: twp.latitude,
+                            longitude: twp.longitude
+                        };
+                        resolvedFix.via_airway = `NAT ${track.identifier}`;
+                        resolvedFix.via_oceanic_track = `NAT ${track.identifier}`;
+                        resolvedPoints.push(resolvedFix);
+                        currentRefLat = resolvedFix.latitude;
+                        currentRefLon = resolvedFix.longitude;
+                    }
+                    continue;
+                }
+            }
+
+            // ═══════════════════════════════════════════════════════════════════
             // 3. AIRWAY EXPANSION (e.g. Q87, J79, V1, Y88, Y886, G585)
             // ═══════════════════════════════════════════════════════════════════
             if ((this.airways[token] || isAirwayDesignator(token)) && resolvedPoints.length > 0 && i + 1 < cleanTokens.length) {
@@ -1176,6 +1247,7 @@ class RouteParser {
                 const endLon = normalizeLonDelta(pt.longitude, startLon);
 
                 const segmentCoords = interpolateGreatCircle(prev.latitude, startLon, pt.latitude, endLon, 12);
+                pt.segment_coordinates = segmentCoords;
                 if (i === 1) {
                     fullCoordinates.push(...segmentCoords);
                 } else {
@@ -1208,6 +1280,7 @@ class RouteParser {
                 inferred_airway: pt.inferred_airway || false,
                 segment_distance_nm: segmentDistanceNm,
                 segment_bearing_deg: segmentBearingDeg,
+                segment_coordinates: pt.segment_coordinates || null,
                 cumulative_distance_nm: cumulativeDistanceNm,
                 ete_minutes: eteMinutes
             });
@@ -1260,6 +1333,35 @@ class RouteParser {
             ]
         };
 
+        const airwaySegments = [];
+        for (let k = 1; k < processedWaypoints.length; k++) {
+            const prevWp = processedWaypoints[k - 1];
+            const currWp = processedWaypoints[k];
+            const airway = currWp.via_airway || (currWp.via_oceanic_track ? currWp.via_oceanic_track : null);
+            if (airway) {
+                const midLat = (prevWp.latitude + currWp.latitude) / 2;
+                let p1Lon = prevWp.unwrapped_longitude !== undefined ? prevWp.unwrapped_longitude : prevWp.longitude;
+                let p2Lon = currWp.unwrapped_longitude !== undefined ? currWp.unwrapped_longitude : currWp.longitude;
+                const midLon = (p1Lon + p2Lon) / 2;
+
+                const segCoordinates = currWp.segment_coordinates && currWp.segment_coordinates.length > 0
+                    ? currWp.segment_coordinates.map(c => [c[1], c[0]])
+                    : [[prevWp.latitude, prevWp.longitude], [currWp.latitude, currWp.longitude]];
+
+                airwaySegments.push({
+                    airway: airway,
+                    from_ident: prevWp.ident,
+                    to_ident: currWp.ident,
+                    from_coords: [prevWp.latitude, prevWp.longitude],
+                    to_coords: [currWp.latitude, currWp.longitude],
+                    midpoint: [parseFloat(midLat.toFixed(6)), parseFloat(midLon.toFixed(6))],
+                    bearing_deg: currWp.segment_bearing_deg || 0,
+                    distance_nm: currWp.segment_distance_nm || 0,
+                    coordinates: segCoordinates
+                });
+            }
+        }
+
         const showLabels = options.include_labels !== false && options.show_labels !== false;
         const result = {
             include_labels: showLabels,
@@ -1271,6 +1373,7 @@ class RouteParser {
             estimated_time_enroute_minutes: totalEteMinutes,
             estimated_time_enroute_formatted: `${Math.floor(totalEteMinutes / 60)}h ${totalEteMinutes % 60}m`,
             inferred_airways: inferredAirways,
+            airway_segments: airwaySegments,
             waypoints: processedWaypoints,
             route_coordinates: fullCoordinates,
             geojson
@@ -1289,7 +1392,10 @@ class RouteParser {
             return this.parsedRouteCache.get(cacheKey);
         }
 
-        const rawStringTokens = (routeStr || '').replace(/[\r\n\t]+/g, ' ').split(' ').filter(t => t.trim());
+        const normalizedRouteStr = (routeStr || '')
+            .replace(/\bNAT\s+([A-Z])\b/gi, 'NAT$1')
+            .replace(/\bTRACK\s+([A-Z])\b/gi, 'TRACK$1');
+        const rawStringTokens = normalizedRouteStr.replace(/[\r\n\t]+/g, ' ').split(' ').filter(t => t.trim());
 
         let depRwy = null;
         let arrRwy = null;
@@ -1303,7 +1409,7 @@ class RouteParser {
 
         const cleanTokens = rawStringTokens
             .map(t => sanitizeToken(t))
-            .filter(t => t && !isSpeedLevelToken(t) && !isNatTrackToken(t) && t !== 'DCT' && t !== 'DIRECT');
+            .filter(t => t && !isSpeedLevelToken(t) && t !== 'DCT' && t !== 'DIRECT');
 
         let depPoint = null;
         let arrPoint = null;
@@ -1464,6 +1570,53 @@ class RouteParser {
                 continue;
             }
 
+            // ═══════════════════════════════════════════════════════════════════
+            // 2.5 OCEANIC TRACK EXPANSION (e.g. NATA, NATB, TRACKC)
+            // ═══════════════════════════════════════════════════════════════════
+            if (isNatTrackToken(token)) {
+                const track = this.oceanicTracksService ? await this.oceanicTracksService.getTrack(token, (ident) => this.resolvePoint(ident)) : null;
+                if (track && Array.isArray(track.waypoints) && track.waypoints.length > 0) {
+                    const prevPoint = resolvedPoints.length > 0 ? resolvedPoints[resolvedPoints.length - 1] : null;
+                    const nextToken = i + 1 < cleanTokens.length ? cleanTokens[i + 1] : null;
+
+                    let startIdx = 0;
+                    let endIdx = track.waypoints.length - 1;
+
+                    if (prevPoint) {
+                        const pIdx = track.waypoints.findIndex(w => w.ident === prevPoint.ident);
+                        if (pIdx !== -1) {
+                            startIdx = pIdx + 1;
+                        }
+                    }
+
+                    if (nextToken) {
+                        const nIdx = track.waypoints.findIndex(w => w.ident === nextToken);
+                        if (nIdx !== -1) {
+                            endIdx = nIdx;
+                            i++; // consume nextToken as track exit fix
+                        }
+                    }
+
+                    for (let k = startIdx; k <= endIdx; k++) {
+                        const twp = track.waypoints[k];
+                        const resolvedFix = await this.resolvePointAsync(twp.ident, currentRefLat, currentRefLon, false, null, null, 0.5, options) || {
+                            id: `OCEANIC_${twp.ident}`,
+                            ident: twp.ident,
+                            name: twp.name || twp.ident,
+                            type: 'WAYPOINT',
+                            latitude: twp.latitude,
+                            longitude: twp.longitude
+                        };
+                        resolvedFix.via_airway = `NAT ${track.identifier}`;
+                        resolvedFix.via_oceanic_track = `NAT ${track.identifier}`;
+                        resolvedPoints.push(resolvedFix);
+                        currentRefLat = resolvedFix.latitude;
+                        currentRefLon = resolvedFix.longitude;
+                    }
+                    continue;
+                }
+            }
+
             // 3. AIRWAY EXPANSION
             if ((this.airways[token] || isAirwayDesignator(token)) && resolvedPoints.length > 0 && i + 1 < cleanTokens.length) {
                 const prevPoint = resolvedPoints[resolvedPoints.length - 1];
@@ -1587,6 +1740,7 @@ class RouteParser {
                 const endLon = normalizeLonDelta(pt.longitude, startLon);
 
                 const segmentCoords = interpolateGreatCircle(prev.latitude, startLon, pt.latitude, endLon, 12);
+                pt.segment_coordinates = segmentCoords;
                 if (i === 1) {
                     fullCoordinates.push(...segmentCoords);
                 } else {
@@ -1618,6 +1772,7 @@ class RouteParser {
                 country_code: pt.country_code,
                 segment_distance_nm: segmentDistanceNm,
                 segment_bearing_deg: segmentBearingDeg,
+                segment_coordinates: pt.segment_coordinates || null,
                 cumulative_distance_nm: cumulativeDistanceNm,
                 estimated_time_enroute_minutes: eteMinutes,
                 estimated_time_enroute_formatted: `${Math.floor(eteMinutes / 60)}h ${eteMinutes % 60}m`
@@ -1668,6 +1823,35 @@ class RouteParser {
             ]
         };
 
+        const airwaySegments = [];
+        for (let k = 1; k < processedWaypoints.length; k++) {
+            const prevWp = processedWaypoints[k - 1];
+            const currWp = processedWaypoints[k];
+            const airway = currWp.via_airway || (currWp.via_oceanic_track ? currWp.via_oceanic_track : null);
+            if (airway) {
+                const midLat = (prevWp.latitude + currWp.latitude) / 2;
+                let p1Lon = prevWp.unwrapped_longitude !== undefined ? prevWp.unwrapped_longitude : prevWp.longitude;
+                let p2Lon = currWp.unwrapped_longitude !== undefined ? currWp.unwrapped_longitude : currWp.longitude;
+                const midLon = (p1Lon + p2Lon) / 2;
+
+                const segCoordinates = currWp.segment_coordinates && currWp.segment_coordinates.length > 0
+                    ? currWp.segment_coordinates.map(c => [c[1], c[0]])
+                    : [[prevWp.latitude, prevWp.longitude], [currWp.latitude, currWp.longitude]];
+
+                airwaySegments.push({
+                    airway: airway,
+                    from_ident: prevWp.ident,
+                    to_ident: currWp.ident,
+                    from_coords: [prevWp.latitude, prevWp.longitude],
+                    to_coords: [currWp.latitude, currWp.longitude],
+                    midpoint: [parseFloat(midLat.toFixed(6)), parseFloat(midLon.toFixed(6))],
+                    bearing_deg: currWp.segment_bearing_deg || 0,
+                    distance_nm: currWp.segment_distance_nm || 0,
+                    coordinates: segCoordinates
+                });
+            }
+        }
+
         const showLabels = options.include_labels !== false && options.show_labels !== false;
         const result = {
             include_labels: showLabels,
@@ -1679,6 +1863,7 @@ class RouteParser {
             estimated_time_enroute_minutes: totalEteMinutes,
             estimated_time_enroute_formatted: `${Math.floor(totalEteMinutes / 60)}h ${totalEteMinutes % 60}m`,
             inferred_airways: inferredAirways,
+            airway_segments: airwaySegments,
             waypoints: processedWaypoints,
             route_coordinates: fullCoordinates,
             geojson

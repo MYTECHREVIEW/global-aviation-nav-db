@@ -12,10 +12,10 @@
     "ident": "ATSUR",
     "name": "ATSUR",
     "type": "WAYPOINT",
-    "latitude": 50,
-    "longitude": -14,
+    "latitude": 50.0,
+    "longitude": -14.0,
     "country_code": "IE",
-    "region": "Oceanic"
+    "region": "Europe"
   },
   "BEDRA": {
     "ident": "BEDRA",
@@ -48,28 +48,28 @@
     "ident": "LIMRI",
     "name": "LIMRI",
     "type": "WAYPOINT",
-    "latitude": 52,
-    "longitude": -15,
+    "latitude": 52.0,
+    "longitude": -15.0,
     "country_code": "IE",
-    "region": "Oceanic"
+    "region": "Europe"
   },
   "DINIM": {
     "ident": "DINIM",
     "name": "DINIM",
     "type": "WAYPOINT",
-    "latitude": 51,
-    "longitude": -15,
-    "country_code": "IE",
-    "region": "Oceanic"
+    "latitude": 51.0,
+    "longitude": -15.0,
+    "country_code": "GB",
+    "region": "Europe"
   },
   "SUNOT": {
     "ident": "SUNOT",
     "name": "SUNOT",
     "type": "WAYPOINT",
-    "latitude": 53,
-    "longitude": -50,
-    "country_code": "CA",
-    "region": "Oceanic"
+    "latitude": 57.0,
+    "longitude": -15.0,
+    "country_code": "IE",
+    "region": "Europe"
   },
   "HEB": {
     "ident": "HEB",
@@ -2861,6 +2861,96 @@
     "latitude": 51.343381,
     "longitude": -1.566358,
     "country_code": "GB",
+    "region": "Europe"
+  },
+  "RESNO": {
+    "ident": "RESNO",
+    "name": "RESNO",
+    "type": "WAYPOINT",
+    "latitude": 55.0,
+    "longitude": -15.0,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "NETKI": {
+    "ident": "NETKI",
+    "name": "NETKI",
+    "type": "WAYPOINT",
+    "latitude": 55.0,
+    "longitude": -14.0,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "KESIX": {
+    "ident": "KESIX",
+    "name": "KESIX",
+    "type": "WAYPOINT",
+    "latitude": 56.95,
+    "longitude": -14.0,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "PIKIL": {
+    "ident": "PIKIL",
+    "name": "PIKIL",
+    "type": "WAYPOINT",
+    "latitude": 56.0,
+    "longitude": -15.0,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "SOVED": {
+    "ident": "SOVED",
+    "name": "SOVED",
+    "type": "WAYPOINT",
+    "latitude": 56.0,
+    "longitude": -14.0,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "BEXET": {
+    "ident": "BEXET",
+    "name": "BEXET",
+    "type": "WAYPOINT",
+    "latitude": 54.0,
+    "longitude": -14.0,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "GISTI": {
+    "ident": "GISTI",
+    "name": "GISTI",
+    "type": "WAYPOINT",
+    "latitude": 53.0,
+    "longitude": -14.0,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "ELSOX": {
+    "ident": "ELSOX",
+    "name": "ELSOX",
+    "type": "WAYPOINT",
+    "latitude": 51.0,
+    "longitude": -14.0,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "SOMAX": {
+    "ident": "SOMAX",
+    "name": "SOMAX",
+    "type": "WAYPOINT",
+    "latitude": 50.0,
+    "longitude": -15.0,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "TOBOR": {
+    "ident": "TOBOR",
+    "name": "TOBOR",
+    "type": "WAYPOINT",
+    "latitude": 52.5,
+    "longitude": -15.0,
+    "country_code": "IE",
     "region": "Europe"
   }
 }

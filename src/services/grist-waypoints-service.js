@@ -120,14 +120,35 @@ class GristWaypointsService {
                 { id: 'DateUpdated', fields: { label: 'DateUpdated', type: 'DateTime' } }
             ];
 
-            const requiredTables = ['Fixes', 'VORs', 'VORTACs_TACANs', 'NDBs', 'Airports', 'Airways'];
+            const oceanicTrackColumns = [
+                { id: 'TrackIdent', fields: { label: 'TrackIdent', type: 'Text' } },
+                { id: 'System', fields: { label: 'System', type: 'Text' } },
+                { id: 'Name', fields: { label: 'Name', type: 'Text' } },
+                { id: 'Direction', fields: { label: 'Direction', type: 'Text' } },
+                { id: 'RouteString', fields: { label: 'RouteString', type: 'Text' } },
+                { id: 'EntryFix', fields: { label: 'EntryFix', type: 'Text' } },
+                { id: 'ExitFix', fields: { label: 'ExitFix', type: 'Text' } },
+                { id: 'FlightLevels', fields: { label: 'FlightLevels', type: 'Text' } },
+                { id: 'ValidFrom', fields: { label: 'ValidFrom', type: 'Text' } },
+                { id: 'ValidTo', fields: { label: 'ValidTo', type: 'Text' } },
+                { id: 'WaypointsCount', fields: { label: 'WaypointsCount', type: 'Numeric' } },
+                { id: 'WaypointsJson', fields: { label: 'WaypointsJson', type: 'Text' } },
+                { id: 'Active', fields: { label: 'Active', type: 'Bool' } },
+                { id: 'DateUpdated', fields: { label: 'DateUpdated', type: 'DateTime' } }
+            ];
+
+            const requiredTables = ['Fixes', 'VORs', 'VORTACs_TACANs', 'NDBs', 'Airports', 'Airways', 'Oceanic_Tracks'];
             const tablesToCreate = [];
 
             for (const tableId of requiredTables) {
                 if (!existingTableIds.includes(tableId)) {
+                    let cols = standardColumns;
+                    if (tableId === 'Airways') cols = airwayColumns;
+                    if (tableId === 'Oceanic_Tracks') cols = oceanicTrackColumns;
+
                     tablesToCreate.push({
                         id: tableId,
-                        columns: tableId === 'Airways' ? airwayColumns : standardColumns
+                        columns: cols
                     });
                 }
             }

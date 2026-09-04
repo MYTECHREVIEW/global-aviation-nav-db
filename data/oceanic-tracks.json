@@ -1,0 +1,1104 @@
+[
+  {
+    "identifier": "A",
+    "system": "NAT",
+    "name": "NAT Track A",
+    "active": true,
+    "direction": "WEST",
+    "flight_levels": [
+      34000,
+      35000,
+      36000,
+      37000,
+      38000,
+      39000,
+      40000
+    ],
+    "valid_from": "2026-09-05T11:30:00.000000Z",
+    "valid_to": "2026-09-05T19:00:00.000000Z",
+    "last_active": "2026-09-04T22:38:03.000000Z",
+    "route_string": "DOGAL 55/20 58/30 59/40 58/50 DORYY",
+    "entry_fix": "DOGAL",
+    "exit_fix": "DORYY",
+    "waypoints": [
+      {
+        "sequence": 10,
+        "ident": "DOGAL",
+        "name": "DOGAL",
+        "type": "WAYPOINT",
+        "latitude": 55,
+        "longitude": -15,
+        "country_code": "IE"
+      },
+      {
+        "sequence": 20,
+        "ident": "55N020W",
+        "name": "55.00°N 20.00°W",
+        "type": "WAYPOINT",
+        "latitude": 55,
+        "longitude": -20,
+        "country_code": null
+      },
+      {
+        "sequence": 30,
+        "ident": "58N030W",
+        "name": "58.00°N 30.00°W",
+        "type": "WAYPOINT",
+        "latitude": 58,
+        "longitude": -30,
+        "country_code": null
+      },
+      {
+        "sequence": 40,
+        "ident": "59N040W",
+        "name": "59.00°N 40.00°W",
+        "type": "WAYPOINT",
+        "latitude": 59,
+        "longitude": -40,
+        "country_code": null
+      },
+      {
+        "sequence": 50,
+        "ident": "58N050W",
+        "name": "58.00°N 50.00°W",
+        "type": "WAYPOINT",
+        "latitude": 58,
+        "longitude": -50,
+        "country_code": null
+      },
+      {
+        "sequence": 60,
+        "ident": "DORYY",
+        "name": "DORYY",
+        "type": "WAYPOINT",
+        "latitude": 56.033333,
+        "longitude": -57,
+        "country_code": null
+      }
+    ],
+    "updated_at": "2026-09-04T22:39:21.030Z"
+  },
+  {
+    "identifier": "B",
+    "system": "NAT",
+    "name": "NAT Track B",
+    "active": true,
+    "direction": "WEST",
+    "flight_levels": [
+      34000,
+      35000,
+      36000,
+      37000,
+      38000,
+      39000,
+      40000
+    ],
+    "valid_from": "2026-09-05T11:30:00.000000Z",
+    "valid_to": "2026-09-05T19:00:00.000000Z",
+    "last_active": "2026-09-04T22:38:03.000000Z",
+    "route_string": "MALOT 54/20 57/30 58/40 57/50 HOIST",
+    "entry_fix": "MALOT",
+    "exit_fix": "HOIST",
+    "waypoints": [
+      {
+        "sequence": 10,
+        "ident": "MALOT",
+        "name": "MALOT",
+        "type": "WAYPOINT",
+        "latitude": 53,
+        "longitude": -15,
+        "country_code": "IE"
+      },
+      {
+        "sequence": 20,
+        "ident": "54N020W",
+        "name": "54.00°N 20.00°W",
+        "type": "WAYPOINT",
+        "latitude": 54,
+        "longitude": -20,
+        "country_code": null
+      },
+      {
+        "sequence": 30,
+        "ident": "57N030W",
+        "name": "57.00°N 30.00°W",
+        "type": "WAYPOINT",
+        "latitude": 57,
+        "longitude": -30,
+        "country_code": null
+      },
+      {
+        "sequence": 40,
+        "ident": "58N040W",
+        "name": "58.00°N 40.00°W",
+        "type": "WAYPOINT",
+        "latitude": 58,
+        "longitude": -40,
+        "country_code": null
+      },
+      {
+        "sequence": 50,
+        "ident": "57N050W",
+        "name": "57.00°N 50.00°W",
+        "type": "WAYPOINT",
+        "latitude": 57,
+        "longitude": -50,
+        "country_code": null
+      },
+      {
+        "sequence": 60,
+        "ident": "HOIST",
+        "name": "HOIST",
+        "type": "WAYPOINT",
+        "latitude": 55.033333,
+        "longitude": -57,
+        "country_code": null
+      }
+    ],
+    "updated_at": "2026-09-04T22:39:21.032Z"
+  },
+  {
+    "identifier": "C",
+    "system": "NAT",
+    "name": "NAT Track C",
+    "active": true,
+    "direction": "WEST",
+    "flight_levels": [
+      34000,
+      35000,
+      36000,
+      37000,
+      38000,
+      39000,
+      40000
+    ],
+    "valid_from": "2026-09-05T11:30:00.000000Z",
+    "valid_to": "2026-09-05T19:00:00.000000Z",
+    "last_active": "2026-09-04T22:38:03.000000Z",
+    "route_string": "TOBOR 5330/20 5630/30 5730/40 5630/50 IRLOK",
+    "entry_fix": "TOBOR",
+    "exit_fix": "IRLOK",
+    "waypoints": [
+      {
+        "sequence": 10,
+        "ident": "TOBOR",
+        "name": "TOBOR",
+        "type": "WAYPOINT",
+        "latitude": 52.5,
+        "longitude": -15,
+        "country_code": "IE"
+      },
+      {
+        "sequence": 20,
+        "ident": "5330N020W",
+        "name": "53.50°N 20.00°W",
+        "type": "WAYPOINT",
+        "latitude": 53.5,
+        "longitude": -20,
+        "country_code": null
+      },
+      {
+        "sequence": 30,
+        "ident": "5630N030W",
+        "name": "56.50°N 30.00°W",
+        "type": "WAYPOINT",
+        "latitude": 56.5,
+        "longitude": -30,
+        "country_code": null
+      },
+      {
+        "sequence": 40,
+        "ident": "5730N040W",
+        "name": "57.50°N 40.00°W",
+        "type": "WAYPOINT",
+        "latitude": 57.5,
+        "longitude": -40,
+        "country_code": null
+      },
+      {
+        "sequence": 50,
+        "ident": "5630N050W",
+        "name": "56.50°N 50.00°W",
+        "type": "WAYPOINT",
+        "latitude": 56.5,
+        "longitude": -50,
+        "country_code": null
+      },
+      {
+        "sequence": 60,
+        "ident": "IRLOK",
+        "name": "IRLOK",
+        "type": "WAYPOINT",
+        "latitude": 54.533333,
+        "longitude": -57,
+        "country_code": null
+      }
+    ],
+    "updated_at": "2026-09-04T22:39:21.032Z"
+  },
+  {
+    "identifier": "D",
+    "system": "NAT",
+    "name": "NAT Track D",
+    "active": true,
+    "direction": "WEST",
+    "flight_levels": [
+      34000,
+      35000,
+      36000,
+      37000,
+      38000,
+      39000,
+      40000
+    ],
+    "valid_from": "2026-09-05T11:30:00.000000Z",
+    "valid_to": "2026-09-05T19:00:00.000000Z",
+    "last_active": "2026-09-04T22:38:03.000000Z",
+    "route_string": "LIMRI 53/20 56/30 57/40 56/50 JANJO",
+    "entry_fix": "LIMRI",
+    "exit_fix": "JANJO",
+    "waypoints": [
+      {
+        "sequence": 10,
+        "ident": "LIMRI",
+        "name": "LIMRI",
+        "type": "WAYPOINT",
+        "latitude": 52,
+        "longitude": -15,
+        "country_code": "IE"
+      },
+      {
+        "sequence": 20,
+        "ident": "53N020W",
+        "name": "53.00°N 20.00°W",
+        "type": "WAYPOINT",
+        "latitude": 53,
+        "longitude": -20,
+        "country_code": null
+      },
+      {
+        "sequence": 30,
+        "ident": "56N030W",
+        "name": "56.00°N 30.00°W",
+        "type": "WAYPOINT",
+        "latitude": 56,
+        "longitude": -30,
+        "country_code": null
+      },
+      {
+        "sequence": 40,
+        "ident": "57N040W",
+        "name": "57.00°N 40.00°W",
+        "type": "WAYPOINT",
+        "latitude": 57,
+        "longitude": -40,
+        "country_code": null
+      },
+      {
+        "sequence": 50,
+        "ident": "56N050W",
+        "name": "56.00°N 50.00°W",
+        "type": "WAYPOINT",
+        "latitude": 56,
+        "longitude": -50,
+        "country_code": null
+      },
+      {
+        "sequence": 60,
+        "ident": "JANJO",
+        "name": "JANJO",
+        "type": "WAYPOINT",
+        "latitude": 54.033333,
+        "longitude": -57,
+        "country_code": null
+      }
+    ],
+    "updated_at": "2026-09-04T22:39:21.032Z"
+  },
+  {
+    "identifier": "E",
+    "system": "NAT",
+    "name": "NAT Track E",
+    "active": true,
+    "direction": "WEST",
+    "flight_levels": [
+      34000,
+      35000,
+      36000,
+      37000,
+      38000,
+      39000,
+      40000
+    ],
+    "valid_from": "2026-09-05T11:30:00.000000Z",
+    "valid_to": "2026-09-05T19:00:00.000000Z",
+    "last_active": "2026-09-04T22:38:03.000000Z",
+    "route_string": "DINIM 52/20 55/30 56/40 55/50 LOMSI",
+    "entry_fix": "DINIM",
+    "exit_fix": "LOMSI",
+    "waypoints": [
+      {
+        "sequence": 10,
+        "ident": "DINIM",
+        "name": "DINIM",
+        "type": "WAYPOINT",
+        "latitude": 51,
+        "longitude": -15,
+        "country_code": "GB"
+      },
+      {
+        "sequence": 20,
+        "ident": "52N020W",
+        "name": "52.00°N 20.00°W",
+        "type": "WAYPOINT",
+        "latitude": 52,
+        "longitude": -20,
+        "country_code": null
+      },
+      {
+        "sequence": 30,
+        "ident": "55N030W",
+        "name": "55.00°N 30.00°W",
+        "type": "WAYPOINT",
+        "latitude": 55,
+        "longitude": -30,
+        "country_code": null
+      },
+      {
+        "sequence": 40,
+        "ident": "56N040W",
+        "name": "56.00°N 40.00°W",
+        "type": "WAYPOINT",
+        "latitude": 56,
+        "longitude": -40,
+        "country_code": null
+      },
+      {
+        "sequence": 50,
+        "ident": "55N050W",
+        "name": "55.00°N 50.00°W",
+        "type": "WAYPOINT",
+        "latitude": 55,
+        "longitude": -50,
+        "country_code": null
+      },
+      {
+        "sequence": 60,
+        "ident": "LOMSI",
+        "name": "LOMSI",
+        "type": "WAYPOINT",
+        "latitude": 53.1,
+        "longitude": -56.783333,
+        "country_code": null
+      }
+    ],
+    "updated_at": "2026-09-04T22:39:21.032Z"
+  },
+  {
+    "identifier": "S",
+    "system": "NAT",
+    "name": "NAT Track S",
+    "active": true,
+    "direction": "EAST",
+    "flight_levels": [
+      34000,
+      35000,
+      36000,
+      37000,
+      38000,
+      39000,
+      40000
+    ],
+    "valid_from": "2026-09-05T01:00:00.000000Z",
+    "valid_to": "2026-09-05T08:00:00.000000Z",
+    "last_active": "2026-09-04T22:38:03.000000Z",
+    "route_string": "LOMSI 55/50 5730/40 59/30 59/20 GOMUP GINGA",
+    "entry_fix": "LOMSI",
+    "exit_fix": "GINGA",
+    "waypoints": [
+      {
+        "sequence": 10,
+        "ident": "LOMSI",
+        "name": "LOMSI",
+        "type": "WAYPOINT",
+        "latitude": 53.1,
+        "longitude": -56.783333,
+        "country_code": null
+      },
+      {
+        "sequence": 20,
+        "ident": "55N050W",
+        "name": "55.00°N 50.00°W",
+        "type": "WAYPOINT",
+        "latitude": 55,
+        "longitude": -50,
+        "country_code": null
+      },
+      {
+        "sequence": 30,
+        "ident": "5730N040W",
+        "name": "57.50°N 40.00°W",
+        "type": "WAYPOINT",
+        "latitude": 57.5,
+        "longitude": -40,
+        "country_code": null
+      },
+      {
+        "sequence": 40,
+        "ident": "59N030W",
+        "name": "59.00°N 30.00°W",
+        "type": "WAYPOINT",
+        "latitude": 59,
+        "longitude": -30,
+        "country_code": null
+      },
+      {
+        "sequence": 50,
+        "ident": "59N020W",
+        "name": "59.00°N 20.00°W",
+        "type": "WAYPOINT",
+        "latitude": 59,
+        "longitude": -20,
+        "country_code": null
+      },
+      {
+        "sequence": 60,
+        "ident": "GOMUP",
+        "name": "GOMUP (Shanwick Oceanic Entry/Exit)",
+        "type": "WAYPOINT",
+        "latitude": 57,
+        "longitude": -10,
+        "country_code": "GB"
+      },
+      {
+        "sequence": 70,
+        "ident": "GINGA",
+        "name": "GINGA (Shanwick / Scottish FIR)",
+        "type": "WAYPOINT",
+        "latitude": 56.925042,
+        "longitude": -9.5,
+        "country_code": "GB"
+      }
+    ],
+    "updated_at": "2026-09-04T22:39:21.032Z"
+  },
+  {
+    "identifier": "V",
+    "system": "NAT",
+    "name": "NAT Track V",
+    "active": true,
+    "direction": "EAST",
+    "flight_levels": [
+      34000,
+      35000,
+      36000,
+      37000,
+      38000,
+      39000,
+      40000
+    ],
+    "valid_from": "2026-09-05T01:00:00.000000Z",
+    "valid_to": "2026-09-05T08:00:00.000000Z",
+    "last_active": "2026-09-04T22:38:03.000000Z",
+    "route_string": "TUDEP 52/50 5430/40 56/30 56/20 RESNO NETKI",
+    "entry_fix": "TUDEP",
+    "exit_fix": "NETKI",
+    "waypoints": [
+      {
+        "sequence": 10,
+        "ident": "TUDEP",
+        "name": "TUDEP",
+        "type": "WAYPOINT",
+        "latitude": 51.166667,
+        "longitude": -53.233333,
+        "country_code": null
+      },
+      {
+        "sequence": 20,
+        "ident": "52N050W",
+        "name": "52.00°N 50.00°W",
+        "type": "WAYPOINT",
+        "latitude": 52,
+        "longitude": -50,
+        "country_code": null
+      },
+      {
+        "sequence": 30,
+        "ident": "5430N040W",
+        "name": "54.50°N 40.00°W",
+        "type": "WAYPOINT",
+        "latitude": 54.5,
+        "longitude": -40,
+        "country_code": null
+      },
+      {
+        "sequence": 40,
+        "ident": "56N030W",
+        "name": "56.00°N 30.00°W",
+        "type": "WAYPOINT",
+        "latitude": 56,
+        "longitude": -30,
+        "country_code": null
+      },
+      {
+        "sequence": 50,
+        "ident": "56N020W",
+        "name": "56.00°N 20.00°W",
+        "type": "WAYPOINT",
+        "latitude": 56,
+        "longitude": -20,
+        "country_code": null
+      },
+      {
+        "sequence": 60,
+        "ident": "RESNO",
+        "name": "RESNO",
+        "type": "WAYPOINT",
+        "latitude": 55,
+        "longitude": -15,
+        "country_code": "IE"
+      },
+      {
+        "sequence": 70,
+        "ident": "NETKI",
+        "name": "NETKI",
+        "type": "WAYPOINT",
+        "latitude": 55,
+        "longitude": -14,
+        "country_code": "IE"
+      }
+    ],
+    "updated_at": "2026-09-04T22:39:21.032Z"
+  },
+  {
+    "identifier": "T",
+    "system": "NAT",
+    "name": "NAT Track T",
+    "active": true,
+    "direction": "EAST",
+    "flight_levels": [
+      34000,
+      35000,
+      36000,
+      37000,
+      38000,
+      39000,
+      40000
+    ],
+    "valid_from": "2026-09-05T01:00:00.000000Z",
+    "valid_to": "2026-09-05T08:00:00.000000Z",
+    "last_active": "2026-09-04T22:38:03.000000Z",
+    "route_string": "NEEKO 54/50 5630/40 58/30 58/20 SUNOT KESIX",
+    "entry_fix": "NEEKO",
+    "exit_fix": "KESIX",
+    "waypoints": [
+      {
+        "sequence": 10,
+        "ident": "NEEKO",
+        "name": "NEEKO",
+        "type": "WAYPOINT",
+        "latitude": 52.4,
+        "longitude": -55.833333,
+        "country_code": null
+      },
+      {
+        "sequence": 20,
+        "ident": "54N050W",
+        "name": "54.00°N 50.00°W",
+        "type": "WAYPOINT",
+        "latitude": 54,
+        "longitude": -50,
+        "country_code": null
+      },
+      {
+        "sequence": 30,
+        "ident": "5630N040W",
+        "name": "56.50°N 40.00°W",
+        "type": "WAYPOINT",
+        "latitude": 56.5,
+        "longitude": -40,
+        "country_code": null
+      },
+      {
+        "sequence": 40,
+        "ident": "58N030W",
+        "name": "58.00°N 30.00°W",
+        "type": "WAYPOINT",
+        "latitude": 58,
+        "longitude": -30,
+        "country_code": null
+      },
+      {
+        "sequence": 50,
+        "ident": "58N020W",
+        "name": "58.00°N 20.00°W",
+        "type": "WAYPOINT",
+        "latitude": 58,
+        "longitude": -20,
+        "country_code": null
+      },
+      {
+        "sequence": 60,
+        "ident": "SUNOT",
+        "name": "SUNOT",
+        "type": "WAYPOINT",
+        "latitude": 57,
+        "longitude": -15,
+        "country_code": "IE"
+      },
+      {
+        "sequence": 70,
+        "ident": "KESIX",
+        "name": "KESIX",
+        "type": "WAYPOINT",
+        "latitude": 56.95,
+        "longitude": -14,
+        "country_code": "IE"
+      }
+    ],
+    "updated_at": "2026-09-04T22:39:21.032Z"
+  },
+  {
+    "identifier": "U",
+    "system": "NAT",
+    "name": "NAT Track U",
+    "active": true,
+    "direction": "EAST",
+    "flight_levels": [
+      34000,
+      35000,
+      36000,
+      37000,
+      38000,
+      39000,
+      40000
+    ],
+    "valid_from": "2026-09-05T01:00:00.000000Z",
+    "valid_to": "2026-09-05T08:00:00.000000Z",
+    "last_active": "2026-09-04T22:38:03.000000Z",
+    "route_string": "RIKAL 53/50 5530/40 57/30 57/20 PIKIL SOVED",
+    "entry_fix": "RIKAL",
+    "exit_fix": "SOVED",
+    "waypoints": [
+      {
+        "sequence": 10,
+        "ident": "RIKAL",
+        "name": "RIKAL",
+        "type": "WAYPOINT",
+        "latitude": 51.8,
+        "longitude": -54.533333,
+        "country_code": null
+      },
+      {
+        "sequence": 20,
+        "ident": "53N050W",
+        "name": "53.00°N 50.00°W",
+        "type": "WAYPOINT",
+        "latitude": 53,
+        "longitude": -50,
+        "country_code": null
+      },
+      {
+        "sequence": 30,
+        "ident": "5530N040W",
+        "name": "55.50°N 40.00°W",
+        "type": "WAYPOINT",
+        "latitude": 55.5,
+        "longitude": -40,
+        "country_code": null
+      },
+      {
+        "sequence": 40,
+        "ident": "57N030W",
+        "name": "57.00°N 30.00°W",
+        "type": "WAYPOINT",
+        "latitude": 57,
+        "longitude": -30,
+        "country_code": null
+      },
+      {
+        "sequence": 50,
+        "ident": "57N020W",
+        "name": "57.00°N 20.00°W",
+        "type": "WAYPOINT",
+        "latitude": 57,
+        "longitude": -20,
+        "country_code": null
+      },
+      {
+        "sequence": 60,
+        "ident": "PIKIL",
+        "name": "PIKIL",
+        "type": "WAYPOINT",
+        "latitude": 56,
+        "longitude": -15,
+        "country_code": "IE"
+      },
+      {
+        "sequence": 70,
+        "ident": "SOVED",
+        "name": "SOVED",
+        "type": "WAYPOINT",
+        "latitude": 56,
+        "longitude": -14,
+        "country_code": "IE"
+      }
+    ],
+    "updated_at": "2026-09-04T22:39:21.032Z"
+  },
+  {
+    "identifier": "W",
+    "system": "NAT",
+    "name": "NAT Track W",
+    "active": true,
+    "direction": "EAST",
+    "flight_levels": [
+      34000,
+      35000,
+      36000,
+      37000,
+      38000,
+      39000,
+      40000
+    ],
+    "valid_from": "2026-09-05T01:00:00.000000Z",
+    "valid_to": "2026-09-05T08:00:00.000000Z",
+    "last_active": "2026-09-04T22:38:03.000000Z",
+    "route_string": "ALLRY 51/50 5330/40 55/30 55/20 DOGAL BEXET",
+    "entry_fix": "ALLRY",
+    "exit_fix": "BEXET",
+    "waypoints": [
+      {
+        "sequence": 10,
+        "ident": "ALLRY",
+        "name": "ALLRY",
+        "type": "WAYPOINT",
+        "latitude": 50.5,
+        "longitude": -52,
+        "country_code": null
+      },
+      {
+        "sequence": 20,
+        "ident": "51N050W",
+        "name": "51.00°N 50.00°W",
+        "type": "WAYPOINT",
+        "latitude": 51,
+        "longitude": -50,
+        "country_code": null
+      },
+      {
+        "sequence": 30,
+        "ident": "5330N040W",
+        "name": "53.50°N 40.00°W",
+        "type": "WAYPOINT",
+        "latitude": 53.5,
+        "longitude": -40,
+        "country_code": null
+      },
+      {
+        "sequence": 40,
+        "ident": "55N030W",
+        "name": "55.00°N 30.00°W",
+        "type": "WAYPOINT",
+        "latitude": 55,
+        "longitude": -30,
+        "country_code": null
+      },
+      {
+        "sequence": 50,
+        "ident": "55N020W",
+        "name": "55.00°N 20.00°W",
+        "type": "WAYPOINT",
+        "latitude": 55,
+        "longitude": -20,
+        "country_code": null
+      },
+      {
+        "sequence": 60,
+        "ident": "DOGAL",
+        "name": "DOGAL",
+        "type": "WAYPOINT",
+        "latitude": 55,
+        "longitude": -15,
+        "country_code": "IE"
+      },
+      {
+        "sequence": 70,
+        "ident": "BEXET",
+        "name": "BEXET",
+        "type": "WAYPOINT",
+        "latitude": 54,
+        "longitude": -14,
+        "country_code": "IE"
+      }
+    ],
+    "updated_at": "2026-09-04T22:39:21.033Z"
+  },
+  {
+    "identifier": "X",
+    "system": "NAT",
+    "name": "NAT Track X",
+    "active": true,
+    "direction": "EAST",
+    "flight_levels": [
+      34000,
+      35000,
+      36000,
+      37000,
+      38000,
+      39000,
+      40000
+    ],
+    "valid_from": "2026-09-05T01:00:00.000000Z",
+    "valid_to": "2026-09-05T08:00:00.000000Z",
+    "last_active": "2026-09-04T22:38:03.000000Z",
+    "route_string": "ELSIR 50/50 5230/40 54/30 54/20 MALOT GISTI",
+    "entry_fix": "ELSIR",
+    "exit_fix": "GISTI",
+    "waypoints": [
+      {
+        "sequence": 10,
+        "ident": "ELSIR",
+        "name": "ELSIR",
+        "type": "WAYPOINT",
+        "latitude": 49.5,
+        "longitude": -52,
+        "country_code": "CA"
+      },
+      {
+        "sequence": 20,
+        "ident": "50N050W",
+        "name": "50.00°N 50.00°W",
+        "type": "WAYPOINT",
+        "latitude": 50,
+        "longitude": -50,
+        "country_code": null
+      },
+      {
+        "sequence": 30,
+        "ident": "5230N040W",
+        "name": "52.50°N 40.00°W",
+        "type": "WAYPOINT",
+        "latitude": 52.5,
+        "longitude": -40,
+        "country_code": null
+      },
+      {
+        "sequence": 40,
+        "ident": "54N030W",
+        "name": "54.00°N 30.00°W",
+        "type": "WAYPOINT",
+        "latitude": 54,
+        "longitude": -30,
+        "country_code": null
+      },
+      {
+        "sequence": 50,
+        "ident": "54N020W",
+        "name": "54.00°N 20.00°W",
+        "type": "WAYPOINT",
+        "latitude": 54,
+        "longitude": -20,
+        "country_code": null
+      },
+      {
+        "sequence": 60,
+        "ident": "MALOT",
+        "name": "MALOT",
+        "type": "WAYPOINT",
+        "latitude": 53,
+        "longitude": -15,
+        "country_code": "IE"
+      },
+      {
+        "sequence": 70,
+        "ident": "GISTI",
+        "name": "GISTI",
+        "type": "WAYPOINT",
+        "latitude": 53,
+        "longitude": -14,
+        "country_code": "IE"
+      }
+    ],
+    "updated_at": "2026-09-04T22:39:21.033Z"
+  },
+  {
+    "identifier": "Y",
+    "system": "NAT",
+    "name": "NAT Track Y",
+    "active": true,
+    "direction": "EAST",
+    "flight_levels": [
+      34000,
+      36000,
+      38000,
+      40000
+    ],
+    "valid_from": "2026-09-05T01:00:00.000000Z",
+    "valid_to": "2026-09-05T08:00:00.000000Z",
+    "last_active": "2026-09-04T22:38:03.000000Z",
+    "route_string": "DOVEY 42/60 44/50 47/40 50/30 51/20 DINIM ELSOX",
+    "entry_fix": "DOVEY",
+    "exit_fix": "ELSOX",
+    "waypoints": [
+      {
+        "sequence": 10,
+        "ident": "DOVEY",
+        "name": "DOVEY",
+        "type": "WAYPOINT",
+        "latitude": 41.116667,
+        "longitude": -67,
+        "country_code": null
+      },
+      {
+        "sequence": 20,
+        "ident": "42N060W",
+        "name": "42.00°N 60.00°W",
+        "type": "WAYPOINT",
+        "latitude": 42,
+        "longitude": -60,
+        "country_code": null
+      },
+      {
+        "sequence": 30,
+        "ident": "44N050W",
+        "name": "44.00°N 50.00°W",
+        "type": "WAYPOINT",
+        "latitude": 44,
+        "longitude": -50,
+        "country_code": null
+      },
+      {
+        "sequence": 40,
+        "ident": "47N040W",
+        "name": "47.00°N 40.00°W",
+        "type": "WAYPOINT",
+        "latitude": 47,
+        "longitude": -40,
+        "country_code": null
+      },
+      {
+        "sequence": 50,
+        "ident": "50N030W",
+        "name": "50.00°N 30.00°W",
+        "type": "WAYPOINT",
+        "latitude": 50,
+        "longitude": -30,
+        "country_code": null
+      },
+      {
+        "sequence": 60,
+        "ident": "51N020W",
+        "name": "51.00°N 20.00°W",
+        "type": "WAYPOINT",
+        "latitude": 51,
+        "longitude": -20,
+        "country_code": null
+      },
+      {
+        "sequence": 70,
+        "ident": "DINIM",
+        "name": "DINIM",
+        "type": "WAYPOINT",
+        "latitude": 51,
+        "longitude": -15,
+        "country_code": "GB"
+      },
+      {
+        "sequence": 80,
+        "ident": "ELSOX",
+        "name": "ELSOX",
+        "type": "WAYPOINT",
+        "latitude": 51,
+        "longitude": -14,
+        "country_code": "IE"
+      }
+    ],
+    "updated_at": "2026-09-04T22:39:21.033Z"
+  },
+  {
+    "identifier": "Z",
+    "system": "NAT",
+    "name": "NAT Track Z",
+    "active": true,
+    "direction": "EAST",
+    "flight_levels": [
+      34000,
+      36000,
+      38000,
+      40000
+    ],
+    "valid_from": "2026-09-05T01:00:00.000000Z",
+    "valid_to": "2026-09-05T08:00:00.000000Z",
+    "last_active": "2026-09-04T22:38:03.000000Z",
+    "route_string": "SOORY 43/50 46/40 49/30 50/20 SOMAX ATSUR",
+    "entry_fix": "SOORY",
+    "exit_fix": "ATSUR",
+    "waypoints": [
+      {
+        "sequence": 10,
+        "ident": "SOORY",
+        "name": "SOORY",
+        "type": "WAYPOINT",
+        "latitude": 38.5,
+        "longitude": -60.267583,
+        "country_code": null
+      },
+      {
+        "sequence": 20,
+        "ident": "43N050W",
+        "name": "43.00°N 50.00°W",
+        "type": "WAYPOINT",
+        "latitude": 43,
+        "longitude": -50,
+        "country_code": null
+      },
+      {
+        "sequence": 30,
+        "ident": "46N040W",
+        "name": "46.00°N 40.00°W",
+        "type": "WAYPOINT",
+        "latitude": 46,
+        "longitude": -40,
+        "country_code": null
+      },
+      {
+        "sequence": 40,
+        "ident": "49N030W",
+        "name": "49.00°N 30.00°W",
+        "type": "WAYPOINT",
+        "latitude": 49,
+        "longitude": -30,
+        "country_code": null
+      },
+      {
+        "sequence": 50,
+        "ident": "50N020W",
+        "name": "50.00°N 20.00°W",
+        "type": "WAYPOINT",
+        "latitude": 50,
+        "longitude": -20,
+        "country_code": null
+      },
+      {
+        "sequence": 60,
+        "ident": "SOMAX",
+        "name": "SOMAX",
+        "type": "WAYPOINT",
+        "latitude": 50,
+        "longitude": -15,
+        "country_code": "IE"
+      },
+      {
+        "sequence": 70,
+        "ident": "ATSUR",
+        "name": "ATSUR",
+        "type": "WAYPOINT",
+        "latitude": 50,
+        "longitude": -14,
+        "country_code": "IE"
+      }
+    ],
+    "updated_at": "2026-09-04T22:39:21.033Z"
+  }
+]

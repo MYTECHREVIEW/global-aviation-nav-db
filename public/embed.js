@@ -30,6 +30,7 @@ let activeWaypointsLayerGroup = null;
 let activeRouteData = null;
 let selectedPilotId = null;
 let initialBoundsFitted = false;
+let activeEmbedAirwayBadgeDescriptors = [];
 
 // Aircraft tracking buffers
 const fleetBuffers = new Map();
@@ -591,6 +592,7 @@ function initMap() {
     map.on('click', () => {
         deselectPilot();
     });
+    map.on('zoomend moveend', updateEmbedAirwayLabelRotations);
 
     const popupEl = document.getElementById('fshubLivePopup');
     if (popupEl) {
@@ -997,7 +999,168 @@ function renderTracedRouteOnMap(routeData) {
         });
     }
 
+    // Color-coded Airway Tracks & Parallel Labels (Displayed on hover)
+    renderAirwayTracksAndLabelsOnEmbed(routeData, worldShift);
+
     map.fitBounds(activeRouteLayer.getBounds(), { padding: [50, 50] });
+}
+
+function updateEmbedAirwayLabelRotations() {
+    if (!map || !activeEmbedAirwayBadgeDescriptors || activeEmbedAirwayBadgeDescriptors.length === 0) return;
+    activeEmbedAirwayBadgeDescriptors.forEach(item => {
+        const el = document.getElementById(item.badgeId);
+        if (el) {
+            const p1 = map.latLngToLayerPoint([item.lat1, item.shiftedLon1]);
+            const p2 = map.latLngToLayerPoint([item.lat2, item.shiftedLon2]);
+            let deg = Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
+            if (deg > 90) deg -= 180;
+            if (deg < -90) deg += 180;
+            el.style.transform = `rotate(${deg.toFixed(1)}deg)`;
+        }
+    });
+}
+
+function renderAirwayTracksAndLabelsOnEmbed(data, worldShift) {
+    if (!data || !data.waypoints || data.waypoints.length < 2 || !map) return;
+    activeEmbedAirwayBadgeDescriptors = [];
+
+    // Collect segments with airways
+    const segments = [];
+    if (Array.isArray(data.airway_segments) && data.airway_segments.length > 0) {
+        data.airway_segments.forEach(seg => {
+            const fromWp = data.waypoints.find(w => w.ident === seg.from_ident);
+            const toWp = data.waypoints.find(w => w.ident === seg.to_ident);
+            if (fromWp && toWp) {
+                segments.push({
+                    airway: seg.airway,
+                    fromWp,
+                    toWp,
+                    coordinates: seg.coordinates,
+                    distance_nm: seg.distance_nm,
+                    bearing_deg: seg.bearing_deg,
+                    from_ident: seg.from_ident,
+                    to_ident: seg.to_ident
+                });
+            }
+        });
+    } else {
+        for (let i = 1; i < data.waypoints.length; i++) {
+            const prev = data.waypoints[i - 1];
+            const curr = data.waypoints[i];
+            const airway = curr.via_airway || (curr.via_oceanic_track ? curr.via_oceanic_track : null);
+            if (airway) {
+                segments.push({
+                    airway: airway,
+                    fromWp: prev,
+                    toWp: curr,
+                    coordinates: curr.segment_coordinates ? curr.segment_coordinates.map(c => [c[1], c[0]]) : null,
+                    distance_nm: curr.segment_distance_nm,
+                    bearing_deg: curr.segment_bearing_deg,
+                    from_ident: prev.ident,
+                    to_ident: curr.ident
+                });
+            }
+        }
+    }
+
+    // Render color-coded airway track segments and hover labels
+    segments.forEach((seg, idx) => {
+        let lon1 = seg.fromWp.unwrapped_longitude !== undefined ? seg.fromWp.unwrapped_longitude : seg.fromWp.longitude;
+        let lon2 = seg.toWp.unwrapped_longitude !== undefined ? seg.toWp.unwrapped_longitude : seg.toWp.longitude;
+
+        const shiftedLon1 = lon1 + worldShift;
+        const shiftedLon2 = lon2 + worldShift;
+        const lat1 = seg.fromWp.latitude;
+        const lat2 = seg.toWp.latitude;
+
+        const isOceanic = (seg.airway || '').startsWith('NAT');
+        const airwayColor = isOceanic ? '#c084fc' : '#38bdf8';
+        const badgeClass = isOceanic ? 'map-airway-badge oceanic-track' : 'map-airway-badge';
+
+        let segLatLngs = [];
+        if (Array.isArray(seg.coordinates) && seg.coordinates.length > 0) {
+            segLatLngs = seg.coordinates.map(([lat, lon]) => [lat, lon + worldShift]);
+        } else {
+            segLatLngs = [ [lat1, shiftedLon1], [lat2, shiftedLon2] ];
+        }
+
+        // 1. Color-coded Airway Track Glow Underlay
+        const airwayGlow = L.polyline(segLatLngs, {
+            color: airwayColor,
+            weight: 6,
+            opacity: 0.35,
+            lineCap: 'round'
+        }).addTo(activeWaypointsLayerGroup);
+
+        // 2. Color-coded Airway Track Corridor Line
+        const airwayLine = L.polyline(segLatLngs, {
+            color: airwayColor,
+            weight: 3.5,
+            opacity: 0.95,
+            dashArray: '8, 4',
+            lineCap: 'round'
+        }).addTo(activeWaypointsLayerGroup);
+
+        // 3. Wide Transparent Hit Area (for effortless, stable hover interaction)
+        const hitLine = L.polyline(segLatLngs, {
+            color: '#000',
+            weight: 20,
+            opacity: 0,
+            interactive: true
+        }).addTo(activeWaypointsLayerGroup);
+
+        const midLat = (lat1 + lat2) / 2;
+        const midLon = (shiftedLon1 + shiftedLon2) / 2;
+
+        const p1 = map.latLngToLayerPoint([lat1, shiftedLon1]);
+        const p2 = map.latLngToLayerPoint([lat2, shiftedLon2]);
+        let deg = Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
+        if (deg > 90) deg -= 180;
+        if (deg < -90) deg += 180;
+
+        const badgeId = `embed-airway-badge-${idx}-${Date.now()}`;
+        activeEmbedAirwayBadgeDescriptors.push({ badgeId, lat1, shiftedLon1, lat2, shiftedLon2 });
+
+        const icon = L.divIcon({
+            className: 'airway-label-container',
+            html: `<div id="${badgeId}" class="${badgeClass}" style="transform: rotate(${deg.toFixed(1)}deg);">${seg.airway}</div>`,
+            iconSize: [60, 18],
+            iconAnchor: [30, 9]
+        });
+
+        L.marker([midLat, midLon], {
+            icon: icon,
+            interactive: false,
+            zIndexOffset: 650
+        }).addTo(activeWaypointsLayerGroup);
+
+        // Hover interactions: labels displayed ONLY when hovered above them
+        hitLine.on('mouseover', () => {
+            const el = document.getElementById(badgeId);
+            if (el) el.classList.add('is-hovered');
+            airwayLine.setStyle({ weight: 5.5, opacity: 1 });
+            airwayGlow.setStyle({ weight: 12, opacity: 0.65 });
+        });
+
+        hitLine.on('mouseout', () => {
+            const el = document.getElementById(badgeId);
+            if (el) el.classList.remove('is-hovered');
+            airwayLine.setStyle({ weight: 3.5, opacity: 0.95 });
+            airwayGlow.setStyle({ weight: 6, opacity: 0.35 });
+        });
+
+        const popupContent = `
+            <div style="font-family: 'Inter', sans-serif; font-size: 12px; color: #fff; min-width: 140px;">
+                <div style="font-weight: 800; font-size: 13px; color: ${airwayColor}; margin-bottom: 3px;">
+                    ${isOceanic ? 'Oceanic Track' : 'Airway'} ${seg.airway}
+                </div>
+                <div style="color: #94a3b8; font-size: 11px; margin-bottom: 4px;">${seg.from_ident} ➔ ${seg.to_ident}</div>
+                <div>📏 <strong>Distance:</strong> ${seg.distance_nm ? seg.distance_nm + ' NM' : '--'}</div>
+                <div>🧭 <strong>Bearing:</strong> ${seg.bearing_deg !== undefined ? seg.bearing_deg + '°' : '--'}</div>
+            </div>
+        `;
+        hitLine.bindPopup(popupContent);
+    });
 }
 
 async function loadAndTraceRoute(routeStr, dep, arr) {
