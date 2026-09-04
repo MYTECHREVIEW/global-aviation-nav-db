@@ -504,5 +504,23 @@
       "seq": 20,
       "fixIdent": "SIRIC"
     }
+  ],
+  "UM674": [
+    {
+      "seq": 10,
+      "fixIdent": "NEGAL"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "ENSOL"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "TOKUT"
+    },
+    {
+      "seq": 40,
+      "fixIdent": "MILAT"
+    }
   ]
 }

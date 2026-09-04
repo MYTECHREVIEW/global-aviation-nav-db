@@ -2952,5 +2952,50 @@
     "longitude": -15.0,
     "country_code": "IE",
     "region": "Europe"
+  },
+  "NEGAL": {
+    "ident": "NEGAL",
+    "name": "NEGAL",
+    "type": "WAYPOINT",
+    "latitude": 0.4975,
+    "longitude": -78.579722,
+    "country_code": "EC",
+    "region": "South America"
+  },
+  "ENSOL": {
+    "ident": "ENSOL",
+    "name": "ENSOL",
+    "type": "WAYPOINT",
+    "latitude": 1.330556,
+    "longitude": -78.686111,
+    "country_code": "CO",
+    "region": "South America"
+  },
+  "TOKUT": {
+    "ident": "TOKUT",
+    "name": "TOKUT",
+    "type": "WAYPOINT",
+    "latitude": 5.935556,
+    "longitude": -79.221667,
+    "country_code": "CO",
+    "region": "South America"
+  },
+  "MILAT": {
+    "ident": "MILAT",
+    "name": "MILAT",
+    "type": "WAYPOINT",
+    "latitude": 7.29975,
+    "longitude": -79.386472,
+    "country_code": "PA",
+    "region": "Central America"
+  },
+  "SIRIL": {
+    "ident": "SIRIL",
+    "name": "SIRIL",
+    "type": "WAYPOINT",
+    "latitude": 8.081667,
+    "longitude": -79.556667,
+    "country_code": "PA",
+    "region": "Central America"
   }
 }
