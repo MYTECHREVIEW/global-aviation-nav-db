@@ -2772,5 +2772,95 @@
     "country_code": "GB",
     "region": "United Kingdom",
     "updated_at": "2026-09-04T21:21:34.826Z"
+  },
+  "ROBBE": {
+    "ident": "ROBBE",
+    "name": "ROBBE",
+    "type": "WAYPOINT",
+    "latitude": 51.143153,
+    "longitude": -70.0,
+    "country_code": "CA",
+    "region": "North America"
+  },
+  "NEBIN": {
+    "ident": "NEBIN",
+    "name": "NEBIN",
+    "type": "WAYPOINT",
+    "latitude": 53.5,
+    "longitude": -15.0,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "OLGON": {
+    "ident": "OLGON",
+    "name": "OLGON",
+    "type": "WAYPOINT",
+    "latitude": 53.5,
+    "longitude": -14.0,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "ENJEX": {
+    "ident": "ENJEX",
+    "name": "ENJEX",
+    "type": "WAYPOINT",
+    "latitude": 52.05585,
+    "longitude": -6.04105,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "AVZAC": {
+    "ident": "AVZAC",
+    "name": "AVZAC",
+    "type": "WAYPOINT",
+    "latitude": 51.776944,
+    "longitude": -5.065556,
+    "country_code": "GB",
+    "region": "Europe"
+  },
+  "INFEC": {
+    "ident": "INFEC",
+    "name": "INFEC",
+    "type": "WAYPOINT",
+    "latitude": 51.543889,
+    "longitude": -4.191944,
+    "country_code": "GB",
+    "region": "Europe"
+  },
+  "JETZI": {
+    "ident": "JETZI",
+    "name": "JETZI",
+    "type": "WAYPOINT",
+    "latitude": 51.5075,
+    "longitude": -3.87,
+    "country_code": "GB",
+    "region": "Europe"
+  },
+  "AMFUL": {
+    "ident": "AMFUL",
+    "name": "AMFUL",
+    "type": "WAYPOINT",
+    "latitude": 51.479,
+    "longitude": -3.6226,
+    "country_code": "GB",
+    "region": "Europe"
+  },
+  "ORZEB": {
+    "ident": "ORZEB",
+    "name": "ORZEB",
+    "type": "WAYPOINT",
+    "latitude": 51.407222,
+    "longitude": -2.465,
+    "country_code": "GB",
+    "region": "Europe"
+  },
+  "SIRIC": {
+    "ident": "SIRIC",
+    "name": "SIRIC",
+    "type": "WAYPOINT",
+    "latitude": 51.343381,
+    "longitude": -1.566358,
+    "country_code": "GB",
+    "region": "Europe"
   }
 }

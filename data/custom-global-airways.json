@@ -494,5 +494,15 @@
       "seq": 30,
       "fixIdent": "UMLAT"
     }
+  ],
+  "P2": [
+    {
+      "seq": 10,
+      "fixIdent": "ORZEB"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "SIRIC"
+    }
   ]
 }
