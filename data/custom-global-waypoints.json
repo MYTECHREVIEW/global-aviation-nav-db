@@ -3249,5 +3249,77 @@
     "elevation_ft": null,
     "frequency_mhz": null,
     "updated_at": "2026-09-05T18:51:50.808Z"
+  },
+  "ELEKA": {
+    "ident": "ELEKA",
+    "name": "ELEKA (Vilnius SID)",
+    "type": "WAYPOINT",
+    "latitude": 54.800556,
+    "longitude": 24.688889,
+    "country_code": "LT",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T20:39:19.884Z"
+  },
+  "VAGVO": {
+    "ident": "VAGVO",
+    "name": "VAGVO (Baltic Sea FIR Entry)",
+    "type": "WAYPOINT",
+    "latitude": 56.249722,
+    "longitude": 19.285,
+    "country_code": "LT",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T20:39:19.893Z"
+  },
+  "ADAXA": {
+    "ident": "ADAXA",
+    "name": "ADAXA (Baltic Sea Corridor)",
+    "type": "WAYPOINT",
+    "latitude": 56.297778,
+    "longitude": 18.898333,
+    "country_code": "SE",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T20:39:19.893Z"
+  },
+  "NINTA": {
+    "ident": "NINTA",
+    "name": "NINTA (Baltic Sea Corridor)",
+    "type": "WAYPOINT",
+    "latitude": 56.228889,
+    "longitude": 18.285556,
+    "country_code": "SE",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T20:39:19.893Z"
+  },
+  "ODDON": {
+    "ident": "ODDON",
+    "name": "ODDON (ex-ODIN VOR)",
+    "type": "WAYPOINT",
+    "latitude": 55.581001,
+    "longitude": 10.652999,
+    "country_code": "DK",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T20:39:19.893Z"
+  },
+  "LOKSA": {
+    "ident": "LOKSA",
+    "name": "LOKSA (Billund RW27 Final Approach Fix)",
+    "type": "WAYPOINT",
+    "latitude": 55.750833,
+    "longitude": 9.513056,
+    "country_code": "DK",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T20:39:19.893Z"
   }
 }

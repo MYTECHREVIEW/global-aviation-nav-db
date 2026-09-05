@@ -426,7 +426,14 @@ const GLOBAL_WAYPOINTS_CATALOG = {
     'DEWIN': { ident: 'DEWIN', name: 'DEWIN (RNP Mindanao)', type: 'WAYPOINT', latitude: 7.305500, longitude: 125.143944, country_code: 'PH' },
     'LINAO': { ident: 'LINAO', name: 'LINAO (Kabacan)', type: 'WAYPOINT', latitude: 7.261983, longitude: 124.847542, country_code: 'PH' },
     'TOMAN': { ident: 'TOMAN', name: 'TOMAN (Singapore FIR / M646)', type: 'WAYPOINT', latitude: 1.363056, longitude: 105.788056, country_code: 'SG' },
-    'KARTO': { ident: 'KARTO', name: 'KARTO (Singapore STAR)', type: 'WAYPOINT', latitude: 1.190000, longitude: 105.561944, country_code: 'SG' }
+    'KARTO': { ident: 'KARTO', name: 'KARTO (Singapore STAR)', type: 'WAYPOINT', latitude: 1.190000, longitude: 105.561944, country_code: 'SG' },
+    // Lithuania, Baltic Sea & Denmark Corridor Waypoints (EYVI to EKBI)
+    'ELEKA': { ident: 'ELEKA', name: 'ELEKA (Vilnius SID)', type: 'WAYPOINT', latitude: 54.800556, longitude: 24.688889, country_code: 'LT' },
+    'VAGVO': { ident: 'VAGVO', name: 'VAGVO (Baltic Sea FIR Entry)', type: 'WAYPOINT', latitude: 56.249722, longitude: 19.285000, country_code: 'LT' },
+    'ADAXA': { ident: 'ADAXA', name: 'ADAXA (Baltic Sea Corridor)', type: 'WAYPOINT', latitude: 56.297778, longitude: 18.898333, country_code: 'SE' },
+    'NINTA': { ident: 'NINTA', name: 'NINTA (Baltic Sea Corridor)', type: 'WAYPOINT', latitude: 56.228889, longitude: 18.285556, country_code: 'SE' },
+    'ODDON': { ident: 'ODDON', name: 'ODDON (ex-ODIN VOR)', type: 'WAYPOINT', latitude: 55.581001, longitude: 10.652999, country_code: 'DK' },
+    'LOKSA': { ident: 'LOKSA', name: 'LOKSA (Billund RW27 Final Approach Fix)', type: 'WAYPOINT', latitude: 55.750833, longitude: 9.513056, country_code: 'DK' }
 };
 
 class RouteParser {
