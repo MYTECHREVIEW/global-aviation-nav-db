@@ -421,7 +421,12 @@ const GLOBAL_WAYPOINTS_CATALOG = {
     'ALAXE': { ident: 'ALAXE', name: 'ALAXE', type: 'WAYPOINT', latitude: 6.500000, longitude: -74.800000, country_code: 'CO' },
     'AMBER': { ident: 'AMBER', name: 'AMBER', type: 'WAYPOINT', latitude: 5.200000, longitude: -74.400000, country_code: 'CO' },
     'MUGIL': { ident: 'MUGIL', name: 'MUGIL', type: 'WAYPOINT', latitude: 16.000000, longitude: -77.500000, country_code: 'JM' },
-    'AGASI': { ident: 'AGASI', name: 'AGASI', type: 'WAYPOINT', latitude: 15.000000, longitude: -77.200000, country_code: 'JM' }
+    'AGASI': { ident: 'AGASI', name: 'AGASI', type: 'WAYPOINT', latitude: 15.000000, longitude: -77.200000, country_code: 'JM' },
+    // Philippines, Malaysia & Singapore Corridor Waypoints (RPMD to WSSS)
+    'DEWIN': { ident: 'DEWIN', name: 'DEWIN (RNP Mindanao)', type: 'WAYPOINT', latitude: 7.305500, longitude: 125.143944, country_code: 'PH' },
+    'LINAO': { ident: 'LINAO', name: 'LINAO (Kabacan)', type: 'WAYPOINT', latitude: 7.261983, longitude: 124.847542, country_code: 'PH' },
+    'TOMAN': { ident: 'TOMAN', name: 'TOMAN (Singapore FIR / M646)', type: 'WAYPOINT', latitude: 1.363056, longitude: 105.788056, country_code: 'SG' },
+    'KARTO': { ident: 'KARTO', name: 'KARTO (Singapore STAR)', type: 'WAYPOINT', latitude: 1.190000, longitude: 105.561944, country_code: 'SG' }
 };
 
 class RouteParser {
@@ -982,7 +987,19 @@ class RouteParser {
             // 1. STRUCTURED SID DEPARTURE EXPANSION (Runway & Enroute Aware)
             // ═══════════════════════════════════════════════════════════════════
             const sidKey = depPoint ? `${depPoint.ident}_${token}` : token;
-            const sidProc = this.sidsStructured[sidKey] || Object.values(this.sidsStructured).find(s => s.procedure === token);
+            let sidProc = this.sidsStructured[sidKey] || Object.values(this.sidsStructured).find(s => s.procedure === token);
+
+            if (!sidProc && depPoint) {
+                if (depPoint.ident === 'RPMD' && token.startsWith('LINAO')) {
+                    sidProc = {
+                        procedure: token,
+                        airport: 'RPMD',
+                        runway_transitions: { '23': [], 'ALL': [] },
+                        enroute_transitions: { 'DEWIN': ['DEWIN'], 'LINAO': ['DEWIN', 'LINAO'] },
+                        common_legs: []
+                    };
+                }
+            }
 
             if (sidProc && resolvedPoints.length > 0) {
                 const nextToken = i + 1 < cleanTokens.length ? cleanTokens[i + 1] : null;
@@ -1056,6 +1073,13 @@ class RouteParser {
                             airport: 'RKSI',
                             enroute_transitions: { 'GUKDO': ['GUKDO', 'BOPTA', 'RESTA'] },
                             common_legs: ['BOPTA', 'RESTA']
+                        };
+                    } else if (baseFix === 'KARTO' && arrPoint.ident === 'WSSS') {
+                        starProc = {
+                            procedure: token,
+                            airport: 'WSSS',
+                            enroute_transitions: { 'TOMAN': ['KARTO'], 'KARTO': ['KARTO'] },
+                            common_legs: ['KARTO']
                         };
                     }
                 }
@@ -1485,7 +1509,19 @@ class RouteParser {
 
             // 1. SID EXPANSION
             const sidKey = depPoint ? `${depPoint.ident}_${token}` : token;
-            const sidProc = this.sidsStructured[sidKey] || Object.values(this.sidsStructured).find(s => s.procedure === token);
+            let sidProc = this.sidsStructured[sidKey] || Object.values(this.sidsStructured).find(s => s.procedure === token);
+
+            if (!sidProc && depPoint) {
+                if (depPoint.ident === 'RPMD' && token.startsWith('LINAO')) {
+                    sidProc = {
+                        procedure: token,
+                        airport: 'RPMD',
+                        runway_transitions: { '23': [], 'ALL': [] },
+                        enroute_transitions: { 'DEWIN': ['DEWIN'], 'LINAO': ['DEWIN', 'LINAO'] },
+                        common_legs: []
+                    };
+                }
+            }
 
             if (sidProc && resolvedPoints.length > 0) {
                 const nextToken = i + 1 < cleanTokens.length ? cleanTokens[i + 1] : null;
@@ -1553,6 +1589,13 @@ class RouteParser {
                             airport: 'RKSI',
                             enroute_transitions: { 'GUKDO': ['GUKDO', 'BOPTA', 'RESTA'] },
                             common_legs: ['BOPTA', 'RESTA']
+                        };
+                    } else if (baseFix === 'KARTO' && arrPoint.ident === 'WSSS') {
+                        starProc = {
+                            procedure: token,
+                            airport: 'WSSS',
+                            enroute_transitions: { 'TOMAN': ['KARTO'], 'KARTO': ['KARTO'] },
+                            common_legs: ['KARTO']
                         };
                     }
                 }

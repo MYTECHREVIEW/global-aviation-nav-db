@@ -77563,5 +77563,20 @@
       "FRARI"
     ],
     "runway_transitions": {}
+  },
+  "WSSS_KARTO2B": {
+    "procedure": "KARTO2B",
+    "airport": "WSSS",
+    "enroute_transitions": {
+      "TOMAN": [
+        "KARTO"
+      ],
+      "KARTO": [
+        "KARTO"
+      ]
+    },
+    "common_legs": [
+      "KARTO"
+    ]
   }
 }

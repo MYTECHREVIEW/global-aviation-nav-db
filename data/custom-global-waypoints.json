@@ -3201,5 +3201,53 @@
     "elevation_ft": 213,
     "frequency_mhz": "116.50",
     "updated_at": "2026-09-05T18:30:00.000Z"
+  },
+  "DEWIN": {
+    "ident": "DEWIN",
+    "name": "DEWIN (RNP Mindanao)",
+    "type": "WAYPOINT",
+    "latitude": 7.3055,
+    "longitude": 125.143944,
+    "country_code": "PH",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:51:50.807Z"
+  },
+  "LINAO": {
+    "ident": "LINAO",
+    "name": "LINAO (Kabacan)",
+    "type": "WAYPOINT",
+    "latitude": 7.261983,
+    "longitude": 124.847542,
+    "country_code": "PH",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:51:50.808Z"
+  },
+  "TOMAN": {
+    "ident": "TOMAN",
+    "name": "TOMAN (Singapore FIR / M646)",
+    "type": "WAYPOINT",
+    "latitude": 1.363056,
+    "longitude": 105.788056,
+    "country_code": "SG",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:51:50.808Z"
+  },
+  "KARTO": {
+    "ident": "KARTO",
+    "name": "KARTO (Singapore STAR)",
+    "type": "WAYPOINT",
+    "latitude": 1.19,
+    "longitude": 105.561944,
+    "country_code": "SG",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:51:50.808Z"
   }
 }

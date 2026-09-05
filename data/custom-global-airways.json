@@ -616,5 +616,53 @@
       "seq": 40,
       "fixIdent": "LIBRO"
     }
+  ],
+  "W10": [
+    {
+      "seq": 10,
+      "fixIdent": "DEWIN"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "LINAO"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "ZAM"
+    }
+  ],
+  "A341": [
+    {
+      "seq": 10,
+      "fixIdent": "ZAM"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "VSN"
+    }
+  ],
+  "W461": [
+    {
+      "seq": 10,
+      "fixIdent": "VSN"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "BRU"
+    }
+  ],
+  "M646": [
+    {
+      "seq": 10,
+      "fixIdent": "BRU"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "TOMAN"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "KARTO"
+    }
   ]
 }

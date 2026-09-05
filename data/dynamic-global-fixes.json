@@ -1330,5 +1330,70 @@
     "longitude": 134.5085,
     "country_code": "JP",
     "source": "ICAO / AIP ENR 4.4"
+  },
+  "OSANU": {
+    "id": "ONLINE_OSANU",
+    "ident": "OSANU",
+    "name": "OSANU",
+    "type": "WAYPOINT",
+    "latitude": 7.69,
+    "longitude": 117.293333,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-09-05T18:49:46.963Z"
+  },
+  "KAMIN": {
+    "id": "ONLINE_KAMIN",
+    "ident": "KAMIN",
+    "name": "KAMIN",
+    "type": "WAYPOINT",
+    "latitude": 2.578889,
+    "longitude": 108.926944,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-09-05T18:49:47.880Z"
+  },
+  "POTIB": {
+    "id": "INTERP_POTIB",
+    "ident": "POTIB",
+    "name": "POTIB (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 3,
+    "longitude": 110,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-09-05T18:49:48.743Z"
+  },
+  "TOKON": {
+    "id": "ONLINE_TOKON",
+    "ident": "TOKON",
+    "name": "TOKON",
+    "type": "WAYPOINT",
+    "latitude": 11.700536,
+    "longitude": 119.674692,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "OPENNAV_ONLINE",
+    "updated_at": "2026-09-05T18:49:49.562Z"
+  },
+  "LUBAN": {
+    "id": "INTERP_LUBAN",
+    "ident": "LUBAN",
+    "name": "LUBAN (Enroute Fix)",
+    "type": "WAYPOINT",
+    "latitude": 3,
+    "longitude": 110,
+    "elevation_ft": null,
+    "country_code": null,
+    "frequency_mhz": null,
+    "source": "GEODESIC_INTERPOLATION",
+    "updated_at": "2026-09-05T18:49:50.075Z"
   }
 }

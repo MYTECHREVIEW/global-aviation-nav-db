@@ -67567,5 +67567,23 @@
         "URSUS"
       ]
     }
+  },
+  "RPMD_LINAO3B": {
+    "procedure": "LINAO3B",
+    "airport": "RPMD",
+    "runway_transitions": {
+      "23": [],
+      "ALL": []
+    },
+    "enroute_transitions": {
+      "DEWIN": [
+        "DEWIN"
+      ],
+      "LINAO": [
+        "DEWIN",
+        "LINAO"
+      ]
+    },
+    "common_legs": []
   }
 }
