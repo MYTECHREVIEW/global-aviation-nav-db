@@ -393,6 +393,21 @@ const GLOBAL_WAYPOINTS_CATALOG = {
     'TOLSI': { ident: 'TOLSI', name: 'TOLSI', type: 'WAYPOINT', latitude: 34.600556, longitude: -7.015000, country_code: 'MA' },
     'KORIS': { ident: 'KORIS', name: 'KORIS', type: 'WAYPOINT', latitude: 35.833332, longitude: -6.239167, country_code: 'MA' },
     'SOTUK': { ident: 'SOTUK', name: 'SOTUK', type: 'WAYPOINT', latitude: 39.193611, longitude: -4.746389, country_code: 'ES' },
+    // GCTS to LICC Corridor (Canarias - Morocco - Algeria - Tunisia - Sicily)
+    'KORAL': { ident: 'KORAL', name: 'KORAL (Canarias/Casablanca FIR)', type: 'WAYPOINT', latitude: 29.7314, longitude: -12.5783, country_code: 'ES' },
+    'SONSO': { ident: 'SONSO', name: 'SONSO (Airway UN871)', type: 'WAYPOINT', latitude: 30.0122, longitude: -12.1019, country_code: 'MA' },
+    'SAK': { ident: 'SAK', name: 'Casablanca Anfa NDB', type: 'NDB', frequency_mhz: '413.00', latitude: 33.5213, longitude: -7.67711, country_code: 'MA' },
+    'ORSUP': { ident: 'ORSUP', name: 'ORSUP (Airway UM985)', type: 'WAYPOINT', latitude: 34.8486, longitude: -1.84056, country_code: 'MA' },
+    'BABOR': { ident: 'BABOR', name: 'BABOR (Airway UM985)', type: 'WAYPOINT', latitude: 36.4844, longitude: 5.0000, country_code: 'DZ' },
+    'CSO': { ident: 'CSO', name: 'Constantine VOR-DME', type: 'VOR-DME', frequency_mhz: '114.50', latitude: 36.2926, longitude: 6.60555, country_code: 'DZ' },
+    'ANB': { ident: 'ANB', name: 'Annaba VOR-DME', type: 'VOR-DME', frequency_mhz: '113.80', latitude: 36.8167, longitude: 7.8000, country_code: 'DZ' },
+    'MORJA': { ident: 'MORJA', name: 'MORJA (Airway UM985)', type: 'WAYPOINT', latitude: 36.8344, longitude: 8.6500, country_code: 'DZ' },
+    'TUC': { ident: 'TUC', name: 'Tunis VOR-DME', type: 'VOR-DME', frequency_mhz: '115.90', latitude: 36.8516, longitude: 10.2303, country_code: 'TN' },
+    'CBN': { ident: 'CBN', name: 'Cap Bon VOR-DME', type: 'VOR-DME', frequency_mhz: '116.50', latitude: 36.8956, longitude: 11.0883, country_code: 'TN' },
+    'MEGAN': { ident: 'MEGAN', name: 'MEGAN (Airway M871)', type: 'WAYPOINT', latitude: 37.5381, longitude: 11.9961, country_code: 'TN' },
+    'BEKIV': { ident: 'BEKIV', name: 'BEKIV (Airway M871)', type: 'WAYPOINT', latitude: 37.8767, longitude: 13.6681, country_code: 'IT' },
+    'ENEPA': { ident: 'ENEPA', name: 'ENEPA (Airway M871)', type: 'WAYPOINT', latitude: 37.7733, longitude: 13.9994, country_code: 'IT' },
+    'LIBRO': { ident: 'LIBRO', name: 'LIBRO (Catania STAR)', type: 'WAYPOINT', latitude: 37.6214, longitude: 14.4647, country_code: 'IT' },
     // Caribbean, Central & South America Waypoints
     'PUTUL': { ident: 'PUTUL', name: 'PUTUL', type: 'WAYPOINT', latitude: 19.980000, longitude: -78.296944, country_code: 'CU' },
     'SUDSA': { ident: 'SUDSA', name: 'SUDSA', type: 'WAYPOINT', latitude: 14.000000, longitude: -76.933333, country_code: 'CO' },
@@ -678,8 +693,14 @@ class RouteParser {
         try {
             if (fs.existsSync(this.customWaypointsDbPath)) {
                 const data = JSON.parse(fs.readFileSync(this.customWaypointsDbPath, 'utf8'));
+                // Sanitize: ensure synthetic (Enroute Fix) or AUTO_CORRIDOR_REPAIR do not override genuine catalog fixes
+                for (const [key, wp] of Object.entries(GLOBAL_WAYPOINTS_CATALOG)) {
+                    if (data[key] && (data[key].name?.includes('(Enroute Fix)') || data[key].source === 'AUTO_CORRIDOR_REPAIR')) {
+                        delete data[key];
+                    }
+                }
                 console.log(`[RouteParser] Loaded ${Object.keys(data).length} curated waypoints from custom-global-waypoints.json`);
-                return data;
+                return { ...GLOBAL_WAYPOINTS_CATALOG, ...data };
             }
         } catch (e) {
             console.warn('[RouteParser] Error loading custom waypoints database:', e.message);
@@ -693,6 +714,13 @@ class RouteParser {
             throw new Error('Invalid waypoint object: ident, latitude, and longitude are required');
         }
         const ident = waypoint.ident.trim().toUpperCase();
+
+        // Reject synthetic corridor repairs or (Enroute Fix) placeholders from being written to persistent database
+        if (waypoint.source === 'AUTO_CORRIDOR_REPAIR' || (waypoint.name && waypoint.name.includes('(Enroute Fix)'))) {
+            console.warn(`[RouteParser] Refusing to persist synthetic corridor repair midpoint for ${ident}`);
+            return null;
+        }
+
         this.customWaypoints[ident] = {
             ident,
             name: waypoint.name || ident,
@@ -1988,9 +2016,12 @@ class RouteParser {
 
                 if (!bestCandidate) {
                     const candidates = [];
+                    if (this.customWaypoints && this.customWaypoints[clean] && !this.customWaypoints[clean].name?.includes('(Enroute Fix)')) {
+                        candidates.push(this.customWaypoints[clean]);
+                    }
+                    if (GLOBAL_WAYPOINTS_CATALOG[clean]) candidates.push(GLOBAL_WAYPOINTS_CATALOG[clean]);
                     if (this.navaidsByIdent[clean]) candidates.push(...this.navaidsByIdent[clean]);
                     if (this.waypointsByIdent[clean]) candidates.push(...this.waypointsByIdent[clean]);
-                    if (GLOBAL_WAYPOINTS_CATALOG[clean]) candidates.push(GLOBAL_WAYPOINTS_CATALOG[clean]);
 
                     for (const cand of candidates) {
                         const candDVia = (haversineDistanceM(prev.latitude, prev.longitude, cand.latitude, cand.longitude) +
@@ -2039,7 +2070,8 @@ class RouteParser {
                 }
 
                 // 4. If a significantly better candidate was discovered, persist to database
-                if (bestCandidate && (detourNm - minCandidateDetour >= 50 || isInterpolated)) {
+                // IMPORTANT: AUTO_CORRIDOR_REPAIR synthetic midpoints must NEVER be persisted to disk!
+                if (bestCandidate && bestCandidate.source !== 'AUTO_CORRIDOR_REPAIR' && (detourNm - minCandidateDetour >= 50 || isInterpolated)) {
                     this.saveCustomWaypoint(clean, {
                         ident: clean,
                         name: bestCandidate.name || clean,
@@ -2065,6 +2097,10 @@ class RouteParser {
                     });
 
                     // Update in-place so subsequent waypoint detour checks use corrected corridor position
+                    curr.latitude = bestCandidate.latitude;
+                    curr.longitude = bestCandidate.longitude;
+                } else if (bestCandidate && bestCandidate.source === 'AUTO_CORRIDOR_REPAIR') {
+                    // Ephemeral in-memory adjustment for route rendering only
                     curr.latitude = bestCandidate.latitude;
                     curr.longitude = bestCandidate.longitude;
                 }
