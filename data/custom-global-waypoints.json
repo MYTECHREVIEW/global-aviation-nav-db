@@ -12,8 +12,8 @@
     "ident": "ATSUR",
     "name": "ATSUR",
     "type": "WAYPOINT",
-    "latitude": 50.0,
-    "longitude": -14.0,
+    "latitude": 50,
+    "longitude": -14,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -48,8 +48,8 @@
     "ident": "LIMRI",
     "name": "LIMRI",
     "type": "WAYPOINT",
-    "latitude": 52.0,
-    "longitude": -15.0,
+    "latitude": 52,
+    "longitude": -15,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -57,8 +57,8 @@
     "ident": "DINIM",
     "name": "DINIM",
     "type": "WAYPOINT",
-    "latitude": 51.0,
-    "longitude": -15.0,
+    "latitude": 51,
+    "longitude": -15,
     "country_code": "GB",
     "region": "Europe"
   },
@@ -66,8 +66,8 @@
     "ident": "SUNOT",
     "name": "SUNOT",
     "type": "WAYPOINT",
-    "latitude": 57.0,
-    "longitude": -15.0,
+    "latitude": 57,
+    "longitude": -15,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -2778,7 +2778,7 @@
     "name": "ROBBE",
     "type": "WAYPOINT",
     "latitude": 51.143153,
-    "longitude": -70.0,
+    "longitude": -70,
     "country_code": "CA",
     "region": "North America"
   },
@@ -2787,7 +2787,7 @@
     "name": "NEBIN",
     "type": "WAYPOINT",
     "latitude": 53.5,
-    "longitude": -15.0,
+    "longitude": -15,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -2796,7 +2796,7 @@
     "name": "OLGON",
     "type": "WAYPOINT",
     "latitude": 53.5,
-    "longitude": -14.0,
+    "longitude": -14,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -2867,8 +2867,8 @@
     "ident": "RESNO",
     "name": "RESNO",
     "type": "WAYPOINT",
-    "latitude": 55.0,
-    "longitude": -15.0,
+    "latitude": 55,
+    "longitude": -15,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -2876,8 +2876,8 @@
     "ident": "NETKI",
     "name": "NETKI",
     "type": "WAYPOINT",
-    "latitude": 55.0,
-    "longitude": -14.0,
+    "latitude": 55,
+    "longitude": -14,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -2886,7 +2886,7 @@
     "name": "KESIX",
     "type": "WAYPOINT",
     "latitude": 56.95,
-    "longitude": -14.0,
+    "longitude": -14,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -2894,8 +2894,8 @@
     "ident": "PIKIL",
     "name": "PIKIL",
     "type": "WAYPOINT",
-    "latitude": 56.0,
-    "longitude": -15.0,
+    "latitude": 56,
+    "longitude": -15,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -2903,8 +2903,8 @@
     "ident": "SOVED",
     "name": "SOVED",
     "type": "WAYPOINT",
-    "latitude": 56.0,
-    "longitude": -14.0,
+    "latitude": 56,
+    "longitude": -14,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -2912,8 +2912,8 @@
     "ident": "BEXET",
     "name": "BEXET",
     "type": "WAYPOINT",
-    "latitude": 54.0,
-    "longitude": -14.0,
+    "latitude": 54,
+    "longitude": -14,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -2921,8 +2921,8 @@
     "ident": "GISTI",
     "name": "GISTI",
     "type": "WAYPOINT",
-    "latitude": 53.0,
-    "longitude": -14.0,
+    "latitude": 53,
+    "longitude": -14,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -2930,8 +2930,8 @@
     "ident": "ELSOX",
     "name": "ELSOX",
     "type": "WAYPOINT",
-    "latitude": 51.0,
-    "longitude": -14.0,
+    "latitude": 51,
+    "longitude": -14,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -2939,8 +2939,8 @@
     "ident": "SOMAX",
     "name": "SOMAX",
     "type": "WAYPOINT",
-    "latitude": 50.0,
-    "longitude": -15.0,
+    "latitude": 50,
+    "longitude": -15,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -2949,7 +2949,7 @@
     "name": "TOBOR",
     "type": "WAYPOINT",
     "latitude": 52.5,
-    "longitude": -15.0,
+    "longitude": -15,
     "country_code": "IE",
     "region": "Europe"
   },
@@ -2997,5 +2997,41 @@
     "longitude": -79.556667,
     "country_code": "PA",
     "region": "Central America"
+  },
+  "EMRIT": {
+    "ident": "EMRIT",
+    "name": "EMRIT (Phuket RNAV Departure Fix)",
+    "type": "WAYPOINT",
+    "latitude": 8.105847,
+    "longitude": 98.811228,
+    "country_code": "TH",
+    "region": "Asia"
+  },
+  "NONEL": {
+    "ident": "NONEL",
+    "name": "NONEL (Gulf of Thailand Y99/Y98 Junction)",
+    "type": "WAYPOINT",
+    "latitude": 10.883611,
+    "longitude": 99.893611,
+    "country_code": "TH",
+    "region": "Asia"
+  },
+  "SURMA": {
+    "ident": "SURMA",
+    "name": "SURMA (Airway Y98 Transition)",
+    "type": "WAYPOINT",
+    "latitude": 11.856236,
+    "longitude": 100.442403,
+    "country_code": "TH",
+    "region": "Asia"
+  },
+  "LEBIM": {
+    "ident": "LEBIM",
+    "name": "LEBIM (Bangkok Suvarnabhumi STAR Arrival Fix)",
+    "type": "WAYPOINT",
+    "latitude": 13.087447,
+    "longitude": 100.473475,
+    "country_code": "TH",
+    "region": "Asia"
   }
 }

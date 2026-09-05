@@ -522,5 +522,29 @@
       "seq": 40,
       "fixIdent": "MILAT"
     }
+  ],
+  "Y99": [
+    {
+      "seq": 10,
+      "fixIdent": "EMRIT"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "NONEL"
+    }
+  ],
+  "Y98": [
+    {
+      "seq": 10,
+      "fixIdent": "NONEL"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "SURMA"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "LEBIM"
+    }
   ]
 }
