@@ -709,6 +709,13 @@ class RouteParser {
         try {
             fs.writeFileSync(this.customWaypointsDbPath, JSON.stringify(this.customWaypoints, null, 2));
             if (this.parsedRouteCache) this.parsedRouteCache.clear();
+
+            // Purge any stale INTERP_ placeholder for this ident from waypointsByIdent & dynamic DB
+            if (this.waypointsByIdent && this.waypointsByIdent[ident]) {
+                this.waypointsByIdent[ident] = this.waypointsByIdent[ident].filter(w => !(w.id && String(w.id).startsWith('INTERP_')));
+            }
+            dynamicNavDataService.deleteFix(ident);
+
             console.log(`[RouteParser] Successfully saved custom waypoint: ${ident} (${waypoint.latitude}, ${waypoint.longitude}) to persistent database`);
             
             // Asynchronously sync to Grist redundancy cloud database
@@ -812,8 +819,12 @@ class RouteParser {
             return null;
         }
 
-        if (allCandidates.length === 1) {
-            return allCandidates[0];
+        // Prioritize genuine surveyed/curated candidates over synthetic INTERP_ placeholders
+        const genuineCandidates = allCandidates.filter(c => !(c.id && String(c.id).startsWith('INTERP_')));
+        const activeCandidates = genuineCandidates.length > 0 ? genuineCandidates : allCandidates;
+
+        if (activeCandidates.length === 1) {
+            return activeCandidates[0];
         }
 
         // If reference point is missing, fallback to next coordinates
@@ -821,13 +832,13 @@ class RouteParser {
         const effectiveRefLon = refLon !== null ? refLon : nextLon;
 
         if (effectiveRefLat === null || effectiveRefLon === null) {
-            return allCandidates[0];
+            return activeCandidates[0];
         }
 
-        let bestCandidate = allCandidates[0];
+        let bestCandidate = activeCandidates[0];
         let minScore = Infinity;
 
-        for (const cand of allCandidates) {
+        for (const cand of activeCandidates) {
             const dRef = haversineDistanceM(effectiveRefLat, effectiveRefLon, cand.latitude, cand.longitude);
             const dNext = (nextLat !== null && nextLon !== null) ? haversineDistanceM(cand.latitude, cand.longitude, nextLat, nextLon) : 0;
             

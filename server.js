@@ -417,6 +417,9 @@ app.post('/api/v1/waypoints/custom', async (req, res) => {
         // Stage waypoint file changes to Git index
         const gitSync = await gitSyncService.stageWaypointFixes([saved]);
 
+        // Evict cached route traces to reflect newly calibrated waypoint
+        routeTraceMemoryCache.clear();
+
         res.json({
             success: true,
             message: `Custom waypoint "${saved.ident}" saved to persistent database.`,
@@ -643,6 +646,9 @@ app.post('/api/v1/airways', async (req, res) => {
             console.warn(`[AirwaysAPI] Grist background sync notice for ${airwayIdent}:`, e.message);
         });
 
+        // Evict cached route traces to reflect newly created airway corridor
+        routeTraceMemoryCache.clear();
+
         res.status(201).json({
             success: true,
             message: `Airway "${airwayIdent}" saved successfully with ${savedAirway.length} fixes.`,
@@ -654,6 +660,16 @@ app.post('/api/v1/airways', async (req, res) => {
         console.error('[AirwaysAPI] Error saving airway:', e.message);
         res.status(500).json({ error: 'Failed to save airway: ' + e.message });
     }
+});
+
+/**
+ * Clear Route Parser & Trace In-Memory Caches
+ * POST /api/v1/route/cache/clear
+ */
+app.post('/api/v1/route/cache/clear', (req, res) => {
+    routeTraceMemoryCache.clear();
+    if (routeParser.parsedRouteCache) routeParser.parsedRouteCache.clear();
+    res.json({ success: true, message: 'All route trace memory caches cleared successfully.' });
 });
 
 /**

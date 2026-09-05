@@ -67,6 +67,15 @@ class DynamicNavDataService {
         this.scheduleSave();
     }
 
+    deleteFix(ident) {
+        if (!ident) return;
+        const clean = ident.trim().toUpperCase();
+        if (this.cache[clean]) {
+            delete this.cache[clean];
+            this.scheduleSave();
+        }
+    }
+
     fetchHttp(url, options = {}, redirectCount = 0) {
         return new Promise((resolve) => {
             if (redirectCount > 3) return resolve(null);
