@@ -546,5 +546,75 @@
       "seq": 30,
       "fixIdent": "LEBIM"
     }
+  ],
+  "UN871": [
+    {
+      "seq": 10,
+      "fixIdent": "KORAL"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "SONSO"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "SAK"
+    }
+  ],
+  "UM985": [
+    {
+      "seq": 10,
+      "fixIdent": "FES"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "ORSUP"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "BABOR"
+    },
+    {
+      "seq": 40,
+      "fixIdent": "CSO"
+    },
+    {
+      "seq": 50,
+      "fixIdent": "ANB"
+    },
+    {
+      "seq": 60,
+      "fixIdent": "MORJA"
+    },
+    {
+      "seq": 70,
+      "fixIdent": "TUC"
+    },
+    {
+      "seq": 80,
+      "fixIdent": "CBN"
+    },
+    {
+      "seq": 90,
+      "fixIdent": "MEGAN"
+    }
+  ],
+  "M871": [
+    {
+      "seq": 10,
+      "fixIdent": "MEGAN"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "BEKIV"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "ENEPA"
+    },
+    {
+      "seq": 40,
+      "fixIdent": "LIBRO"
+    }
   ]
 }
