@@ -1,4 +1,595 @@
 {
+  "SEFIX": {
+    "ident": "SEFIX",
+    "name": "SEFIX",
+    "type": "WAYPOINT",
+    "latitude": 48.743333,
+    "longitude": -126.708056,
+    "country_code": "CA"
+  },
+  "AGEDI": {
+    "ident": "AGEDI",
+    "name": "AGEDI",
+    "type": "WAYPOINT",
+    "latitude": 44.166667,
+    "longitude": 155.096683,
+    "country_code": "JP"
+  },
+  "ADGOR": {
+    "ident": "ADGOR",
+    "name": "ADGOR",
+    "type": "WAYPOINT",
+    "latitude": 40.424689,
+    "longitude": 149.650711,
+    "country_code": "JP"
+  },
+  "ADNAP": {
+    "ident": "ADNAP",
+    "name": "ADNAP",
+    "type": "WAYPOINT",
+    "latitude": 37.197467,
+    "longitude": 145.666311,
+    "country_code": "JP"
+  },
+  "DAIGO": {
+    "ident": "DAIGO",
+    "name": "Daigo VORTAC (GTC)",
+    "type": "VOR-DME",
+    "frequency_mhz": "115.30",
+    "latitude": 36.744367,
+    "longitude": 140.34985,
+    "country_code": "JP"
+  },
+  "TEPEX": {
+    "ident": "TEPEX",
+    "name": "TEPEX",
+    "type": "WAYPOINT",
+    "latitude": 36.004103,
+    "longitude": 138.88275,
+    "country_code": "JP"
+  },
+  "SAPRA": {
+    "ident": "SAPRA",
+    "name": "SAPRA",
+    "type": "WAYPOINT",
+    "latitude": 35.823842,
+    "longitude": 130.723675,
+    "country_code": "KR"
+  },
+  "GUKDO": {
+    "ident": "GUKDO",
+    "name": "GUKDO",
+    "type": "WAYPOINT",
+    "latitude": 37.019722,
+    "longitude": 127.639722,
+    "country_code": "KR"
+  },
+  "KALNA": {
+    "ident": "KALNA",
+    "name": "KALNA",
+    "type": "WAYPOINT",
+    "latitude": 42.183333,
+    "longitude": 153.25,
+    "country_code": "JP"
+  },
+  "EMRON": {
+    "ident": "EMRON",
+    "name": "EMRON",
+    "type": "WAYPOINT",
+    "latitude": 41.533333,
+    "longitude": 150,
+    "country_code": "JP"
+  },
+  "AVBET": {
+    "ident": "AVBET",
+    "name": "AVBET",
+    "type": "WAYPOINT",
+    "latitude": 39.5,
+    "longitude": 148,
+    "country_code": "JP"
+  },
+  "LEPKI": {
+    "ident": "LEPKI",
+    "name": "LEPKI",
+    "type": "WAYPOINT",
+    "latitude": 45,
+    "longitude": 160,
+    "country_code": "JP"
+  },
+  "NIKOL": {
+    "ident": "NIKOL",
+    "name": "NIKOL",
+    "type": "WAYPOINT",
+    "latitude": 54.5,
+    "longitude": 168,
+    "country_code": "RU"
+  },
+  "NIPPI": {
+    "ident": "NIPPI",
+    "name": "NIPPI",
+    "type": "WAYPOINT",
+    "latitude": 45.666667,
+    "longitude": 150,
+    "country_code": "JP"
+  },
+  "GULOT": {
+    "ident": "GULOT",
+    "name": "GULOT",
+    "type": "WAYPOINT",
+    "latitude": 48,
+    "longitude": 165,
+    "country_code": "JP"
+  },
+  "BILLO": {
+    "ident": "BILLO",
+    "name": "BILLO",
+    "type": "WAYPOINT",
+    "latitude": 53,
+    "longitude": 175,
+    "country_code": "RU"
+  },
+  "NULUK": {
+    "ident": "NULUK",
+    "name": "NULUK",
+    "type": "WAYPOINT",
+    "latitude": 50,
+    "longitude": 170,
+    "country_code": "RU"
+  },
+  "ALCOA": {
+    "ident": "ALCOA",
+    "name": "ALCOA",
+    "type": "WAYPOINT",
+    "latitude": 52,
+    "longitude": 175,
+    "country_code": "US"
+  },
+  "CRAIL": {
+    "ident": "CRAIL",
+    "name": "CRAIL",
+    "type": "WAYPOINT",
+    "latitude": 51.5,
+    "longitude": 170,
+    "country_code": "US"
+  },
+  "PABBA": {
+    "ident": "PABBA",
+    "name": "PABBA",
+    "type": "WAYPOINT",
+    "latitude": 46.5,
+    "longitude": 160,
+    "country_code": "JP"
+  },
+  "BOPTA": {
+    "ident": "BOPTA",
+    "name": "BOPTA",
+    "type": "WAYPOINT",
+    "latitude": 37.283333,
+    "longitude": 127.15,
+    "country_code": "KR"
+  },
+  "RESTA": {
+    "ident": "RESTA",
+    "name": "RESTA",
+    "type": "WAYPOINT",
+    "latitude": 37.383333,
+    "longitude": 126.85,
+    "country_code": "KR"
+  },
+  "SEL": {
+    "ident": "SEL",
+    "name": "Anyang VORTAC",
+    "type": "VORTAC",
+    "frequency_mhz": "113.80",
+    "latitude": 37.441944,
+    "longitude": 126.936667,
+    "country_code": "KR"
+  },
+  "KAE": {
+    "ident": "KAE",
+    "name": "Gimpo VOR-DME",
+    "type": "VOR-DME",
+    "frequency_mhz": "113.60",
+    "latitude": 37.583333,
+    "longitude": 126.8,
+    "country_code": "KR"
+  },
+  "SOTTA": {
+    "ident": "SOTTA",
+    "name": "SOTTA",
+    "type": "WAYPOINT",
+    "latitude": 37.4,
+    "longitude": 126.5,
+    "country_code": "KR"
+  },
+  "LAMEN": {
+    "ident": "LAMEN",
+    "name": "LAMEN",
+    "type": "WAYPOINT",
+    "latitude": 37.316667,
+    "longitude": 126.7,
+    "country_code": "KR"
+  },
+  "KARBU": {
+    "ident": "KARBU",
+    "name": "KARBU",
+    "type": "WAYPOINT",
+    "latitude": 37.15,
+    "longitude": 127.4,
+    "country_code": "KR"
+  },
+  "BEDES": {
+    "ident": "BEDES",
+    "name": "BEDES",
+    "type": "WAYPOINT",
+    "latitude": 36.5,
+    "longitude": 128.5,
+    "country_code": "KR"
+  },
+  "MALPA": {
+    "ident": "MALPA",
+    "name": "MALPA",
+    "type": "WAYPOINT",
+    "latitude": 36.2,
+    "longitude": 129.8,
+    "country_code": "KR"
+  },
+  "APANO": {
+    "ident": "APANO",
+    "name": "APANO",
+    "type": "WAYPOINT",
+    "latitude": 35.5,
+    "longitude": 131,
+    "country_code": "JP",
+    "region": "Asia"
+  },
+  "MIHO": {
+    "ident": "MIHO",
+    "name": "Miho TACAN",
+    "type": "TACAN",
+    "latitude": 35.493889,
+    "longitude": 133.238611,
+    "country_code": "JP",
+    "region": "Asia"
+  },
+  "KASMI": {
+    "ident": "KASMI",
+    "name": "KASMI",
+    "type": "WAYPOINT",
+    "latitude": 35.633333,
+    "longitude": 134.616667,
+    "country_code": "JP",
+    "region": "Asia"
+  },
+  "KOMAT": {
+    "ident": "KOMAT",
+    "name": "Komatsu TACAN",
+    "type": "TACAN",
+    "latitude": 36.394722,
+    "longitude": 136.406944,
+    "country_code": "JP",
+    "region": "Asia"
+  },
+  "GTC": {
+    "ident": "GTC",
+    "name": "Daigo VORTAC",
+    "type": "VOR-DME",
+    "frequency_mhz": "115.30",
+    "latitude": 36.744367,
+    "longitude": 140.34985,
+    "country_code": "JP",
+    "region": "Asia"
+  },
+  "NRE": {
+    "ident": "NRE",
+    "name": "Narita VORTAC",
+    "type": "VOR-DME",
+    "frequency_mhz": "117.90",
+    "latitude": 35.781667,
+    "longitude": 140.386111,
+    "country_code": "JP",
+    "region": "Asia"
+  },
+  "HND": {
+    "ident": "HND",
+    "name": "Haneda VOR-DME",
+    "type": "VOR-DME",
+    "frequency_mhz": "112.20",
+    "latitude": 35.553333,
+    "longitude": 139.781667,
+    "country_code": "JP",
+    "region": "Asia"
+  },
+  "NAMWE": {
+    "ident": "NAMWE",
+    "name": "NAMWE",
+    "type": "WAYPOINT",
+    "latitude": 81,
+    "longitude": -141,
+    "country_code": "CA",
+    "region": "Arctic",
+    "updated_at": "2026-09-02T21:56:31.195Z"
+  },
+  "NARAL": {
+    "ident": "NARAL",
+    "name": "NARAL",
+    "type": "WAYPOINT",
+    "latitude": 81.5,
+    "longitude": -168.973333,
+    "country_code": "US",
+    "region": "Arctic",
+    "updated_at": "2026-09-02T21:56:31.196Z"
+  },
+  "RUTIN": {
+    "ident": "RUTIN",
+    "name": "RUTIN",
+    "type": "WAYPOINT",
+    "latitude": 73.570667,
+    "longitude": 140.59595,
+    "country_code": "RU",
+    "region": "Russia",
+    "updated_at": "2026-09-02T21:56:31.196Z"
+  },
+  "BALOM": {
+    "ident": "BALOM",
+    "name": "BALOM",
+    "type": "WAYPOINT",
+    "latitude": 65.263908,
+    "longitude": 134.698197,
+    "country_code": "RU",
+    "region": "Russia",
+    "updated_at": "2026-09-02T21:56:31.196Z"
+  },
+  "PANAR": {
+    "ident": "PANAR",
+    "name": "PANAR",
+    "type": "WAYPOINT",
+    "latitude": 60.142,
+    "longitude": 128.384,
+    "country_code": "RU",
+    "region": "Russia",
+    "updated_at": "2026-09-02T21:56:31.196Z"
+  },
+  "ARTUN": {
+    "ident": "ARTUN",
+    "name": "ARTUN",
+    "type": "WAYPOINT",
+    "latitude": 55.021,
+    "longitude": 122.062,
+    "country_code": "RU",
+    "region": "Russia",
+    "updated_at": "2026-09-02T21:56:31.196Z"
+  },
+  "SULOK": {
+    "ident": "SULOK",
+    "name": "SULOK",
+    "type": "WAYPOINT",
+    "latitude": 49.900364,
+    "longitude": 115.750436,
+    "country_code": "RU",
+    "region": "Russia",
+    "updated_at": "2026-09-02T21:56:31.196Z"
+  },
+  "POLHO": {
+    "ident": "POLHO",
+    "name": "POLHO",
+    "type": "WAYPOINT",
+    "latitude": 44.783333,
+    "longitude": 113.25,
+    "country_code": "MN",
+    "region": "Mongolia",
+    "updated_at": "2026-09-02T21:56:31.196Z"
+  },
+  "DADGA": {
+    "ident": "DADGA",
+    "name": "DADGA (Airway B458)",
+    "type": "WAYPOINT",
+    "latitude": 36.012234,
+    "longitude": 113.470668,
+    "country_code": "CN",
+    "region": "China",
+    "updated_at": "2026-09-02T23:49:56.483Z"
+  },
+  "OMBEB": {
+    "ident": "OMBEB",
+    "name": "OMBEB",
+    "type": "WAYPOINT",
+    "latitude": 31.631111,
+    "longitude": 113.656944,
+    "country_code": "CN",
+    "region": "China",
+    "updated_at": "2026-09-02T21:56:31.196Z"
+  },
+  "SIERA": {
+    "ident": "SIERA",
+    "name": "SIERA (Hong Kong STAR)",
+    "type": "WAYPOINT",
+    "latitude": 21.986667,
+    "longitude": 113.553333,
+    "country_code": "HK",
+    "region": "Hong Kong",
+    "updated_at": "2026-09-02T21:56:31.196Z"
+  },
+  "DALOL": {
+    "ident": "DALOL",
+    "name": "DALOL (Hong Kong SID)",
+    "type": "WAYPOINT",
+    "latitude": 21.743583,
+    "longitude": 114.845928,
+    "country_code": "HK",
+    "region": "Hong Kong",
+    "updated_at": "2026-09-02T23:16:15.793Z"
+  },
+  "DUMEP": {
+    "ident": "DUMEP",
+    "name": "DUMEP (Hong Kong SID)",
+    "type": "WAYPOINT",
+    "latitude": 21.743417,
+    "longitude": 115.213853,
+    "country_code": "HK",
+    "region": "Hong Kong",
+    "updated_at": "2026-09-02T22:04:25.194Z"
+  },
+  "ENVAR": {
+    "ident": "ENVAR",
+    "name": "ENVAR (Hong Kong / Taipei FIR)",
+    "type": "WAYPOINT",
+    "latitude": 21.991667,
+    "longitude": 117.5,
+    "country_code": "HK",
+    "region": "Hong Kong",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "ANLOT": {
+    "ident": "ANLOT",
+    "name": "ANLOT (Taipei FIR M750)",
+    "type": "WAYPOINT",
+    "latitude": 23.907222,
+    "longitude": 120.486944,
+    "country_code": "TW",
+    "region": "Taiwan",
+    "updated_at": "2026-09-02T22:04:25.195Z"
+  },
+  "DRAKE": {
+    "ident": "DRAKE",
+    "name": "DRAKE (Taipei FIR Q11)",
+    "type": "WAYPOINT",
+    "latitude": 25.615561,
+    "longitude": 122.077947,
+    "country_code": "TW",
+    "region": "Taiwan",
+    "updated_at": "2026-09-02T22:04:25.195Z"
+  },
+  "MOLKA": {
+    "ident": "MOLKA",
+    "name": "MOLKA (Taipei / Fukuoka FIR)",
+    "type": "WAYPOINT",
+    "latitude": 26.658611,
+    "longitude": 124,
+    "country_code": "TW",
+    "region": "Taiwan",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "LIPLO": {
+    "ident": "LIPLO",
+    "name": "LIPLO (Taipei / Fukuoka FIR)",
+    "type": "WAYPOINT",
+    "latitude": 27.991389,
+    "longitude": 123.999444,
+    "country_code": "TW",
+    "region": "Taiwan",
+    "updated_at": "2026-09-02T22:04:25.195Z"
+  },
+  "MUKEP": {
+    "ident": "MUKEP",
+    "name": "MUKEP (Airway M750 / Y891)",
+    "type": "WAYPOINT",
+    "latitude": 29.8,
+    "longitude": 130.5,
+    "country_code": "JP",
+    "region": "Japan",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "ATOTI": {
+    "ident": "ATOTI",
+    "name": "ATOTI (East China Sea Y741)",
+    "type": "WAYPOINT",
+    "latitude": 30.003583,
+    "longitude": 125.198208,
+    "country_code": "KR",
+    "region": "Korea",
+    "updated_at": "2026-09-02T22:04:25.195Z"
+  },
+  "OVSUN": {
+    "ident": "OVSUN",
+    "name": "OVSUN (Airway Y891 / Y893)",
+    "type": "WAYPOINT",
+    "latitude": 32.4,
+    "longitude": 135.2,
+    "country_code": "JP",
+    "region": "Japan",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "IGMIS": {
+    "ident": "IGMIS",
+    "name": "IGMIS (Airway Y893 / Y57)",
+    "type": "WAYPOINT",
+    "latitude": 34.3,
+    "longitude": 139.8,
+    "country_code": "JP",
+    "region": "Japan",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "POROT": {
+    "ident": "POROT",
+    "name": "POROT (Airway Y57 / NOPAC)",
+    "type": "WAYPOINT",
+    "latitude": 35.93,
+    "longitude": 143.228333,
+    "country_code": "JP",
+    "region": "Japan",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "OLMEN": {
+    "ident": "OLMEN",
+    "name": "OLMEN (Incheon STAR Arrival)",
+    "type": "WAYPOINT",
+    "latitude": 36.736944,
+    "longitude": 126.991111,
+    "country_code": "KR",
+    "region": "Korea",
+    "updated_at": "2026-09-02T22:04:25.195Z"
+  },
+  "POWAL": {
+    "ident": "POWAL",
+    "name": "POWAL (North Pacific NOPAC)",
+    "type": "WAYPOINT",
+    "latitude": 50.174575,
+    "longitude": 165.123283,
+    "country_code": "NOPAC",
+    "region": "North Pacific",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "RIZON": {
+    "ident": "RIZON",
+    "name": "RIZON (North Pacific NOPAC)",
+    "type": "WAYPOINT",
+    "latitude": 53,
+    "longitude": -170,
+    "country_code": "US",
+    "region": "Alaska",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "KATCH": {
+    "ident": "KATCH",
+    "name": "KATCH (Gulf of Alaska)",
+    "type": "WAYPOINT",
+    "latitude": 53.999592,
+    "longitude": -136.001603,
+    "country_code": "US",
+    "region": "Alaska",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "HSTIN": {
+    "ident": "HSTIN",
+    "name": "HSTIN (Minnesota Enroute)",
+    "type": "WAYPOINT",
+    "latitude": 44.002222,
+    "longitude": -93.961111,
+    "country_code": "US",
+    "region": "Minnesota",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
+  "ZZIPR": {
+    "ident": "ZZIPR",
+    "name": "ZZIPR (Chicago O'Hare STAR)",
+    "type": "WAYPOINT",
+    "latitude": 43.185833,
+    "longitude": -91.659167,
+    "country_code": "US",
+    "region": "Illinois",
+    "updated_at": "2026-09-02T23:16:15.803Z"
+  },
   "RATKA": {
     "ident": "RATKA",
     "name": "RATKA",
@@ -24,6 +615,60 @@
     "latitude": 50,
     "longitude": -15,
     "country_code": "IE",
+    "region": "Oceanic"
+  },
+  "ANEKI": {
+    "ident": "ANEKI",
+    "name": "ANEKI",
+    "type": "WAYPOINT",
+    "latitude": 49.317272,
+    "longitude": 8.480428,
+    "country_code": "DE",
+    "region": "Europe"
+  },
+  "PABLA": {
+    "ident": "PABLA",
+    "name": "PABLA",
+    "type": "WAYPOINT",
+    "latitude": 48.788586,
+    "longitude": 8.351969,
+    "country_code": "DE",
+    "region": "Europe"
+  },
+  "RIGVI": {
+    "ident": "RIGVI",
+    "name": "RIGVI",
+    "type": "WAYPOINT",
+    "latitude": 48.132589,
+    "longitude": 7.503564,
+    "country_code": "FR",
+    "region": "Europe"
+  },
+  "SUNOT": {
+    "ident": "SUNOT",
+    "name": "SUNOT",
+    "type": "WAYPOINT",
+    "latitude": 57,
+    "longitude": -15,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "HEB": {
+    "ident": "HEB",
+    "name": "Hebron NDB",
+    "type": "NDB",
+    "latitude": 58.2,
+    "longitude": -62.6,
+    "country_code": "CA",
+    "region": "Canada"
+  },
+  "VIXUN": {
+    "ident": "VIXUN",
+    "name": "VIXUN",
+    "type": "WAYPOINT",
+    "latitude": 54,
+    "longitude": -40,
+    "country_code": "NAT",
     "region": "Oceanic"
   },
   "DOGAL": {
@@ -62,213 +707,6 @@
     "country_code": "GB",
     "region": "Europe"
   },
-  "SUNOT": {
-    "ident": "SUNOT",
-    "name": "SUNOT",
-    "type": "WAYPOINT",
-    "latitude": 57,
-    "longitude": -15,
-    "country_code": "IE",
-    "region": "Europe"
-  },
-  "HEB": {
-    "ident": "HEB",
-    "name": "Hebron NDB",
-    "type": "NDB",
-    "latitude": 58.2,
-    "longitude": -62.6,
-    "country_code": "CA",
-    "region": "Canada"
-  },
-  "VIXUN": {
-    "ident": "VIXUN",
-    "name": "VIXUN",
-    "type": "WAYPOINT",
-    "latitude": 54,
-    "longitude": -40,
-    "country_code": "NAT",
-    "region": "Oceanic"
-  },
-  "JOOPY": {
-    "ident": "JOOPY",
-    "name": "JOOPY",
-    "type": "WAYPOINT",
-    "latitude": 48.5,
-    "longitude": -52,
-    "country_code": "CA",
-    "region": "Oceanic"
-  },
-  "BRADD": {
-    "ident": "BRADD",
-    "name": "BRADD",
-    "type": "WAYPOINT",
-    "latitude": 43.15,
-    "longitude": -67,
-    "country_code": "NAT",
-    "region": "Oceanic"
-  },
-  "ELSIR": {
-    "ident": "ELSIR",
-    "name": "ELSIR",
-    "type": "WAYPOINT",
-    "latitude": 49.5,
-    "longitude": -52,
-    "country_code": "CA",
-    "region": "Oceanic"
-  },
-  "TUSKY": {
-    "ident": "TUSKY",
-    "name": "TUSKY",
-    "type": "WAYPOINT",
-    "latitude": 43.565,
-    "longitude": -67,
-    "country_code": "US",
-    "region": "North America"
-  },
-  "KOPUL": {
-    "ident": "KOPUL",
-    "name": "KOPUL",
-    "type": "WAYPOINT",
-    "latitude": 51.542222,
-    "longitude": 1.137222,
-    "country_code": "GB",
-    "region": "Europe"
-  },
-  "OKSAW": {
-    "ident": "OKSAW",
-    "name": "OKSAW",
-    "type": "WAYPOINT",
-    "latitude": 52.05,
-    "longitude": -2.1,
-    "country_code": "GB",
-    "region": "Europe"
-  },
-  "TEWXI": {
-    "ident": "TEWXI",
-    "name": "TEWXI",
-    "type": "WAYPOINT",
-    "latitude": 52.483333,
-    "longitude": -4.833333,
-    "country_code": "GB",
-    "region": "Europe"
-  },
-  "VATRY": {
-    "ident": "VATRY",
-    "name": "VATRY",
-    "type": "WAYPOINT",
-    "latitude": 52.554444,
-    "longitude": -5.5,
-    "country_code": "GB",
-    "region": "Europe"
-  },
-  "SUTEX": {
-    "ident": "SUTEX",
-    "name": "SUTEX",
-    "type": "WAYPOINT",
-    "latitude": 52.824361,
-    "longitude": -6.930361,
-    "country_code": "IE",
-    "region": "Europe"
-  },
-  "ANEKI": {
-    "ident": "ANEKI",
-    "name": "ANEKI",
-    "type": "WAYPOINT",
-    "latitude": 49.317272,
-    "longitude": 8.480428,
-    "country_code": "DE",
-    "region": "Europe"
-  },
-  "PABLA": {
-    "ident": "PABLA",
-    "name": "PABLA",
-    "type": "WAYPOINT",
-    "latitude": 48.788586,
-    "longitude": 8.351969,
-    "country_code": "DE",
-    "region": "Europe"
-  },
-  "RIGVI": {
-    "ident": "RIGVI",
-    "name": "RIGVI",
-    "type": "WAYPOINT",
-    "latitude": 48.132589,
-    "longitude": 7.503564,
-    "country_code": "FR",
-    "region": "Europe"
-  },
-  "DENUT": {
-    "ident": "DENUT",
-    "name": "DENUT",
-    "type": "WAYPOINT",
-    "latitude": 51.236111,
-    "longitude": 3.6575,
-    "country_code": "BE",
-    "region": "Europe"
-  },
-  "LENDO": {
-    "ident": "LENDO",
-    "name": "LENDO",
-    "type": "WAYPOINT",
-    "latitude": 50.625267,
-    "longitude": 6.278553,
-    "country_code": "DE",
-    "region": "Europe"
-  },
-  "ADKUV": {
-    "ident": "ADKUV",
-    "name": "ADKUV",
-    "type": "WAYPOINT",
-    "latitude": 50.506808,
-    "longitude": 6.817408,
-    "country_code": "DE",
-    "region": "Europe"
-  },
-  "BOMBI": {
-    "ident": "BOMBI",
-    "name": "BOMBI",
-    "type": "WAYPOINT",
-    "latitude": 50.056793,
-    "longitude": 8.800399,
-    "country_code": "DE",
-    "region": "Europe"
-  },
-  "INBED": {
-    "ident": "INBED",
-    "name": "INBED",
-    "type": "WAYPOINT",
-    "latitude": 49.387581,
-    "longitude": 10.941744,
-    "country_code": "DE",
-    "region": "Europe"
-  },
-  "RENKA": {
-    "ident": "RENKA",
-    "name": "RENKA",
-    "type": "WAYPOINT",
-    "latitude": 48.584842,
-    "longitude": 13.505225,
-    "country_code": "DE",
-    "region": "Europe"
-  },
-  "PEROL": {
-    "ident": "PEROL",
-    "name": "PEROL",
-    "type": "WAYPOINT",
-    "latitude": 48.076026,
-    "longitude": 15.129485,
-    "country_code": "AT",
-    "region": "Europe"
-  },
-  "ARSIN": {
-    "ident": "ARSIN",
-    "name": "ARSIN",
-    "type": "WAYPOINT",
-    "latitude": 47.567211,
-    "longitude": 16.753744,
-    "country_code": "AT",
-    "region": "Europe"
-  },
   "GAMSA": {
     "ident": "GAMSA",
     "name": "GAMSA",
@@ -285,42 +723,6 @@
     "latitude": 46.541944,
     "longitude": 11.530556,
     "country_code": "IT",
-    "region": "Europe"
-  },
-  "TUDBU": {
-    "ident": "TUDBU",
-    "name": "TUDBU",
-    "type": "WAYPOINT",
-    "latitude": 43.550909,
-    "longitude": 25.522318,
-    "country_code": "BG",
-    "region": "Europe"
-  },
-  "ETUBA": {
-    "ident": "ETUBA",
-    "name": "ETUBA",
-    "type": "WAYPOINT",
-    "latitude": 44.608333,
-    "longitude": 21.652778,
-    "country_code": "RO",
-    "region": "Europe"
-  },
-  "NAVOD": {
-    "ident": "NAVOD",
-    "name": "NAVOD",
-    "type": "WAYPOINT",
-    "latitude": 45.968056,
-    "longitude": 20.088889,
-    "country_code": "RS",
-    "region": "Europe"
-  },
-  "MAVIR": {
-    "ident": "MAVIR",
-    "name": "MAVIR",
-    "type": "WAYPOINT",
-    "latitude": 46.398333,
-    "longitude": 19.825278,
-    "country_code": "HU",
     "region": "Europe"
   },
   "TEBLI": {
@@ -405,6 +807,36 @@
     "region": "Lebanon",
     "updated_at": "2026-09-02T22:13:50.442Z"
   },
+  "KUKLA": {
+    "ident": "KUKLA",
+    "name": "KUKLA (Beirut STAR)",
+    "type": "WAYPOINT",
+    "latitude": 34.245,
+    "longitude": 34.746667,
+    "country_code": "LB",
+    "region": "Lebanon",
+    "updated_at": "2026-09-02T22:13:50.442Z"
+  },
+  "LEBOR": {
+    "ident": "LEBOR",
+    "name": "LEBOR (Syria / Lebanon FIR)",
+    "type": "WAYPOINT",
+    "latitude": 34.265556,
+    "longitude": 36.583056,
+    "country_code": "LB",
+    "region": "Lebanon",
+    "updated_at": "2026-09-02T22:13:50.442Z"
+  },
+  "FIRAS": {
+    "ident": "FIRAS",
+    "name": "FIRAS (Airway R655)",
+    "type": "WAYPOINT",
+    "latitude": 33.871944,
+    "longitude": 37.92,
+    "country_code": "SY",
+    "region": "Syria",
+    "updated_at": "2026-09-02T22:13:50.442Z"
+  },
   "CAK": {
     "ident": "CAK",
     "name": "CAK VOR-DME",
@@ -468,6 +900,26 @@
     "country_code": "SA",
     "region": "Middle East"
   },
+  "NARMI": {
+    "ident": "NARMI",
+    "name": "NARMI (Bahrain / Saudi FIR)",
+    "type": "WAYPOINT",
+    "latitude": 26.300647,
+    "longitude": 50.327503,
+    "country_code": "BH",
+    "region": "Bahrain",
+    "updated_at": "2026-09-02T22:13:50.442Z"
+  },
+  "TULUB": {
+    "ident": "TULUB",
+    "name": "TULUB (Doha SID)",
+    "type": "WAYPOINT",
+    "latitude": 26.112222,
+    "longitude": 51.011389,
+    "country_code": "QA",
+    "region": "Qatar",
+    "updated_at": "2026-09-02T22:13:50.441Z"
+  },
   "TOSNA": {
     "ident": "TOSNA",
     "name": "TOSNA",
@@ -494,6 +946,248 @@
     "longitude": 54.158873,
     "country_code": "AE",
     "region": "Middle East"
+  },
+  "CORRS": {
+    "ident": "CORRS",
+    "name": "CORRS (Melbourne SID)",
+    "type": "WAYPOINT",
+    "latitude": -37.925,
+    "longitude": 145.613333,
+    "country_code": "AU",
+    "region": "Australia",
+    "updated_at": "2026-09-03T00:01:04.590Z"
+  },
+  "DADAD": {
+    "ident": "DADAD",
+    "name": "DADAD (Airway P753)",
+    "type": "WAYPOINT",
+    "latitude": -40.145,
+    "longitude": 150.585,
+    "country_code": "AU",
+    "region": "Australia",
+    "updated_at": "2026-09-03T00:01:04.589Z"
+  },
+  "ADKOS": {
+    "ident": "ADKOS",
+    "name": "ADKOS (New Zealand FIR)",
+    "type": "WAYPOINT",
+    "latitude": -44.617117,
+    "longitude": 166.880431,
+    "country_code": "NZ",
+    "region": "New Zealand",
+    "updated_at": "2026-09-03T00:01:04.590Z"
+  },
+  "TUDBU": {
+    "ident": "TUDBU",
+    "name": "TUDBU",
+    "type": "WAYPOINT",
+    "latitude": 43.550909,
+    "longitude": 25.522318,
+    "country_code": "BG",
+    "region": "Europe"
+  },
+  "ETUBA": {
+    "ident": "ETUBA",
+    "name": "ETUBA",
+    "type": "WAYPOINT",
+    "latitude": 44.608333,
+    "longitude": 21.652778,
+    "country_code": "RO",
+    "region": "Europe"
+  },
+  "NAVOD": {
+    "ident": "NAVOD",
+    "name": "NAVOD",
+    "type": "WAYPOINT",
+    "latitude": 45.968056,
+    "longitude": 20.088889,
+    "country_code": "RS",
+    "region": "Europe"
+  },
+  "MAVIR": {
+    "ident": "MAVIR",
+    "name": "MAVIR",
+    "type": "WAYPOINT",
+    "latitude": 46.398333,
+    "longitude": 19.825278,
+    "country_code": "HU",
+    "region": "Europe"
+  },
+  "ARSIN": {
+    "ident": "ARSIN",
+    "name": "ARSIN",
+    "type": "WAYPOINT",
+    "latitude": 47.567211,
+    "longitude": 16.753744,
+    "country_code": "AT",
+    "region": "Europe"
+  },
+  "PEROL": {
+    "ident": "PEROL",
+    "name": "PEROL",
+    "type": "WAYPOINT",
+    "latitude": 48.076026,
+    "longitude": 15.129485,
+    "country_code": "AT",
+    "region": "Europe"
+  },
+  "RENKA": {
+    "ident": "RENKA",
+    "name": "RENKA",
+    "type": "WAYPOINT",
+    "latitude": 48.584842,
+    "longitude": 13.505225,
+    "country_code": "DE",
+    "region": "Europe"
+  },
+  "INBED": {
+    "ident": "INBED",
+    "name": "INBED",
+    "type": "WAYPOINT",
+    "latitude": 49.387581,
+    "longitude": 10.941744,
+    "country_code": "DE",
+    "region": "Europe"
+  },
+  "BOMBI": {
+    "ident": "BOMBI",
+    "name": "BOMBI",
+    "type": "WAYPOINT",
+    "latitude": 50.056793,
+    "longitude": 8.800399,
+    "country_code": "DE",
+    "region": "Europe"
+  },
+  "ADKUV": {
+    "ident": "ADKUV",
+    "name": "ADKUV",
+    "type": "WAYPOINT",
+    "latitude": 50.506808,
+    "longitude": 6.817408,
+    "country_code": "DE",
+    "region": "Europe"
+  },
+  "LENDO": {
+    "ident": "LENDO",
+    "name": "LENDO",
+    "type": "WAYPOINT",
+    "latitude": 50.625267,
+    "longitude": 6.278553,
+    "country_code": "DE",
+    "region": "Europe"
+  },
+  "VICOT": {
+    "ident": "VICOT",
+    "name": "VICOT",
+    "type": "WAYPOINT",
+    "latitude": 51.644444,
+    "longitude": 4.795833,
+    "country_code": "NL",
+    "region": "Europe"
+  },
+  "ANDIK": {
+    "ident": "ANDIK",
+    "name": "ANDIK",
+    "type": "WAYPOINT",
+    "latitude": 52.739444,
+    "longitude": 5.270556,
+    "country_code": "NL"
+  },
+  "BEDUM": {
+    "ident": "BEDUM",
+    "name": "BEDUM",
+    "type": "WAYPOINT",
+    "latitude": 53.3482,
+    "longitude": 6.5889,
+    "country_code": "NL"
+  },
+  "DOSUR": {
+    "ident": "DOSUR",
+    "name": "DOSUR",
+    "type": "WAYPOINT",
+    "latitude": 54.8586,
+    "longitude": 9.1942,
+    "country_code": "DE"
+  },
+  "RASMU": {
+    "ident": "RASMU",
+    "name": "RASMU",
+    "type": "WAYPOINT",
+    "latitude": 56.7584,
+    "longitude": 13.8153,
+    "country_code": "SE"
+  },
+  "DENUT": {
+    "ident": "DENUT",
+    "name": "DENUT",
+    "type": "WAYPOINT",
+    "latitude": 51.236111,
+    "longitude": 3.6575,
+    "country_code": "BE",
+    "region": "Europe"
+  },
+  "KOPUL": {
+    "ident": "KOPUL",
+    "name": "KOPUL",
+    "type": "WAYPOINT",
+    "latitude": 51.542222,
+    "longitude": 1.137222,
+    "country_code": "GB",
+    "region": "Europe"
+  },
+  "OKSAW": {
+    "ident": "OKSAW",
+    "name": "OKSAW",
+    "type": "WAYPOINT",
+    "latitude": 52.05,
+    "longitude": -2.1,
+    "country_code": "GB",
+    "region": "Europe"
+  },
+  "TEWXI": {
+    "ident": "TEWXI",
+    "name": "TEWXI",
+    "type": "WAYPOINT",
+    "latitude": 52.483333,
+    "longitude": -4.833333,
+    "country_code": "GB",
+    "region": "Europe"
+  },
+  "VATRY": {
+    "ident": "VATRY",
+    "name": "VATRY",
+    "type": "WAYPOINT",
+    "latitude": 52.554444,
+    "longitude": -5.5,
+    "country_code": "GB",
+    "region": "Europe"
+  },
+  "SUTEX": {
+    "ident": "SUTEX",
+    "name": "SUTEX",
+    "type": "WAYPOINT",
+    "latitude": 52.824361,
+    "longitude": -6.930361,
+    "country_code": "IE",
+    "region": "Europe"
+  },
+  "JOOPY": {
+    "ident": "JOOPY",
+    "name": "JOOPY",
+    "type": "WAYPOINT",
+    "latitude": 48.5,
+    "longitude": -52,
+    "country_code": "CA",
+    "region": "Oceanic"
+  },
+  "BRADD": {
+    "ident": "BRADD",
+    "name": "BRADD",
+    "type": "WAYPOINT",
+    "latitude": 43.15,
+    "longitude": -67,
+    "country_code": "NAT",
+    "region": "Oceanic"
   },
   "PARKA": {
     "ident": "PARKA",
@@ -548,6 +1242,174 @@
     "longitude": -4.746389,
     "country_code": "ES",
     "region": "Europe"
+  },
+  "KORAL": {
+    "ident": "KORAL",
+    "name": "KORAL (Canarias/Casablanca FIR)",
+    "type": "WAYPOINT",
+    "latitude": 29.7314,
+    "longitude": -12.5783,
+    "country_code": "ES",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:30:00.000Z"
+  },
+  "SONSO": {
+    "ident": "SONSO",
+    "name": "SONSO (Airway UN871)",
+    "type": "WAYPOINT",
+    "latitude": 30.0122,
+    "longitude": -12.1019,
+    "country_code": "MA",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:30:00.000Z"
+  },
+  "SAK": {
+    "ident": "SAK",
+    "name": "Casablanca Anfa NDB",
+    "type": "NDB",
+    "latitude": 33.5213,
+    "longitude": -7.67711,
+    "country_code": "MA",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": "413.00",
+    "updated_at": "2026-09-05T18:30:00.000Z"
+  },
+  "ORSUP": {
+    "ident": "ORSUP",
+    "name": "ORSUP (Airway UM985)",
+    "type": "WAYPOINT",
+    "latitude": 34.8486,
+    "longitude": -1.84056,
+    "country_code": "MA",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:30:00.000Z"
+  },
+  "BABOR": {
+    "ident": "BABOR",
+    "name": "BABOR (Airway UM985)",
+    "type": "WAYPOINT",
+    "latitude": 36.4844,
+    "longitude": 5,
+    "country_code": "DZ",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:30:00.000Z"
+  },
+  "CSO": {
+    "ident": "CSO",
+    "name": "Constantine Mohamed Boudiaf VOR-DME",
+    "type": "VOR-DME",
+    "latitude": 36.2926,
+    "longitude": 6.60555,
+    "country_code": "DZ",
+    "region": "Custom",
+    "elevation_ft": 2267,
+    "frequency_mhz": "114.50",
+    "updated_at": "2026-09-05T18:30:00.000Z"
+  },
+  "ANB": {
+    "ident": "ANB",
+    "name": "Annaba Rabah Bitat VOR-DME",
+    "type": "VOR-DME",
+    "latitude": 36.8167,
+    "longitude": 7.8,
+    "country_code": "DZ",
+    "region": "Custom",
+    "elevation_ft": 16,
+    "frequency_mhz": "113.80",
+    "updated_at": "2026-09-05T18:30:00.000Z"
+  },
+  "MORJA": {
+    "ident": "MORJA",
+    "name": "MORJA (Airway UM985)",
+    "type": "WAYPOINT",
+    "latitude": 36.8344,
+    "longitude": 8.65,
+    "country_code": "DZ",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:30:00.000Z"
+  },
+  "TUC": {
+    "ident": "TUC",
+    "name": "Tunis Carthage VOR-DME",
+    "type": "VOR-DME",
+    "latitude": 36.8516,
+    "longitude": 10.2303,
+    "country_code": "TN",
+    "region": "Custom",
+    "elevation_ft": 22,
+    "frequency_mhz": "115.90",
+    "updated_at": "2026-09-05T18:30:00.000Z"
+  },
+  "CBN": {
+    "ident": "CBN",
+    "name": "Cap Bon VOR-DME",
+    "type": "VOR-DME",
+    "latitude": 36.8956,
+    "longitude": 11.0883,
+    "country_code": "TN",
+    "region": "Custom",
+    "elevation_ft": 213,
+    "frequency_mhz": "116.50",
+    "updated_at": "2026-09-05T18:30:00.000Z"
+  },
+  "MEGAN": {
+    "ident": "MEGAN",
+    "name": "MEGAN (Airway M871)",
+    "type": "WAYPOINT",
+    "latitude": 37.5381,
+    "longitude": 11.9961,
+    "country_code": "TN",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:30:00.000Z"
+  },
+  "BEKIV": {
+    "ident": "BEKIV",
+    "name": "BEKIV (Airway M871)",
+    "type": "WAYPOINT",
+    "latitude": 37.8767,
+    "longitude": 13.6681,
+    "country_code": "IT",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:30:00.000Z"
+  },
+  "ENEPA": {
+    "ident": "ENEPA",
+    "name": "ENEPA (Airway M871)",
+    "type": "WAYPOINT",
+    "latitude": 37.7733,
+    "longitude": 13.9994,
+    "country_code": "IT",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:30:00.000Z"
+  },
+  "LIBRO": {
+    "ident": "LIBRO",
+    "name": "LIBRO (Catania STAR)",
+    "type": "WAYPOINT",
+    "latitude": 37.6214,
+    "longitude": 14.4647,
+    "country_code": "IT",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:30:00.000Z"
   },
   "PUTUL": {
     "ident": "PUTUL",
@@ -666,80 +1528,143 @@
     "country_code": "JM",
     "region": "Caribbean"
   },
-  "APANO": {
-    "ident": "APANO",
-    "name": "APANO",
+  "DEWIN": {
+    "ident": "DEWIN",
+    "name": "DEWIN (RNP Mindanao)",
     "type": "WAYPOINT",
-    "latitude": 35.5,
-    "longitude": 131,
-    "country_code": "JP",
-    "region": "Asia"
+    "latitude": 7.3055,
+    "longitude": 125.143944,
+    "country_code": "PH",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:51:50.807Z"
   },
-  "MIHO": {
-    "ident": "MIHO",
-    "name": "Miho TACAN",
-    "type": "TACAN",
-    "latitude": 35.493889,
-    "longitude": 133.238611,
-    "country_code": "JP",
-    "region": "Asia"
-  },
-  "KASMI": {
-    "ident": "KASMI",
-    "name": "KASMI",
+  "LINAO": {
+    "ident": "LINAO",
+    "name": "LINAO (Kabacan)",
     "type": "WAYPOINT",
-    "latitude": 35.633333,
-    "longitude": 134.616667,
-    "country_code": "JP",
-    "region": "Asia"
+    "latitude": 7.261983,
+    "longitude": 124.847542,
+    "country_code": "PH",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:51:50.808Z"
   },
-  "KOMAT": {
-    "ident": "KOMAT",
-    "name": "Komatsu TACAN",
-    "type": "TACAN",
-    "latitude": 36.394722,
-    "longitude": 136.406944,
-    "country_code": "JP",
-    "region": "Asia"
-  },
-  "GTC": {
-    "ident": "GTC",
-    "name": "Daigo VORTAC",
-    "type": "VOR-DME",
-    "frequency_mhz": "115.30",
-    "latitude": 36.744367,
-    "longitude": 140.34985,
-    "country_code": "JP",
-    "region": "Asia"
-  },
-  "NRE": {
-    "ident": "NRE",
-    "name": "Narita VORTAC",
-    "type": "VOR-DME",
-    "frequency_mhz": "117.90",
-    "latitude": 35.781667,
-    "longitude": 140.386111,
-    "country_code": "JP",
-    "region": "Asia"
-  },
-  "HND": {
-    "ident": "HND",
-    "name": "Haneda VOR-DME",
-    "type": "VOR-DME",
-    "frequency_mhz": "112.20",
-    "latitude": 35.553333,
-    "longitude": 139.781667,
-    "country_code": "JP",
-    "region": "Asia"
-  },
-  "VICOT": {
-    "ident": "VICOT",
-    "name": "VICOT",
+  "TOMAN": {
+    "ident": "TOMAN",
+    "name": "TOMAN (Singapore FIR / M646)",
     "type": "WAYPOINT",
-    "latitude": 51.644444,
-    "longitude": 4.795833,
-    "country_code": "NL",
-    "region": "Europe"
+    "latitude": 1.363056,
+    "longitude": 105.788056,
+    "country_code": "SG",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:51:50.808Z"
+  },
+  "KARTO": {
+    "ident": "KARTO",
+    "name": "KARTO (Singapore STAR)",
+    "type": "WAYPOINT",
+    "latitude": 1.19,
+    "longitude": 105.561944,
+    "country_code": "SG",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T18:51:50.808Z"
+  },
+  "ELEKA": {
+    "ident": "ELEKA",
+    "name": "ELEKA (Vilnius SID)",
+    "type": "WAYPOINT",
+    "latitude": 54.800556,
+    "longitude": 24.688889,
+    "country_code": "LT",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T20:39:19.884Z"
+  },
+  "VAGVO": {
+    "ident": "VAGVO",
+    "name": "VAGVO (Baltic Sea FIR Entry)",
+    "type": "WAYPOINT",
+    "latitude": 56.249722,
+    "longitude": 19.285,
+    "country_code": "LT",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T20:39:19.893Z"
+  },
+  "ADAXA": {
+    "ident": "ADAXA",
+    "name": "ADAXA (Baltic Sea Corridor)",
+    "type": "WAYPOINT",
+    "latitude": 56.297778,
+    "longitude": 18.898333,
+    "country_code": "SE",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T20:39:19.893Z"
+  },
+  "NINTA": {
+    "ident": "NINTA",
+    "name": "NINTA (Baltic Sea Corridor)",
+    "type": "WAYPOINT",
+    "latitude": 56.228889,
+    "longitude": 18.285556,
+    "country_code": "SE",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T20:39:19.893Z"
+  },
+  "ODDON": {
+    "ident": "ODDON",
+    "name": "ODDON (ex-ODIN VOR)",
+    "type": "WAYPOINT",
+    "latitude": 55.581001,
+    "longitude": 10.652999,
+    "country_code": "DK",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T20:39:19.893Z"
+  },
+  "LOKSA": {
+    "ident": "LOKSA",
+    "name": "LOKSA (Billund RW27 Final Approach Fix)",
+    "type": "WAYPOINT",
+    "latitude": 55.750833,
+    "longitude": 9.513056,
+    "country_code": "DK",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-05T20:39:19.893Z"
+  },
+  "ELSIR": {
+    "ident": "ELSIR",
+    "name": "ELSIR",
+    "type": "WAYPOINT",
+    "latitude": 49.5,
+    "longitude": -52,
+    "country_code": "CA",
+    "region": "Oceanic"
+  },
+  "TUSKY": {
+    "ident": "TUSKY",
+    "name": "TUSKY",
+    "type": "WAYPOINT",
+    "latitude": 43.565,
+    "longitude": -67,
+    "country_code": "US",
+    "region": "North America"
   },
   "KUNAV": {
     "ident": "KUNAV",
@@ -1471,66 +2396,6 @@
     "frequency_mhz": null,
     "updated_at": "2026-08-30T01:42:50.656Z"
   },
-  "DALOL": {
-    "ident": "DALOL",
-    "name": "DALOL (Hong Kong SID)",
-    "type": "WAYPOINT",
-    "latitude": 21.743583,
-    "longitude": 114.845928,
-    "country_code": "HK",
-    "region": "Hong Kong",
-    "updated_at": "2026-09-02T23:16:15.793Z"
-  },
-  "ENVAR": {
-    "ident": "ENVAR",
-    "name": "ENVAR (Hong Kong / Taipei FIR)",
-    "type": "WAYPOINT",
-    "latitude": 21.991667,
-    "longitude": 117.5,
-    "country_code": "HK",
-    "region": "Hong Kong",
-    "updated_at": "2026-09-02T23:16:15.803Z"
-  },
-  "MUKEP": {
-    "ident": "MUKEP",
-    "name": "MUKEP (Airway M750 / Y891)",
-    "type": "WAYPOINT",
-    "latitude": 29.8,
-    "longitude": 130.5,
-    "country_code": "JP",
-    "region": "Japan",
-    "updated_at": "2026-09-02T23:16:15.803Z"
-  },
-  "OVSUN": {
-    "ident": "OVSUN",
-    "name": "OVSUN (Airway Y891 / Y893)",
-    "type": "WAYPOINT",
-    "latitude": 32.4,
-    "longitude": 135.2,
-    "country_code": "JP",
-    "region": "Japan",
-    "updated_at": "2026-09-02T23:16:15.803Z"
-  },
-  "IGMIS": {
-    "ident": "IGMIS",
-    "name": "IGMIS (Airway Y893 / Y57)",
-    "type": "WAYPOINT",
-    "latitude": 34.3,
-    "longitude": 139.8,
-    "country_code": "JP",
-    "region": "Japan",
-    "updated_at": "2026-09-02T23:16:15.803Z"
-  },
-  "POROT": {
-    "ident": "POROT",
-    "name": "POROT (Airway Y57 / NOPAC)",
-    "type": "WAYPOINT",
-    "latitude": 35.93,
-    "longitude": 143.228333,
-    "country_code": "JP",
-    "region": "Japan",
-    "updated_at": "2026-09-02T23:16:15.803Z"
-  },
   "ISDAK": {
     "ident": "ISDAK",
     "name": "ISDAK (Enroute Fix)",
@@ -1590,316 +2455,6 @@
     "elevation_ft": null,
     "frequency_mhz": null,
     "updated_at": "2026-08-30T02:40:31.244Z"
-  },
-  "NAMWE": {
-    "ident": "NAMWE",
-    "name": "NAMWE",
-    "type": "WAYPOINT",
-    "latitude": 81,
-    "longitude": -141,
-    "country_code": "CA",
-    "region": "Arctic",
-    "updated_at": "2026-09-02T21:56:31.195Z"
-  },
-  "RUTIN": {
-    "ident": "RUTIN",
-    "name": "RUTIN",
-    "type": "WAYPOINT",
-    "latitude": 73.570667,
-    "longitude": 140.59595,
-    "country_code": "RU",
-    "region": "Russia",
-    "updated_at": "2026-09-02T21:56:31.196Z"
-  },
-  "BALOM": {
-    "ident": "BALOM",
-    "name": "BALOM",
-    "type": "WAYPOINT",
-    "latitude": 65.263908,
-    "longitude": 134.698197,
-    "country_code": "RU",
-    "region": "Russia",
-    "updated_at": "2026-09-02T21:56:31.196Z"
-  },
-  "PANAR": {
-    "ident": "PANAR",
-    "name": "PANAR",
-    "type": "WAYPOINT",
-    "latitude": 60.142,
-    "longitude": 128.384,
-    "country_code": "RU",
-    "region": "Russia",
-    "updated_at": "2026-09-02T21:56:31.196Z"
-  },
-  "ARTUN": {
-    "ident": "ARTUN",
-    "name": "ARTUN",
-    "type": "WAYPOINT",
-    "latitude": 55.021,
-    "longitude": 122.062,
-    "country_code": "RU",
-    "region": "Russia",
-    "updated_at": "2026-09-02T21:56:31.196Z"
-  },
-  "SULOK": {
-    "ident": "SULOK",
-    "name": "SULOK",
-    "type": "WAYPOINT",
-    "latitude": 49.900364,
-    "longitude": 115.750436,
-    "country_code": "RU",
-    "region": "Russia",
-    "updated_at": "2026-09-02T21:56:31.196Z"
-  },
-  "POLHO": {
-    "ident": "POLHO",
-    "name": "POLHO",
-    "type": "WAYPOINT",
-    "latitude": 44.783333,
-    "longitude": 113.25,
-    "country_code": "MN",
-    "region": "Mongolia",
-    "updated_at": "2026-09-02T21:56:31.196Z"
-  },
-  "DADGA": {
-    "ident": "DADGA",
-    "name": "DADGA (Airway B458)",
-    "type": "WAYPOINT",
-    "latitude": 36.012234,
-    "longitude": 113.470668,
-    "country_code": "CN",
-    "region": "China",
-    "updated_at": "2026-09-02T23:49:56.483Z"
-  },
-  "OMBEB": {
-    "ident": "OMBEB",
-    "name": "OMBEB",
-    "type": "WAYPOINT",
-    "latitude": 31.631111,
-    "longitude": 113.656944,
-    "country_code": "CN",
-    "region": "China",
-    "updated_at": "2026-09-02T21:56:31.196Z"
-  },
-  "SIERA": {
-    "ident": "SIERA",
-    "name": "SIERA (Hong Kong STAR)",
-    "type": "WAYPOINT",
-    "latitude": 21.986667,
-    "longitude": 113.553333,
-    "country_code": "HK",
-    "region": "Hong Kong",
-    "updated_at": "2026-09-02T21:56:31.196Z"
-  },
-  "NARAL": {
-    "ident": "NARAL",
-    "name": "NARAL",
-    "type": "WAYPOINT",
-    "latitude": 81.5,
-    "longitude": -168.973333,
-    "country_code": "US",
-    "region": "Arctic",
-    "updated_at": "2026-09-02T21:56:31.196Z"
-  },
-  "TULUB": {
-    "ident": "TULUB",
-    "name": "TULUB (Doha SID)",
-    "type": "WAYPOINT",
-    "latitude": 26.112222,
-    "longitude": 51.011389,
-    "country_code": "QA",
-    "region": "Qatar",
-    "updated_at": "2026-09-02T22:13:50.441Z"
-  },
-  "NARMI": {
-    "ident": "NARMI",
-    "name": "NARMI (Bahrain / Saudi FIR)",
-    "type": "WAYPOINT",
-    "latitude": 26.300647,
-    "longitude": 50.327503,
-    "country_code": "BH",
-    "region": "Bahrain",
-    "updated_at": "2026-09-02T22:13:50.442Z"
-  },
-  "FIRAS": {
-    "ident": "FIRAS",
-    "name": "FIRAS (Airway R655)",
-    "type": "WAYPOINT",
-    "latitude": 33.871944,
-    "longitude": 37.92,
-    "country_code": "SY",
-    "region": "Syria",
-    "updated_at": "2026-09-02T22:13:50.442Z"
-  },
-  "LEBOR": {
-    "ident": "LEBOR",
-    "name": "LEBOR (Syria / Lebanon FIR)",
-    "type": "WAYPOINT",
-    "latitude": 34.265556,
-    "longitude": 36.583056,
-    "country_code": "LB",
-    "region": "Lebanon",
-    "updated_at": "2026-09-02T22:13:50.442Z"
-  },
-  "KUKLA": {
-    "ident": "KUKLA",
-    "name": "KUKLA (Beirut STAR)",
-    "type": "WAYPOINT",
-    "latitude": 34.245,
-    "longitude": 34.746667,
-    "country_code": "LB",
-    "region": "Lebanon",
-    "updated_at": "2026-09-02T22:13:50.442Z"
-  },
-  "DUMEP": {
-    "ident": "DUMEP",
-    "name": "DUMEP (Hong Kong SID)",
-    "type": "WAYPOINT",
-    "latitude": 21.743417,
-    "longitude": 115.213853,
-    "country_code": "HK",
-    "region": "Hong Kong",
-    "updated_at": "2026-09-02T22:04:25.194Z"
-  },
-  "ANLOT": {
-    "ident": "ANLOT",
-    "name": "ANLOT (Taipei FIR M750)",
-    "type": "WAYPOINT",
-    "latitude": 23.907222,
-    "longitude": 120.486944,
-    "country_code": "TW",
-    "region": "Taiwan",
-    "updated_at": "2026-09-02T22:04:25.195Z"
-  },
-  "DRAKE": {
-    "ident": "DRAKE",
-    "name": "DRAKE (Taipei FIR Q11)",
-    "type": "WAYPOINT",
-    "latitude": 25.615561,
-    "longitude": 122.077947,
-    "country_code": "TW",
-    "region": "Taiwan",
-    "updated_at": "2026-09-02T22:04:25.195Z"
-  },
-  "LIPLO": {
-    "ident": "LIPLO",
-    "name": "LIPLO (Taipei / Fukuoka FIR)",
-    "type": "WAYPOINT",
-    "latitude": 27.991389,
-    "longitude": 123.999444,
-    "country_code": "TW",
-    "region": "Taiwan",
-    "updated_at": "2026-09-02T22:04:25.195Z"
-  },
-  "ATOTI": {
-    "ident": "ATOTI",
-    "name": "ATOTI (East China Sea Y741)",
-    "type": "WAYPOINT",
-    "latitude": 30.003583,
-    "longitude": 125.198208,
-    "country_code": "KR",
-    "region": "Korea",
-    "updated_at": "2026-09-02T22:04:25.195Z"
-  },
-  "OLMEN": {
-    "ident": "OLMEN",
-    "name": "OLMEN (Incheon STAR Arrival)",
-    "type": "WAYPOINT",
-    "latitude": 36.736944,
-    "longitude": 126.991111,
-    "country_code": "KR",
-    "region": "Korea",
-    "updated_at": "2026-09-02T22:04:25.195Z"
-  },
-  "MOLKA": {
-    "ident": "MOLKA",
-    "name": "MOLKA (Taipei / Fukuoka FIR)",
-    "type": "WAYPOINT",
-    "latitude": 26.658611,
-    "longitude": 124,
-    "country_code": "TW",
-    "region": "Taiwan",
-    "updated_at": "2026-09-02T23:16:15.803Z"
-  },
-  "POWAL": {
-    "ident": "POWAL",
-    "name": "POWAL (North Pacific NOPAC)",
-    "type": "WAYPOINT",
-    "latitude": 50.174575,
-    "longitude": 165.123283,
-    "country_code": "NOPAC",
-    "region": "North Pacific",
-    "updated_at": "2026-09-02T23:16:15.803Z"
-  },
-  "RIZON": {
-    "ident": "RIZON",
-    "name": "RIZON (North Pacific NOPAC)",
-    "type": "WAYPOINT",
-    "latitude": 53,
-    "longitude": -170,
-    "country_code": "US",
-    "region": "Alaska",
-    "updated_at": "2026-09-02T23:16:15.803Z"
-  },
-  "KATCH": {
-    "ident": "KATCH",
-    "name": "KATCH (Gulf of Alaska)",
-    "type": "WAYPOINT",
-    "latitude": 53.999592,
-    "longitude": -136.001603,
-    "country_code": "US",
-    "region": "Alaska",
-    "updated_at": "2026-09-02T23:16:15.803Z"
-  },
-  "HSTIN": {
-    "ident": "HSTIN",
-    "name": "HSTIN (Minnesota Enroute)",
-    "type": "WAYPOINT",
-    "latitude": 44.002222,
-    "longitude": -93.961111,
-    "country_code": "US",
-    "region": "Minnesota",
-    "updated_at": "2026-09-02T23:16:15.803Z"
-  },
-  "ZZIPR": {
-    "ident": "ZZIPR",
-    "name": "ZZIPR (Chicago O'Hare STAR)",
-    "type": "WAYPOINT",
-    "latitude": 43.185833,
-    "longitude": -91.659167,
-    "country_code": "US",
-    "region": "Illinois",
-    "updated_at": "2026-09-02T23:16:15.803Z"
-  },
-  "CORRS": {
-    "ident": "CORRS",
-    "name": "CORRS (Melbourne SID)",
-    "type": "WAYPOINT",
-    "latitude": -37.925,
-    "longitude": 145.613333,
-    "country_code": "AU",
-    "region": "Australia",
-    "updated_at": "2026-09-03T00:01:04.590Z"
-  },
-  "DADAD": {
-    "ident": "DADAD",
-    "name": "DADAD (Airway P753)",
-    "type": "WAYPOINT",
-    "latitude": -40.145,
-    "longitude": 150.585,
-    "country_code": "AU",
-    "region": "Australia",
-    "updated_at": "2026-09-03T00:01:04.589Z"
-  },
-  "ADKOS": {
-    "ident": "ADKOS",
-    "name": "ADKOS (New Zealand FIR)",
-    "type": "WAYPOINT",
-    "latitude": -44.617117,
-    "longitude": 166.880431,
-    "country_code": "NZ",
-    "region": "New Zealand",
-    "updated_at": "2026-09-03T00:01:04.590Z"
   },
   "UMLAT": {
     "ident": "UMLAT",
@@ -3034,292 +3589,28 @@
     "country_code": "TH",
     "region": "Asia"
   },
-  "KORAL": {
-    "ident": "KORAL",
-    "name": "KORAL (Canarias/Casablanca FIR)",
+  "KUA": {
+    "ident": "KUA",
+    "name": "Kaduna (KUA)",
     "type": "WAYPOINT",
-    "latitude": 29.7314,
-    "longitude": -12.5783,
-    "country_code": "ES",
-    "region": "Custom",
+    "latitude": 10.696,
+    "longitude": 7.3201,
+    "country_code": "NG",
+    "region": "Africa",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-05T18:30:00.000Z"
+    "updated_at": "2026-09-06T02:03:28.701Z"
   },
-  "SONSO": {
-    "ident": "SONSO",
-    "name": "SONSO (Airway UN871)",
+  "OXORU": {
+    "ident": "OXORU",
+    "name": "OXORU (Abuja RNAV Arrival)",
     "type": "WAYPOINT",
-    "latitude": 30.0122,
-    "longitude": -12.1019,
-    "country_code": "MA",
-    "region": "Custom",
+    "latitude": 9.8653,
+    "longitude": 7.3708,
+    "country_code": "NG",
+    "region": "Africa",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-05T18:30:00.000Z"
-  },
-  "SAK": {
-    "ident": "SAK",
-    "name": "Casablanca Anfa NDB",
-    "type": "NDB",
-    "latitude": 33.5213,
-    "longitude": -7.67711,
-    "country_code": "MA",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": "413.00",
-    "updated_at": "2026-09-05T18:30:00.000Z"
-  },
-  "ORSUP": {
-    "ident": "ORSUP",
-    "name": "ORSUP (Airway UM985)",
-    "type": "WAYPOINT",
-    "latitude": 34.8486,
-    "longitude": -1.84056,
-    "country_code": "MA",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T18:30:00.000Z"
-  },
-  "BABOR": {
-    "ident": "BABOR",
-    "name": "BABOR (Airway UM985)",
-    "type": "WAYPOINT",
-    "latitude": 36.4844,
-    "longitude": 5,
-    "country_code": "DZ",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T18:30:00.000Z"
-  },
-  "MORJA": {
-    "ident": "MORJA",
-    "name": "MORJA (Airway UM985)",
-    "type": "WAYPOINT",
-    "latitude": 36.8344,
-    "longitude": 8.65,
-    "country_code": "DZ",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T18:30:00.000Z"
-  },
-  "MEGAN": {
-    "ident": "MEGAN",
-    "name": "MEGAN (Airway M871)",
-    "type": "WAYPOINT",
-    "latitude": 37.5381,
-    "longitude": 11.9961,
-    "country_code": "TN",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T18:30:00.000Z"
-  },
-  "BEKIV": {
-    "ident": "BEKIV",
-    "name": "BEKIV (Airway M871)",
-    "type": "WAYPOINT",
-    "latitude": 37.8767,
-    "longitude": 13.6681,
-    "country_code": "IT",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T18:30:00.000Z"
-  },
-  "ENEPA": {
-    "ident": "ENEPA",
-    "name": "ENEPA (Airway M871)",
-    "type": "WAYPOINT",
-    "latitude": 37.7733,
-    "longitude": 13.9994,
-    "country_code": "IT",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T18:30:00.000Z"
-  },
-  "LIBRO": {
-    "ident": "LIBRO",
-    "name": "LIBRO (Catania STAR)",
-    "type": "WAYPOINT",
-    "latitude": 37.6214,
-    "longitude": 14.4647,
-    "country_code": "IT",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T18:30:00.000Z"
-  },
-  "CSO": {
-    "ident": "CSO",
-    "name": "Constantine Mohamed Boudiaf VOR-DME",
-    "type": "VOR-DME",
-    "latitude": 36.2926,
-    "longitude": 6.60555,
-    "country_code": "DZ",
-    "region": "Custom",
-    "elevation_ft": 2267,
-    "frequency_mhz": "114.50",
-    "updated_at": "2026-09-05T18:30:00.000Z"
-  },
-  "ANB": {
-    "ident": "ANB",
-    "name": "Annaba Rabah Bitat VOR-DME",
-    "type": "VOR-DME",
-    "latitude": 36.8167,
-    "longitude": 7.8,
-    "country_code": "DZ",
-    "region": "Custom",
-    "elevation_ft": 16,
-    "frequency_mhz": "113.80",
-    "updated_at": "2026-09-05T18:30:00.000Z"
-  },
-  "TUC": {
-    "ident": "TUC",
-    "name": "Tunis Carthage VOR-DME",
-    "type": "VOR-DME",
-    "latitude": 36.8516,
-    "longitude": 10.2303,
-    "country_code": "TN",
-    "region": "Custom",
-    "elevation_ft": 22,
-    "frequency_mhz": "115.90",
-    "updated_at": "2026-09-05T18:30:00.000Z"
-  },
-  "CBN": {
-    "ident": "CBN",
-    "name": "Cap Bon VOR-DME",
-    "type": "VOR-DME",
-    "latitude": 36.8956,
-    "longitude": 11.0883,
-    "country_code": "TN",
-    "region": "Custom",
-    "elevation_ft": 213,
-    "frequency_mhz": "116.50",
-    "updated_at": "2026-09-05T18:30:00.000Z"
-  },
-  "DEWIN": {
-    "ident": "DEWIN",
-    "name": "DEWIN (RNP Mindanao)",
-    "type": "WAYPOINT",
-    "latitude": 7.3055,
-    "longitude": 125.143944,
-    "country_code": "PH",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T18:51:50.807Z"
-  },
-  "LINAO": {
-    "ident": "LINAO",
-    "name": "LINAO (Kabacan)",
-    "type": "WAYPOINT",
-    "latitude": 7.261983,
-    "longitude": 124.847542,
-    "country_code": "PH",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T18:51:50.808Z"
-  },
-  "TOMAN": {
-    "ident": "TOMAN",
-    "name": "TOMAN (Singapore FIR / M646)",
-    "type": "WAYPOINT",
-    "latitude": 1.363056,
-    "longitude": 105.788056,
-    "country_code": "SG",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T18:51:50.808Z"
-  },
-  "KARTO": {
-    "ident": "KARTO",
-    "name": "KARTO (Singapore STAR)",
-    "type": "WAYPOINT",
-    "latitude": 1.19,
-    "longitude": 105.561944,
-    "country_code": "SG",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T18:51:50.808Z"
-  },
-  "ELEKA": {
-    "ident": "ELEKA",
-    "name": "ELEKA (Vilnius SID)",
-    "type": "WAYPOINT",
-    "latitude": 54.800556,
-    "longitude": 24.688889,
-    "country_code": "LT",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T20:39:19.884Z"
-  },
-  "VAGVO": {
-    "ident": "VAGVO",
-    "name": "VAGVO (Baltic Sea FIR Entry)",
-    "type": "WAYPOINT",
-    "latitude": 56.249722,
-    "longitude": 19.285,
-    "country_code": "LT",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T20:39:19.893Z"
-  },
-  "ADAXA": {
-    "ident": "ADAXA",
-    "name": "ADAXA (Baltic Sea Corridor)",
-    "type": "WAYPOINT",
-    "latitude": 56.297778,
-    "longitude": 18.898333,
-    "country_code": "SE",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T20:39:19.893Z"
-  },
-  "NINTA": {
-    "ident": "NINTA",
-    "name": "NINTA (Baltic Sea Corridor)",
-    "type": "WAYPOINT",
-    "latitude": 56.228889,
-    "longitude": 18.285556,
-    "country_code": "SE",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T20:39:19.893Z"
-  },
-  "ODDON": {
-    "ident": "ODDON",
-    "name": "ODDON (ex-ODIN VOR)",
-    "type": "WAYPOINT",
-    "latitude": 55.581001,
-    "longitude": 10.652999,
-    "country_code": "DK",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T20:39:19.893Z"
-  },
-  "LOKSA": {
-    "ident": "LOKSA",
-    "name": "LOKSA (Billund RW27 Final Approach Fix)",
-    "type": "WAYPOINT",
-    "latitude": 55.750833,
-    "longitude": 9.513056,
-    "country_code": "DK",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-05T20:39:19.893Z"
+    "updated_at": "2026-09-06T02:03:32.748Z"
   }
 }
