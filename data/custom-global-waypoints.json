@@ -3612,5 +3612,89 @@
     "elevation_ft": null,
     "frequency_mhz": null,
     "updated_at": "2026-09-06T02:03:32.748Z"
+  },
+  "DABOY": {
+    "ident": "DABOY",
+    "name": "DABOY (Puerto Princesa)",
+    "type": "WAYPOINT",
+    "latitude": 10.409388,
+    "longitude": 118.817361,
+    "country_code": "PH",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-06T20:19:52.521Z"
+  },
+  "LEGED": {
+    "ident": "LEGED",
+    "name": "LEGED",
+    "type": "WAYPOINT",
+    "latitude": 13.020278,
+    "longitude": 119.001944,
+    "country_code": "PH",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-06T20:19:52.645Z"
+  },
+  "REKEL": {
+    "ident": "REKEL",
+    "name": "REKEL",
+    "type": "WAYPOINT",
+    "latitude": 13.590556,
+    "longitude": 118.708889,
+    "country_code": "PH",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-06T20:19:52.703Z"
+  },
+  "SABNO": {
+    "ident": "SABNO",
+    "name": "SABNO",
+    "type": "WAYPOINT",
+    "latitude": 18.985,
+    "longitude": 115.845,
+    "country_code": "PH",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-06T20:19:52.787Z"
+  },
+  "SUKER": {
+    "ident": "SUKER",
+    "name": "SUKER",
+    "type": "WAYPOINT",
+    "latitude": 19.675833,
+    "longitude": 114.653333,
+    "country_code": "HK",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-06T20:19:52.855Z"
+  },
+  "CYBER": {
+    "ident": "CYBER",
+    "name": "CYBER",
+    "type": "WAYPOINT",
+    "latitude": 20.847122,
+    "longitude": 114.552933,
+    "country_code": "HK",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-06T20:19:52.914Z"
+  },
+  "BETTY": {
+    "ident": "BETTY",
+    "name": "BETTY",
+    "type": "WAYPOINT",
+    "latitude": 21.486389,
+    "longitude": 114.558889,
+    "country_code": "HK",
+    "region": "Custom",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-06T20:19:52.965Z"
   }
 }

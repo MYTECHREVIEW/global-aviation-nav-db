@@ -67585,5 +67585,22 @@
       ]
     },
     "common_legs": []
+  },
+  "RPVP_DABOY3W": {
+    "procedure": "DABOY3W",
+    "airport": "RPVP",
+    "runway_transitions": {
+      "27": [],
+      "09": [],
+      "ALL": []
+    },
+    "enroute_transitions": {
+      "DABOY": [
+        "DABOY"
+      ]
+    },
+    "common_legs": [
+      "DABOY"
+    ]
   }
 }

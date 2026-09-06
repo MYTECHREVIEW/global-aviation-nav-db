@@ -297,6 +297,14 @@ const GLOBAL_WAYPOINTS_CATALOG = {
     'DADGA': { ident: 'DADGA', name: 'DADGA (Airway B458)', type: 'WAYPOINT', latitude: 36.012234, longitude: 113.470668, country_code: 'CN' },
     'OMBEB': { ident: 'OMBEB', name: 'OMBEB (Airway W37)', type: 'WAYPOINT', latitude: 31.631111, longitude: 113.656944, country_code: 'CN' },
     'SIERA': { ident: 'SIERA', name: 'SIERA (Hong Kong STAR)', type: 'WAYPOINT', latitude: 21.986667, longitude: 113.553333, country_code: 'HK' },
+    // Philippines & South China Sea / Hong Kong Corridor (RPVP to VMMC)
+    'DABOY': { ident: 'DABOY', name: 'DABOY (Puerto Princesa)', type: 'WAYPOINT', latitude: 10.409388, longitude: 118.817361, country_code: 'PH' },
+    'LEGED': { ident: 'LEGED', name: 'LEGED', type: 'WAYPOINT', latitude: 13.020278, longitude: 119.001944, country_code: 'PH' },
+    'REKEL': { ident: 'REKEL', name: 'REKEL', type: 'WAYPOINT', latitude: 13.590556, longitude: 118.708889, country_code: 'PH' },
+    'SABNO': { ident: 'SABNO', name: 'SABNO', type: 'WAYPOINT', latitude: 18.985000, longitude: 115.845000, country_code: 'PH' },
+    'SUKER': { ident: 'SUKER', name: 'SUKER', type: 'WAYPOINT', latitude: 19.675833, longitude: 114.653333, country_code: 'HK' },
+    'CYBER': { ident: 'CYBER', name: 'CYBER', type: 'WAYPOINT', latitude: 20.847122, longitude: 114.552933, country_code: 'HK' },
+    'BETTY': { ident: 'BETTY', name: 'BETTY', type: 'WAYPOINT', latitude: 21.486389, longitude: 114.558889, country_code: 'HK' },
     // East Asia & Taiwan-Korea Corridor Waypoints (VHHH to RKSI)
     'DALOL': { ident: 'DALOL', name: 'DALOL (Hong Kong SID)', type: 'WAYPOINT', latitude: 21.743583, longitude: 114.845928, country_code: 'HK' },
     'DUMEP': { ident: 'DUMEP', name: 'DUMEP (Hong Kong SID)', type: 'WAYPOINT', latitude: 21.743417, longitude: 115.213853, country_code: 'HK' },
