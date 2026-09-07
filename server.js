@@ -174,41 +174,41 @@ app.delete('/api/v1/auth/keys/:id', apiKeyManager.requireLocalOrAdmin, async (re
  */
 app.get('/api/v1/git/status', apiKeyManager.requireLocalOrAdmin, (req, res) => {
     const cwd = __dirname;
-    exec('git log -1 --format="%h - %s (%cr)" 2>/dev/null && echo "---STATUS_DELIM---" && git status --porcelain', { cwd }, (err, stdout, stderr) => {
-        if (err) {
-            return res.json({ success: false, error: err.message, status: 'Not a git repository' });
-        }
-        const parts = stdout.split('---STATUS_DELIM---');
-        const latestCommit = (parts[0] || '').trim() || 'Initial commit';
-        const statusOutput = (parts[1] || '').trim();
-        
-        const rawLines = statusOutput.split('\n').filter(l => l.trim().length > 0);
-        const files = rawLines.map(line => {
-            const statusCode = line.substring(0, 2).trim();
-            const filePath = line.substring(2).trim();
-            let label = 'Modified';
-            let badge = 'M';
+    exec('git log -1 --format="%h - %s (%cr)"', { cwd }, (errLog, stdoutLog) => {
+        const latestCommit = (!errLog && stdoutLog) ? stdoutLog.trim() : 'Initial commit';
+        exec('git status --porcelain', { cwd }, (errStatus, stdoutStatus) => {
+            if (errStatus) {
+                return res.json({ success: false, error: errStatus.message, status: 'Not a git repository' });
+            }
+            const statusOutput = (stdoutStatus || '').trim();
+            const rawLines = statusOutput.split('\n').filter(l => l.trim().length > 0);
+            const files = rawLines.map(line => {
+                const statusCode = line.substring(0, 2).trim();
+                const filePath = line.substring(2).trim();
+                let label = 'Modified';
+                let badge = 'M';
 
-            if (statusCode.includes('A')) { label = 'Added'; badge = 'A'; }
-            else if (statusCode.includes('D')) { label = 'Deleted'; badge = 'D'; }
-            else if (statusCode.includes('R')) { label = 'Renamed'; badge = 'R'; }
-            else if (statusCode.includes('?')) { label = 'Untracked'; badge = '?'; }
+                if (statusCode.includes('A')) { label = 'Added'; badge = 'A'; }
+                else if (statusCode.includes('D')) { label = 'Deleted'; badge = 'D'; }
+                else if (statusCode.includes('R')) { label = 'Renamed'; badge = 'R'; }
+                else if (statusCode.includes('?')) { label = 'Untracked'; badge = '?'; }
 
-            return {
-                status_code: statusCode,
-                status_badge: badge,
-                status_label: label,
-                path: filePath
-            };
-        });
+                return {
+                    status_code: statusCode,
+                    status_badge: badge,
+                    status_label: label,
+                    path: filePath
+                };
+            });
 
-        res.json({
-            success: true,
-            latest_commit: latestCommit,
-            has_uncommitted_changes: files.length > 0,
-            changed_files_count: files.length,
-            files: files,
-            github_url: 'https://github.com/MYTECHREVIEW/global-aviation-nav-db'
+            res.json({
+                success: true,
+                latest_commit: latestCommit,
+                has_uncommitted_changes: files.length > 0,
+                changed_files_count: files.length,
+                files: files,
+                github_url: 'https://github.com/MYTECHREVIEW/global-aviation-nav-db'
+            });
         });
     });
 });
@@ -223,23 +223,55 @@ app.post('/api/v1/git/push', apiKeyManager.requireLocalOrAdmin, (req, res) => {
     const msg = req.body?.message || `update: UI & database sync at ${new Date().toISOString()}`;
     const cleanMsg = msg.replace(/"/g, '\\"');
 
-    const cmd = `./push-to-github.sh "${cleanMsg}"`;
+    const gitEnv = {
+        ...process.env,
+        GIT_AUTHOR_NAME: process.env.GIT_USER_NAME || process.env.GIT_NAME || 'Rolando Nieves',
+        GIT_AUTHOR_EMAIL: process.env.GIT_USER_EMAIL || process.env.GIT_EMAIL || 'mytekreview@macmini.local',
+        GIT_COMMITTER_NAME: process.env.GIT_USER_NAME || process.env.GIT_NAME || 'Rolando Nieves',
+        GIT_COMMITTER_EMAIL: process.env.GIT_USER_EMAIL || process.env.GIT_EMAIL || 'mytekreview@macmini.local',
+        GIT_TERMINAL_PROMPT: '0'
+    };
 
-    exec(cmd, { cwd }, (err, stdout, stderr) => {
-        if (err) {
-            console.error('[Git Push Error]:', stderr || err.message);
-            return res.status(500).json({
-                success: false,
-                error: stderr || err.message,
-                output: stdout
-            });
+    exec('git add -A', { cwd, env: gitEnv }, (errAdd, stdoutAdd, stderrAdd) => {
+        if (errAdd) {
+            console.error('[Git Add Error]:', stderrAdd || errAdd.message);
+            return res.status(500).json({ success: false, error: stderrAdd || errAdd.message });
         }
 
-        res.json({
-            success: true,
-            message: 'Successfully pushed all changes to GitHub (main branch).',
-            output: stdout,
-            github_url: 'https://github.com/MYTECHREVIEW/global-aviation-nav-db'
+        exec('git status --porcelain', { cwd, env: gitEnv }, (errStat, stdoutStat) => {
+            const hasChanges = stdoutStat && stdoutStat.trim().length > 0;
+
+            const performPush = () => {
+                exec('git push -u origin main', { cwd, env: gitEnv }, (errPush, stdoutPush, stderrPush) => {
+                    if (errPush) {
+                        console.error('[Git Push Error]:', stderrPush || errPush.message);
+                        return res.status(500).json({
+                            success: false,
+                            error: stderrPush || errPush.message,
+                            output: stdoutPush
+                        });
+                    }
+
+                    res.json({
+                        success: true,
+                        message: 'Successfully pushed all changes to GitHub (main branch).',
+                        output: stdoutPush || stderrPush || 'Everything up-to-date',
+                        github_url: 'https://github.com/MYTECHREVIEW/global-aviation-nav-db'
+                    });
+                });
+            };
+
+            if (hasChanges) {
+                exec(`git commit -m "${cleanMsg}"`, { cwd, env: gitEnv }, (errCommit, stdoutCommit, stderrCommit) => {
+                    if (errCommit && !stdoutCommit.includes('nothing to commit')) {
+                        console.error('[Git Commit Error]:', stderrCommit || errCommit.message);
+                        return res.status(500).json({ success: false, error: stderrCommit || errCommit.message });
+                    }
+                    performPush();
+                });
+            } else {
+                performPush();
+            }
         });
     });
 });
