@@ -3974,5 +3974,89 @@
     "elevation_ft": null,
     "frequency_mhz": null,
     "updated_at": "2026-09-09T17:38:29.814Z"
+  },
+  "KORNO": {
+    "ident": "KORNO",
+    "name": "KORNO",
+    "type": "WAYPOINT",
+    "latitude": 35.833333,
+    "longitude": -7.416667,
+    "country_code": "ES",
+    "region": "LECM",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:49:06.371Z"
+  },
+  "TERTO": {
+    "ident": "TERTO",
+    "name": "TERTO",
+    "type": "WAYPOINT",
+    "latitude": 30.104167,
+    "longitude": -12.717222,
+    "country_code": "ES",
+    "region": "GCCC",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:49:06.454Z"
+  },
+  "GUNET": {
+    "ident": "GUNET",
+    "name": "GUNET",
+    "type": "WAYPOINT",
+    "latitude": 19.595,
+    "longitude": -19.735,
+    "country_code": "CV",
+    "region": "GVSC",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:49:06.525Z"
+  },
+  "OPTUR": {
+    "ident": "OPTUR",
+    "name": "OPTUR",
+    "type": "WAYPOINT",
+    "latitude": -9.229444,
+    "longitude": -36.649167,
+    "country_code": "BR",
+    "region": "SREC",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:49:06.599Z"
+  },
+  "USVOL": {
+    "ident": "USVOL",
+    "name": "USVOL",
+    "type": "WAYPOINT",
+    "latitude": -17.543611,
+    "longitude": -43.199444,
+    "country_code": "BR",
+    "region": "SBAO",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:49:06.659Z"
+  },
+  "REDAD": {
+    "ident": "REDAD",
+    "name": "REDAD",
+    "type": "WAYPOINT",
+    "latitude": -20.136667,
+    "longitude": -44.495833,
+    "country_code": "BR",
+    "region": "SBCW",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:49:06.728Z"
+  },
+  "VUNOX": {
+    "ident": "VUNOX",
+    "name": "VUNOX (Guarulhos STAR)",
+    "type": "WAYPOINT",
+    "latitude": -22.317778,
+    "longitude": -46.213333,
+    "country_code": "BR",
+    "region": "SBGR",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:49:06.792Z"
   }
 }

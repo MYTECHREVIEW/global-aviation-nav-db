@@ -334,6 +334,14 @@ const GLOBAL_WAYPOINTS_CATALOG = {
     'RATMU': { ident: 'RATMU', name: 'RATMU', type: 'WAYPOINT', latitude: 60.237778, longitude: 26.535833, country_code: 'FI' },
     'INLOG': { ident: 'INLOG', name: 'INLOG', type: 'WAYPOINT', latitude: 60.171667, longitude: 26.946389, country_code: 'FI' },
     'NAMIN': { ident: 'NAMIN', name: 'NAMIN (Moscow STAR)', type: 'WAYPOINT', latitude: 56.718333, longitude: 36.821111, country_code: 'RU' },
+    // Europe - South America / Atlantic & Brazil Corridors (LEMD to SBGR)
+    'KORNO': { ident: 'KORNO', name: 'KORNO', type: 'WAYPOINT', latitude: 35.833333, longitude: -7.416667, country_code: 'ES' },
+    'TERTO': { ident: 'TERTO', name: 'TERTO', type: 'WAYPOINT', latitude: 30.104167, longitude: -12.717222, country_code: 'ES' },
+    'GUNET': { ident: 'GUNET', name: 'GUNET', type: 'WAYPOINT', latitude: 19.595000, longitude: -19.735000, country_code: 'CV' },
+    'OPTUR': { ident: 'OPTUR', name: 'OPTUR', type: 'WAYPOINT', latitude: -9.229444, longitude: -36.649167, country_code: 'BR' },
+    'USVOL': { ident: 'USVOL', name: 'USVOL', type: 'WAYPOINT', latitude: -17.543611, longitude: -43.199444, country_code: 'BR' },
+    'REDAD': { ident: 'REDAD', name: 'REDAD', type: 'WAYPOINT', latitude: -20.136667, longitude: -44.495833, country_code: 'BR' },
+    'VUNOX': { ident: 'VUNOX', name: 'VUNOX (Guarulhos STAR)', type: 'WAYPOINT', latitude: -22.317778, longitude: -46.213333, country_code: 'BR' },
     // East Asia & Taiwan-Korea Corridor Waypoints (VHHH to RKSI)
     'DALOL': { ident: 'DALOL', name: 'DALOL (Hong Kong SID)', type: 'WAYPOINT', latitude: 21.743583, longitude: 114.845928, country_code: 'HK' },
     'DUMEP': { ident: 'DUMEP', name: 'DUMEP (Hong Kong SID)', type: 'WAYPOINT', latitude: 21.743417, longitude: 115.213853, country_code: 'HK' },
