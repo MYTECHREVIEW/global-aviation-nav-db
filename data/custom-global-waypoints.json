@@ -410,90 +410,6 @@
     "region": "Hong Kong",
     "updated_at": "2026-09-02T21:56:31.196Z"
   },
-  "DABOY": {
-    "ident": "DABOY",
-    "name": "DABOY (Puerto Princesa)",
-    "type": "WAYPOINT",
-    "latitude": 10.409388,
-    "longitude": 118.817361,
-    "country_code": "PH",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-06T20:19:52.521Z"
-  },
-  "LEGED": {
-    "ident": "LEGED",
-    "name": "LEGED",
-    "type": "WAYPOINT",
-    "latitude": 13.020278,
-    "longitude": 119.001944,
-    "country_code": "PH",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-06T20:19:52.645Z"
-  },
-  "REKEL": {
-    "ident": "REKEL",
-    "name": "REKEL",
-    "type": "WAYPOINT",
-    "latitude": 13.590556,
-    "longitude": 118.708889,
-    "country_code": "PH",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-06T20:19:52.703Z"
-  },
-  "SABNO": {
-    "ident": "SABNO",
-    "name": "SABNO",
-    "type": "WAYPOINT",
-    "latitude": 18.985,
-    "longitude": 115.845,
-    "country_code": "PH",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-06T20:19:52.787Z"
-  },
-  "SUKER": {
-    "ident": "SUKER",
-    "name": "SUKER",
-    "type": "WAYPOINT",
-    "latitude": 19.675833,
-    "longitude": 114.653333,
-    "country_code": "HK",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-06T20:19:52.855Z"
-  },
-  "CYBER": {
-    "ident": "CYBER",
-    "name": "CYBER",
-    "type": "WAYPOINT",
-    "latitude": 20.847122,
-    "longitude": 114.552933,
-    "country_code": "HK",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-06T20:19:52.914Z"
-  },
-  "BETTY": {
-    "ident": "BETTY",
-    "name": "BETTY",
-    "type": "WAYPOINT",
-    "latitude": 21.486389,
-    "longitude": 114.558889,
-    "country_code": "HK",
-    "region": "Custom",
-    "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-06T20:19:52.965Z"
-  },
   "DALOL": {
     "ident": "DALOL",
     "name": "DALOL (Hong Kong SID)",
@@ -913,13 +829,15 @@
   },
   "FIRAS": {
     "ident": "FIRAS",
-    "name": "FIRAS (Airway R655)",
+    "name": "FIRAS",
     "type": "WAYPOINT",
     "latitude": 33.871944,
     "longitude": 37.92,
     "country_code": "SY",
-    "region": "Syria",
-    "updated_at": "2026-09-02T22:13:50.442Z"
+    "region": "OSTT",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:03:06.680Z"
   },
   "CAK": {
     "ident": "CAK",
@@ -3010,15 +2928,15 @@
   },
   "MIGMA": {
     "ident": "MIGMA",
-    "name": "MIGMA (Enroute Fix)",
+    "name": "MIGMA",
     "type": "WAYPOINT",
-    "latitude": 24.910328,
-    "longitude": 45.656628,
-    "country_code": null,
-    "region": "Custom",
+    "latitude": 22.843056,
+    "longitude": 51.463611,
+    "country_code": "SA",
+    "region": "OEJD",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-04T00:45:15.757Z"
+    "updated_at": "2026-09-09T17:03:06.265Z"
   },
   "MEVDO": {
     "ident": "MEVDO",
@@ -3697,232 +3615,364 @@
     "frequency_mhz": null,
     "updated_at": "2026-09-06T02:03:32.748Z"
   },
-  "KONAN": {
-    "ident": "KONAN",
-    "name": "KONAN",
+  "DABOY": {
+    "ident": "DABOY",
+    "name": "DABOY (Puerto Princesa)",
     "type": "WAYPOINT",
-    "latitude": 51.130833,
-    "longitude": 2,
-    "country_code": "FR",
+    "latitude": 10.409388,
+    "longitude": 118.817361,
+    "country_code": "PH",
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:26:43.127Z"
+    "updated_at": "2026-09-06T20:19:52.521Z"
   },
-  "MATUG": {
-    "ident": "MATUG",
-    "name": "MATUG",
+  "LEGED": {
+    "ident": "LEGED",
+    "name": "LEGED",
     "type": "WAYPOINT",
-    "latitude": 50.416667,
-    "longitude": 6.369722,
-    "country_code": "DE",
+    "latitude": 13.020278,
+    "longitude": 119.001944,
+    "country_code": "PH",
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:26:43.815Z"
+    "updated_at": "2026-09-06T20:19:52.645Z"
   },
-  "GUBAX": {
-    "ident": "GUBAX",
-    "name": "GUBAX",
+  "REKEL": {
+    "ident": "REKEL",
+    "name": "REKEL",
     "type": "WAYPOINT",
-    "latitude": 50.290278,
-    "longitude": 7.9112,
-    "country_code": "DE",
+    "latitude": 13.590556,
+    "longitude": 118.708889,
+    "country_code": "PH",
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:26:44.025Z"
+    "updated_at": "2026-09-06T20:19:52.703Z"
   },
-  "BOREP": {
-    "ident": "BOREP",
-    "name": "BOREP",
+  "SABNO": {
+    "ident": "SABNO",
+    "name": "SABNO",
     "type": "WAYPOINT",
-    "latitude": 49.965833,
-    "longitude": 10.627783,
-    "country_code": "DE",
+    "latitude": 18.985,
+    "longitude": 115.845,
+    "country_code": "PH",
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:26:44.229Z"
+    "updated_at": "2026-09-06T20:19:52.787Z"
   },
-  "ENITA": {
-    "ident": "ENITA",
-    "name": "ENITA",
+  "SUKER": {
+    "ident": "SUKER",
+    "name": "SUKER",
     "type": "WAYPOINT",
-    "latitude": 49.702136,
-    "longitude": 12.473886,
-    "country_code": "DE",
+    "latitude": 19.675833,
+    "longitude": 114.653333,
+    "country_code": "HK",
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:26:44.429Z"
+    "updated_at": "2026-09-06T20:19:52.855Z"
   },
-  "ETVIS": {
-    "ident": "ETVIS",
-    "name": "ETVIS",
+  "CYBER": {
+    "ident": "CYBER",
+    "name": "CYBER",
     "type": "WAYPOINT",
-    "latitude": 49.653828,
-    "longitude": 12.817447,
-    "country_code": "CZ",
+    "latitude": 20.847122,
+    "longitude": 114.552933,
+    "country_code": "HK",
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:26:44.633Z"
+    "updated_at": "2026-09-06T20:19:52.914Z"
   },
-  "BUDEX": {
-    "ident": "BUDEX",
-    "name": "BUDEX",
+  "BETTY": {
+    "ident": "BETTY",
+    "name": "BETTY",
     "type": "WAYPOINT",
-    "latitude": 48.948328,
-    "longitude": 14.336028,
-    "country_code": "CZ",
+    "latitude": 21.486389,
+    "longitude": 114.558889,
+    "country_code": "HK",
     "region": "Custom",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:26:44.885Z"
+    "updated_at": "2026-09-06T20:19:52.965Z"
   },
-  "MAREG": {
-    "ident": "MAREG",
-    "name": "MAREG",
+  "KUTLI": {
+    "ident": "KUTLI",
+    "name": "KUTLI",
     "type": "WAYPOINT",
-    "latitude": 48.190489,
-    "longitude": 16.969089,
-    "country_code": "AT",
-    "region": "Custom",
+    "latitude": 24.864167,
+    "longitude": 54.938333,
+    "country_code": "AE",
+    "region": "OMAE",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:26:45.121Z"
+    "updated_at": "2026-09-09T17:03:05.891Z"
   },
-  "ANEXA": {
-    "ident": "ANEXA",
-    "name": "ANEXA",
+  "ATUDO": {
+    "ident": "ATUDO",
+    "name": "ATUDO",
     "type": "WAYPOINT",
-    "latitude": 47.854856,
-    "longitude": 18.486231,
-    "country_code": "SK",
-    "region": "Custom",
+    "latitude": 24.285556,
+    "longitude": 54.575556,
+    "country_code": "AE",
+    "region": "OMAE",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:26:45.355Z"
+    "updated_at": "2026-09-09T17:03:06.025Z"
   },
-  "MAXIT": {
-    "ident": "MAXIT",
-    "name": "MAXIT (Heathrow SID)",
+  "GOLGU": {
+    "ident": "GOLGU",
+    "name": "GOLGU",
     "type": "WAYPOINT",
-    "latitude": 51.249372,
-    "longitude": -0.557448,
-    "country_code": "GB",
-    "region": "Custom",
+    "latitude": 23.180833,
+    "longitude": 52.519167,
+    "country_code": "AE",
+    "region": "OMAE",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:35:35.820Z"
+    "updated_at": "2026-09-09T17:03:06.095Z"
   },
-  "SITET": {
-    "ident": "SITET",
-    "name": "SITET",
+  "RIBOT": {
+    "ident": "RIBOT",
+    "name": "RIBOT",
     "type": "WAYPOINT",
-    "latitude": 50.1,
-    "longitude": 0,
-    "country_code": "FR",
-    "region": "Custom",
+    "latitude": 23.037778,
+    "longitude": 52.026667,
+    "country_code": "AE",
+    "region": "OMAE",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:35:36.121Z"
+    "updated_at": "2026-09-09T17:03:06.199Z"
   },
-  "SOPIL": {
-    "ident": "SOPIL",
-    "name": "SOPIL",
+  "SITUK": {
+    "ident": "SITUK",
+    "name": "SITUK",
     "type": "WAYPOINT",
-    "latitude": 47.025833,
-    "longitude": 1.055,
-    "country_code": "FR",
-    "region": "Custom",
+    "latitude": 23.03,
+    "longitude": 47.811667,
+    "country_code": "SA",
+    "region": "OEJD",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:35:36.351Z"
+    "updated_at": "2026-09-09T17:03:06.333Z"
   },
-  "BALAN": {
-    "ident": "BALAN",
-    "name": "BALAN",
-    "type": "WAYPOINT",
-    "latitude": 46.516111,
-    "longitude": 1.033333,
-    "country_code": "FR",
-    "region": "Custom",
+  "KSA": {
+    "ident": "KSA",
+    "name": "King Khaled VOR (Riyadh)",
+    "type": "VOR-DME",
+    "latitude": 24.886101,
+    "longitude": 46.759399,
+    "country_code": "SA",
+    "region": "OERK",
     "elevation_ft": null,
-    "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:35:36.565Z"
+    "frequency_mhz": "115.00",
+    "updated_at": "2026-09-09T17:03:06.429Z"
   },
-  "EVPOK": {
-    "ident": "EVPOK",
-    "name": "EVPOK",
+  "OVANO": {
+    "ident": "OVANO",
+    "name": "OVANO",
     "type": "WAYPOINT",
-    "latitude": 45.474167,
-    "longitude": 1.376389,
-    "country_code": "FR",
-    "region": "Custom",
+    "latitude": 31.800278,
+    "longitude": 39.164167,
+    "country_code": "SA",
+    "region": "OEJD",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:35:36.788Z"
+    "updated_at": "2026-09-09T17:03:06.494Z"
   },
-  "NARAK": {
-    "ident": "NARAK",
-    "name": "NARAK",
+  "SOKAN": {
+    "ident": "SOKAN",
+    "name": "SOKAN",
     "type": "WAYPOINT",
-    "latitude": 44.295278,
-    "longitude": 1.748889,
-    "country_code": "FR",
-    "region": "Custom",
+    "latitude": 33.135833,
+    "longitude": 38.368611,
+    "country_code": "JO",
+    "region": "OJAC",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:35:37.010Z"
+    "updated_at": "2026-09-09T17:03:06.563Z"
   },
-  "LOMRA": {
-    "ident": "LOMRA",
-    "name": "LOMRA",
+  "NISAP": {
+    "ident": "NISAP",
+    "name": "NISAP",
     "type": "WAYPOINT",
-    "latitude": 43.344167,
-    "longitude": 1.883056,
-    "country_code": "FR",
-    "region": "Custom",
+    "latitude": 36.79,
+    "longitude": 36.641667,
+    "country_code": "TR",
+    "region": "LTAA",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:35:37.230Z"
+    "updated_at": "2026-09-09T17:03:06.749Z"
   },
-  "ROCAN": {
-    "ident": "ROCAN",
-    "name": "ROCAN",
+  "BELSU": {
+    "ident": "BELSU",
+    "name": "BELSU",
     "type": "WAYPOINT",
-    "latitude": 42.673333,
-    "longitude": 1.946667,
-    "country_code": "FR",
-    "region": "Custom",
+    "latitude": 39.130833,
+    "longitude": 34.286389,
+    "country_code": "TR",
+    "region": "LTAA",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:35:37.504Z"
+    "updated_at": "2026-09-09T17:03:06.817Z"
   },
-  "PUMAL": {
-    "ident": "PUMAL",
-    "name": "PUMAL",
+  "YUCEL": {
+    "ident": "YUCEL",
+    "name": "YUCEL",
     "type": "WAYPOINT",
-    "latitude": 42.366944,
-    "longitude": 2.008333,
-    "country_code": "ES",
-    "region": "Custom",
+    "latitude": 39.578889,
+    "longitude": 33.585278,
+    "country_code": "TR",
+    "region": "LTAA",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:35:37.760Z"
+    "updated_at": "2026-09-09T17:03:06.941Z"
   },
-  "CORDA": {
-    "ident": "CORDA",
-    "name": "CORDA",
+  "YAVRU": {
+    "ident": "YAVRU",
+    "name": "YAVRU",
     "type": "WAYPOINT",
-    "latitude": 40.415556,
-    "longitude": 2.255833,
-    "country_code": "ES",
-    "region": "Custom",
+    "latitude": 40.582222,
+    "longitude": 31.832778,
+    "country_code": "TR",
+    "region": "LTAA",
     "elevation_ft": null,
     "frequency_mhz": null,
-    "updated_at": "2026-09-07T20:35:37.989Z"
+    "updated_at": "2026-09-09T17:03:07.016Z"
+  },
+  "ERSEN": {
+    "ident": "ERSEN",
+    "name": "ERSEN",
+    "type": "WAYPOINT",
+    "latitude": 40.865556,
+    "longitude": 30.666111,
+    "country_code": "TR",
+    "region": "LTBB",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:03:07.072Z"
+  },
+  "KEPPA": {
+    "ident": "KEPPA",
+    "name": "KEPPA",
+    "type": "WAYPOINT",
+    "latitude": -36.796667,
+    "longitude": 143.975,
+    "country_code": "AU",
+    "region": "YMMM",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:10:26.882Z"
+  },
+  "AVNEX": {
+    "ident": "AVNEX",
+    "name": "AVNEX",
+    "type": "WAYPOINT",
+    "latitude": -30.8125,
+    "longitude": 115.860556,
+    "country_code": "AU",
+    "region": "YPPH",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:17:13.463Z"
+  },
+  "ESDEG": {
+    "ident": "ESDEG",
+    "name": "ESDEG",
+    "type": "WAYPOINT",
+    "latitude": -29.208889,
+    "longitude": 116.023611,
+    "country_code": "AU",
+    "region": "YPPH",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:17:13.550Z"
+  },
+  "METUM": {
+    "ident": "METUM",
+    "name": "METUM",
+    "type": "WAYPOINT",
+    "latitude": -14.136667,
+    "longitude": 115.141667,
+    "country_code": "AU",
+    "region": "YMMM",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:17:13.613Z"
+  },
+  "VINIK": {
+    "ident": "VINIK",
+    "name": "VINIK",
+    "type": "WAYPOINT",
+    "latitude": 8.641667,
+    "longitude": 116.23,
+    "country_code": "MY",
+    "region": "WBFC",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:17:13.688Z"
+  },
+  "AKOTA": {
+    "ident": "AKOTA",
+    "name": "AKOTA",
+    "type": "WAYPOINT",
+    "latitude": 16.462028,
+    "longitude": 117.20675,
+    "country_code": "PH",
+    "region": "RPHI",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:17:13.744Z"
+  },
+  "ARVEP": {
+    "ident": "ARVEP",
+    "name": "ARVEP",
+    "type": "WAYPOINT",
+    "latitude": 60.249444,
+    "longitude": 26.399167,
+    "country_code": "FI",
+    "region": "EFHK",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:38:29.539Z"
+  },
+  "RATMU": {
+    "ident": "RATMU",
+    "name": "RATMU",
+    "type": "WAYPOINT",
+    "latitude": 60.237778,
+    "longitude": 26.535833,
+    "country_code": "FI",
+    "region": "EFHK",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:38:29.667Z"
+  },
+  "INLOG": {
+    "ident": "INLOG",
+    "name": "INLOG",
+    "type": "WAYPOINT",
+    "latitude": 60.171667,
+    "longitude": 26.946389,
+    "country_code": "FI",
+    "region": "EFIN",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:38:29.746Z"
+  },
+  "NAMIN": {
+    "ident": "NAMIN",
+    "name": "NAMIN (Moscow STAR)",
+    "type": "WAYPOINT",
+    "latitude": 56.718333,
+    "longitude": 36.821111,
+    "country_code": "RU",
+    "region": "UUWV",
+    "elevation_ft": null,
+    "frequency_mhz": null,
+    "updated_at": "2026-09-09T17:38:29.814Z"
   }
 }

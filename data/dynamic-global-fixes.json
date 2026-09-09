@@ -887,19 +887,6 @@
     "source": "AUTO_CORRIDOR_REPAIR",
     "updated_at": "2026-09-04T00:45:15.757Z"
   },
-  "MIGMA": {
-    "id": "DYNAMIC_MIGMA",
-    "ident": "MIGMA",
-    "name": "MIGMA (Enroute Fix)",
-    "type": "WAYPOINT",
-    "latitude": 24.910328,
-    "longitude": 45.656628,
-    "elevation_ft": null,
-    "country_code": null,
-    "frequency_mhz": null,
-    "source": "AUTO_CORRIDOR_REPAIR",
-    "updated_at": "2026-09-04T00:45:15.763Z"
-  },
   "MEVDO": {
     "id": "DYNAMIC_MEVDO",
     "ident": "MEVDO",

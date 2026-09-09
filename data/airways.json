@@ -79404,5 +79404,107 @@
       "seq": 30,
       "fixIdent": "BETTY"
     }
+  ],
+  "L519": [
+    {
+      "seq": 10,
+      "fixIdent": "KUTLI"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "ATUDO"
+    }
+  ],
+  "M318": [
+    {
+      "seq": 10,
+      "fixIdent": "ATUDO"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "GOLGU"
+    }
+  ],
+  "M550": [
+    {
+      "seq": 10,
+      "fixIdent": "GOLGU"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "RIBOT"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "MIGMA"
+    }
+  ],
+  "M321": [
+    {
+      "seq": 10,
+      "fixIdent": "MIGMA"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "SITUK"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "KSA"
+    }
+  ],
+  "T503": [
+    {
+      "seq": 10,
+      "fixIdent": "KSA"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "OVANO"
+    }
+  ],
+  "L768": [
+    {
+      "seq": 10,
+      "fixIdent": "OVANO"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "SOKAN"
+    }
+  ],
+  "UM861": [
+    {
+      "seq": 10,
+      "fixIdent": "NISAP"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "BELSU"
+    }
+  ],
+  "UL605": [
+    {
+      "seq": 10,
+      "fixIdent": "BELSU"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "YUCEL"
+    },
+    {
+      "seq": 30,
+      "fixIdent": "YAVRU"
+    }
+  ],
+  "UL615": [
+    {
+      "seq": 10,
+      "fixIdent": "YAVRU"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "ERSEN"
+    }
   ]
 }
