@@ -814,5 +814,25 @@
       "seq": 20,
       "fixIdent": "ERSEN"
     }
+  ],
+  "Y75": [
+    {
+      "seq": 10,
+      "fixIdent": "TEVRU"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "MIMRU"
+    }
+  ],
+  "Y86": [
+    {
+      "seq": 10,
+      "fixIdent": "EVSET"
+    },
+    {
+      "seq": 20,
+      "fixIdent": "RENVI"
+    }
   ]
 }
